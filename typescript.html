@@ -1,0 +1,158 @@
+6. Interfaces
+
+interface Profile {
+    name:string,
+    age: number
+}
+
+let profile: Profile = {
+    name:'ratna',
+    age:2
+}
+s
+By default properties of interface are mandatory. If i remove 'age' property, typescript will warn me that age is 
+missing. 
+
+we can make age optional.
+
+interface Profile {
+	name:string,
+	age?:number
+}
+
+Also we can change profile on fly.
+
+profile.name = 'Jim';
+
+if we would like to forbid developers to modify the object we should use the readonly keyword. and this should go infront of the property name. 
+
+interface Profile {
+    readonly name:string,
+    age?: number
+}
+
+now we cannot modify the name.
+
+In js it is very common to create an object and add properties on the fly, like this.
+
+const a: any = {};
+
+a.x =1;
+a.y=2;
+
+inorder to do properly in typescript, we should use the index signature to describe it. 
+
+lets create an interface A and create an index signature. in the square brackets, we specify the type of the key. it can be either string or number. then goes the colon.
+and we define the type of the value. in our case it is the number. 
+
+interface A {
+	[key: string]: number
+}
+
+Now we can use this interface to describe this object. 
+
+So index signature allows us to describe dynamic properties. If the interface has a specific property, like someProp, the type of the value of this property should match
+the type of the value of the index signature.
+if it doesnt match, typescript will produce an error.
+
+interface A {
+	someProp: string,
+	[key:string]:number| string
+}
+
+Error:"Property someProp of type 'string' is not assignable to string index type number". to make someProp a string we could use the union type for the index signature like this. So the index signature takes either number or string.
+
+
+const a: A = {
+	someProp:'some prop'
+}
+a.x = 1;
+a.y = 2;
+
+We can also use interfaces to describe functions
+
+For this we should add a call signature to an interface. Lets describe a function called "sum"- it takes 2 numbers and sums it up. So to describe a call signature we simply describe a function that takes 2 numbers, "a" and "b" and retuns the number- the sum.
+
+interface Sum {
+	(a:number,b:number):number
+}
+
+Now lets create a function of this type.
+
+const sum: Sum = (a,b)=>{
+	return a+b
+}
+
+and we should continue to grab the properties of the interfaces as usual. 
+
+We can also extend interfaces:
+
+lets say we have an interface Parent. that has one property 'x' of type string and we have a child interface that extends the parent. 
+
+interface Parent {
+	x:string;
+}
+
+interface Child extends Parent {
+	
+}
+
+Now the child interface inherits property 'x' from the parent.  we need to define the property x that exists on the parent. 
+
+
+let child: Child = {
+    x:'dfsdfsd'
+}
+
+Also, we can extend multiple interfaces using a comma. 
+
+interface Parent2 {
+	y: string
+}
+
+interface Parent3 {
+	z: string
+}
+
+interface Child extends Parent, Parent2, Parent3 {
+	x:'sdfdf',
+	y:'sdfdsf',
+	z:'sdfdf'
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
