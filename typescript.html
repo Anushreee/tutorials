@@ -120,6 +120,89 @@ interface Child extends Parent, Parent2, Parent3 {
 	z:'sdfdf'
 }
 
+7. Functions
+
+function sum(a,b){
+    return a+b
+}
+
+We have a function called sum which takes two arguments a and b which are numbers and returns the sum. Lets make this function typesafe.
+typescript allows us to specify the types of the function arguments and its return value. so "a" is a number. "b" is a
+number. and the function returns a number.
+
+function sum(a:number,b:number):number {
+
+}
+
+these are the basics to make the function typesafe. 
+
+we can also make a function type like this:
+
+it is a function that takes two arguments a and b.   
+ type MyFunc = (a: number, b: number)=> number.
+
+ this time we specify an arrow to specify the return type instead of a colon. Lets use this type to create a function.
+
+ now we can only assign a function that matches this signature to this variable. so we asssign an anonymous function that takes a and
+ b and returns their sum
+
+ const sum2: myFunc = (a,b)=>a+b;
+
+ this time we didnt need to specify any types.  because typescript infers this type from the type signature. 
+
+ By default, all arguments of a function are required. so if i call the sum without arguments, i will get an error saying that
+ it expects 2 arguments but got 0.
+
+ sum();
+
+ so lets give it these arguments. 
+
+ sum(1,1);
+ 
+ we can make an argument optional. to do this, we should add a question question mark after the argument name.
+
+ function sum(a:number, b?:number):number {
+     return a+ (b);
+ }
+
+ now we will get an error saying that b is undefined. so we need to handle this case, so if b is provided, we use b. otherwise we use 
+ b||0
+
+ function sum(a:number,b:number):number {
+     return a + (b||0);
+ }
+
+
+ and now we can remove this second argument.
+
+ sum(1);
+
+ we can also specify the default values for the arguments like this. 
+
+ function sum(a:number, b:number =0):number {}
+
+ But we cannot use both the default value and the optional value like this:
+
+ function sum(a:number, b?:number =0):number {} //we cannot do this.
+
+ so lets remove the question mark. this is because when we specify the default value, the argument becomes optional. so lets remove 
+ this check. 
+ 
+ quite frequently we create functions that take unknown number of arguments. 
+
+ we have a function calle sumEverything. it takes a lis of numbers and we use rest operator to gather all the numbers into an 
+ array of numbers, and then, we call the reduce method on this array to sum these numbers up. 
+
+ function sum(...numbers){
+    return numbers.reduce((result,num)=>result+num,0);
+}
+   
+   document.write(sum(2,3,4,4));
+
+
+
+
+
 
 
 
