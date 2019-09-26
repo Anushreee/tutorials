@@ -1,34 +1,34 @@
 6. Interfaces
 
 interface Profile {
-    name:string,
-    age: number
+name:string,
+age: number
 }
 
 let profile: Profile = {
-    name:'ratna',
-    age:2
+name:'ratna',
+age:2
 }
 s
-By default properties of interface are mandatory. If i remove 'age' property, typescript will warn me that age is 
-missing. 
+By default properties of interface are mandatory. If i remove 'age' property, typescript will warn me that age is
+missing.
 
 we can make age optional.
 
 interface Profile {
-	name:string,
-	age?:number
+name:string,
+age?:number
 }
 
 Also we can change profile on fly.
 
 profile.name = 'Jim';
 
-if we would like to forbid developers to modify the object we should use the readonly keyword. and this should go infront of the property name. 
+if we would like to forbid developers to modify the object we should use the readonly keyword. and this should go infront of the property name.
 
 interface Profile {
-    readonly name:string,
-    age?: number
+readonly name:string,
+age?: number
 }
 
 now we cannot modify the name.
@@ -40,31 +40,30 @@ const a: any = {};
 a.x =1;
 a.y=2;
 
-inorder to do properly in typescript, we should use the index signature to describe it. 
+inorder to do properly in typescript, we should use the index signature to describe it.
 
 lets create an interface A and create an index signature. in the square brackets, we specify the type of the key. it can be either string or number. then goes the colon.
-and we define the type of the value. in our case it is the number. 
+and we define the type of the value. in our case it is the number.
 
 interface A {
-	[key: string]: number
+[key: string]: number
 }
 
-Now we can use this interface to describe this object. 
+Now we can use this interface to describe this object.
 
 So index signature allows us to describe dynamic properties. If the interface has a specific property, like someProp, the type of the value of this property should match
 the type of the value of the index signature.
 if it doesnt match, typescript will produce an error.
 
 interface A {
-	someProp: string,
-	[key:string]:number| string
+someProp: string,
+[key:string]:number| string
 }
 
 Error:"Property someProp of type 'string' is not assignable to string index type number". to make someProp a string we could use the union type for the index signature like this. So the index signature takes either number or string.
 
-
 const a: A = {
-	someProp:'some prop'
+someProp:'some prop'
 }
 a.x = 1;
 a.y = 2;
@@ -74,56 +73,54 @@ We can also use interfaces to describe functions
 For this we should add a call signature to an interface. Lets describe a function called "sum"- it takes 2 numbers and sums it up. So to describe a call signature we simply describe a function that takes 2 numbers, "a" and "b" and retuns the number- the sum.
 
 interface Sum {
-	(a:number,b:number):number
+(a:number,b:number):number
 }
 
 Now lets create a function of this type.
 
 const sum: Sum = (a,b)=>{
-	return a+b
+return a+b
 }
 
-and we should continue to grab the properties of the interfaces as usual. 
+and we should continue to grab the properties of the interfaces as usual.
 
 We can also extend interfaces:
 
-lets say we have an interface Parent. that has one property 'x' of type string and we have a child interface that extends the parent. 
+lets say we have an interface Parent. that has one property 'x' of type string and we have a child interface that extends the parent.
 
 interface Parent {
-	x:string;
+x:string;
 }
 
 interface Child extends Parent {
-	
 }
 
-Now the child interface inherits property 'x' from the parent.  we need to define the property x that exists on the parent. 
-
+Now the child interface inherits property 'x' from the parent. we need to define the property x that exists on the parent.
 
 let child: Child = {
-    x:'dfsdfsd'
+x:'dfsdfsd'
 }
 
-Also, we can extend multiple interfaces using a comma. 
+Also, we can extend multiple interfaces using a comma.
 
 interface Parent2 {
-	y: string
+y: string
 }
 
 interface Parent3 {
-	z: string
+z: string
 }
 
 interface Child extends Parent, Parent2, Parent3 {
-	x:'sdfdf',
-	y:'sdfdsf',
-	z:'sdfdf'
+x:'sdfdf',
+y:'sdfdsf',
+z:'sdfdf'
 }
 
 7. Functions
 
 function sum(a,b){
-    return a+b
+return a+b
 }
 
 We have a function called sum which takes two arguments a and b which are numbers and returns the sum. Lets make this function typesafe.
@@ -134,108 +131,374 @@ function sum(a:number,b:number):number {
 
 }
 
-these are the basics to make the function typesafe. 
+these are the basics to make the function typesafe.
 
 we can also make a function type like this:
 
-it is a function that takes two arguments a and b.   
+it is a function that takes two arguments a and b.  
  type MyFunc = (a: number, b: number)=> number.
 
- this time we specify an arrow to specify the return type instead of a colon. Lets use this type to create a function.
+this time we specify an arrow to specify the return type instead of a colon. Lets use this type to create a function.
 
- now we can only assign a function that matches this signature to this variable. so we asssign an anonymous function that takes a and
- b and returns their sum
+now we can only assign a function that matches this signature to this variable. so we asssign an anonymous function that takes a and
+b and returns their sum
 
- const sum2: myFunc = (a,b)=>a+b;
+const sum2: myFunc = (a,b)=>a+b;
 
- this time we didnt need to specify any types.  because typescript infers this type from the type signature. 
+this time we didnt need to specify any types. because typescript infers this type from the type signature.
 
- By default, all arguments of a function are required. so if i call the sum without arguments, i will get an error saying that
- it expects 2 arguments but got 0.
+By default, all arguments of a function are required. so if i call the sum without arguments, i will get an error saying that
+it expects 2 arguments but got 0.
 
- sum();
+sum();
 
- so lets give it these arguments. 
+so lets give it these arguments.
 
- sum(1,1);
- 
- we can make an argument optional. to do this, we should add a question question mark after the argument name.
+sum(1,1);
 
- function sum(a:number, b?:number):number {
-     return a+ (b);
- }
+we can make an argument optional. to do this, we should add a question question mark after the argument name.
 
- now we will get an error saying that b is undefined. so we need to handle this case, so if b is provided, we use b. otherwise we use 
- b||0
-
- function sum(a:number,b:number):number {
-     return a + (b||0);
- }
-
-
- and now we can remove this second argument.
-
- sum(1);
-
- we can also specify the default values for the arguments like this. 
-
- function sum(a:number, b:number =0):number {}
-
- But we cannot use both the default value and the optional value like this:
-
- function sum(a:number, b?:number =0):number {} //we cannot do this.
-
- so lets remove the question mark. this is because when we specify the default value, the argument becomes optional. so lets remove 
- this check. 
- 
- quite frequently we create functions that take unknown number of arguments. 
-
- we have a function calle sumEverything. it takes a lis of numbers and we use rest operator to gather all the numbers into an 
- array of numbers, and then, we call the reduce method on this array to sum these numbers up. 
-
- function sum(...numbers){
-    return numbers.reduce((result,num)=>result+num,0);
+function sum(a:number, b?:number):number {
+return a+ (b);
 }
-   
-   document.write(sum(2,3,4,4));
 
+now we will get an error saying that b is undefined. so we need to handle this case, so if b is provided, we use b. otherwise we use
+b||0
 
+function sum(a:number,b:number):number {
+return a + (b||0);
+}
 
+and now we can remove this second argument.
 
+sum(1);
 
+we can also specify the default values for the arguments like this.
 
+function sum(a:number, b:number =0):number {}
 
+But we cannot use both the default value and the optional value like this:
 
+function sum(a:number, b?:number =0):number {} //we cannot do this.
 
+so lets remove the question mark. this is because when we specify the default value, the argument becomes optional. so lets remove
+this check.
 
+quite frequently we create functions that take unknown number of arguments.
 
+we have a function calle sumEverything. it takes a lis of numbers and we use rest operator to gather all the numbers into an
+array of numbers, and then, we call the reduce method on this array to sum these numbers up.
 
+function sum(...numbers){
+return numbers.reduce((result,num)=>result+num,0);
+}
 
+document.write(sum(2,3,4,4));
 
+Class
 
+We have a simple class called "Robot", and, this class has four members: the "name" property,
 
+the constructor;
 
+This method is being called when we instantiate the class using the "new" keyword. In here we set up the
 
+property "name". The "askName" method which logs the Robot's name. And, the "move" method that moves the Robot
 
+by some distance. Later we instantiate the class using the "new" keyword,
 
+then, the class name, and in the parenthesis, we list the constructor arguments. And, we have only one argument,
 
+the "name", and then, we call the askName method which outputs:
 
+"My name is John". One class can inherit properties of another class.
 
+class Robot {
+name: string;
 
+    constructor(name:string){
+        this.name = name;
+    }
 
+    askName(){
+        console.log(`${this.name}`);
+    }
 
+    move(distance:number) {
+        console.log(`${distance}`);
+    }
 
+}
 
+const myRobot = new Robot('Laila');
+const robot = new Robot('tony');
+robot.askName();
 
+Let's create a subclass of Robot and call it Flying Robot.
 
+This class extends
 
+Robot.
 
+class FlyingRobot extends Robot {
+constructor() {
 
+    }
 
+}
 
+We use the "extends" keyword. And now, FlyingRobot inherits the properties and methods of the Robot class.
 
+We can override members in the child class. Let's override the constructor.
 
+Our constructor takes the "name" argument. First, we have to call the constructor of the parent class. We
 
+use the function called "super" for this.
 
+class FlyingRobot extends Robot {
+constructor(name:string) {
+super(name);
+}
+}
 
+So, "super" refers to the constructor of the parent class and we give it the name property. Then, because
 
+this robot is flying, I suppose it has a jetpack.
+
+class FlyingRobot extends Robot {
+jetpackSize: number;
+constructor(name:string) {
+super(name);
+}
+}
+
+So, let's add another property and call it jetpack
+
+Size. It's a number. Let's set up this property in our child constructor.
+
+class FlyingRobot extends Robot {
+jetpackSize: number;
+constructor(name:string, jetpackSize:number) {
+super(name);
+this.jetpackSize = jetpackSize;
+}
+
+    move(distance: number) {
+    	console.log(`${this.name} is flying`);
+    }
+
+    super.move(distance);
+
+}
+
+class robot = new Robot('John');
+robot.askName();
+
+Now let's override the method "move".
+
+Let's make sure that the robot is flying.
+
+And now, let's call the "move" method from the parent.
+
+We use "super" to refer to the parent class and call "move".
+
+Now, let's create the FlyingRobot
+
+instance.
+
+The FlyingRobot constructor takes two arguments: the name and the jetpackSize.
+
+const flyingRobot = new FlyingRobot('Jim',2);
+
+Now, let's call the "move" method to make sure we have overridden it.
+
+flyingRobot.move(10);
+
+We move the robot by 10. And, we have "Jim is flying" from here and the "Jim moved 10 meters", from the parent
+
+class.
+
+We can control the scope of class members using modifiers. There are 3 modifiers:
+
+public, private, and protected. When we don't specify a modifier, a member becomes public like the jetpack
+
+Size property.
+
+This means that the class consumer can access this property on the class instance, like this.
+
+console.log(flyingRobot.jetpackSize);
+
+And here we go.
+
+The flyingRobot's jetpack size is 2.
+
+So, we have full access to this property. To set a modifier, we type the modifier's name in front of
+
+the property, like this. Let's try to set it to private.
+
+class FlyingRobot extends Robot {
+public jetpackSize: number
+}
+
+Private means that this property can be accessed from the class where it has been declared. Only from the
+
+FlyingRobot class, like this.
+
+class FlyingRobot extends Robot {
+private jetpackSize: number
+}
+
+console.log(flyingRobot.jetpackSize);
+
+We get an error, like here.
+
+Property jetpackSize is private.
+
+Now, let's see how protected modifier works.
+
+Let's set the name of the Robot class to "protected". When a member is protected, it can be accessed only
+
+from the class where it has been defined or from any subclass, like FlyingRobot
+
+in this case. And, the consumer of the class won't be able to access it from the outside. So, we can access
+
+the "name" property in here or in here, but not outside of the class.
+
+In here we cannot access it.
+
+We will get a notice that it is protected. Like interface properties,
+
+class properties can be readonly. To make a property
+
+readonly, we add the readonly keyword in front of the property name, like this.
+
+Now, once the jetpackSize property is set in the constructor, we won't be able to change it in any other
+
+method, like this. And, we get an error that the jetpackSize is a readonly property. Also,
+
+instead of defining properties in here, we can define properties in the constructor parenthesis to make
+
+the whole class structure a little simpler
+
+if we don't have a lot of properties. So, let's simplify this.
+
+Now, let's remove the protected name
+
+property and describe it in the constructor.
+
+And, now we don't need to assign the argument name to the property "name" because TypeScript does it for
+
+us. We can use getters and setters to process a property while it's being written or read.
+
+Let's create a getter and a setter for the "name" property.
+
+Let's start with the setter. To create a setter, we type the "set" keyword.
+
+Then, the name of the property.
+
+And, this is a method that takes the value of the property.
+
+In this case the name is a string and this method should set the value of the property.
+
+Also, we cannot name our setters and getters the same as we named the property.
+
+So let's rename the property.
+
+Let's add underscore in front of the name.
+
+And now we can set it, like this.
+
+"this" "underscore" "name" is equal to value.
+
+And, here we can override it as we like.
+
+Let's add a prefix for the demonstration.
+
+Now, let's create a getter for the name. We type the keyword "get", then, the name of the property.
+
+And, this is a method that returns the property's value.
+
+In this case we return the name property. And, in here,
+
+let's also, overwrite it a little.
+
+Let's add a suffix.
+
+Now, let's update the name of the flying robot just to see how it works.
+
+Now, let's log this.
+
+And, here we go.
+
+"My name is PREFIX_Kevin_SUFFIX". Let's talk about static members. Let's create a property called "color" and
+
+let's create a setter for this color.
+
+And, in the setter I would like to check if this color is available and if it's not available we will
+
+throw an error.
+
+So let's create a setter.
+
+we cannot use the same name for the setter as we use for the color property. So, let's add an underscore
+
+in front of the color property. And, in the setter we set the color.
+
+Let's create a static property called availableColors
+
+and for the availableColors we have only two colors: green and yellow.
+
+Also, let's create a static member that will use this property to check if the color is available.
+
+Let's name it isColorAvailable.
+
+And, this is a method that takes a color and returns a boolean.
+
+We take the Robot.availableColors and check if it includes the color.
+
+Now, let's use this method in the color setter. If Robot.isColorAvailable, color, ..., oh, it
+
+should be "not", if color is not available, we throw an error:
+
+Color
+
+"color" is not available. As you might have noticed, we cannot access static properties or methods on the
+
+class instance. So, we cannot do this:
+
+this isAvailableColors.
+
+There is no such method on this instance.
+
+We can only access static properties on the class itself, like this, Robot
+
+dot, is available, is color available or available colors. You can also use modifiers with static members.
+
+By default,
+
+When we don't specify a modifier, they are public, so we can access them from the outside of a class,
+
+like here, Robot is color available.
+
+Or Robot available colors. If we make this property private, (we do it like this: private static available
+
+colors),
+
+this property becomes unavailable from the outside of the class.
+
+Like here, we see the message that the availableColors property is private. And, one important thing, that
+
+we have to note is that classes have two sides: the "static side" that includes the static methods and properties
+
+and the constructor. And, the "instance side" that includes the instance methods and properties, like color,
+
+askName, name, and other instance methods.
+
+Video course
+Teach the world online
+Create an online video course, reach students across the globe, and earn money
+Udemy
+Copyright © 2019 Udemy, Inc.
+Terms Privacy Policy and Cookie Policy Help and Support
+
+×Close alert
