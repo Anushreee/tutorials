@@ -1,0 +1,170 @@
+1. Problems encountered during installing cps-ui-dashboard-react-components in mac
+
+
+2. Hiding of files in mac
+
+3. while installing webpack got an error: Maximum call stack size exceeded
+
+4. Module not found: Error: Can't resolve 'dist/bundle.js' in '/Users/anushreeshakya/codes/react-components'
+
+5. Problems starting CPS-UI
+
+
+
+1. Problems encountered during installing cps-ui-dashboard-react-components in mac
+
+command: yarn
+
+error An unexpected error occurred: "EACCES: permission denied, unlink '/Users/anushreeshakya/codes/cps-ui-dashboard-react-components/node_modules/yarn/LICENSE'".
+
+Solution
+
+Home Machintosh HD > Users > anushreeshakya > .npmrc
+
+Remove auth and do yarn
+
+_auth = aDM3OTE3OTpBUDcyNGRmVU04Q1BkSnRuaUhqWmg1UTZzVEU=
+email = Anushree.Shakya@Honeywell.com
+always-auth = true
+
+
+@hw:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/hmiweb-npm-stable-local/
+@scuf:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/SCUF-10305-stable-npm-local/
+@cpsui:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/Connected-Performance-Services-8877-stable-npm-virtual/
+
+and then add auth and do yarn.
+
+if there is error regarding scuff-common or something like that.
+
+"@scuf/analytics": "^0.52.17",
+"@scuf/dashboard": "^0.52.18",
+"@scuf/datatable": "^0.52.18",
+"@scuf/styles": "^0.52.17",
+
+and add them one by one 
+add on do yarn
+add another do yarn.
+
+
+2. Hiding of files in mac
+in the terminal type the following:
+defaults write com.apple.finder AppleShowAllFiles YES
+
+Finder > Go > you can see all the hidden files. you can see all the main folders like HD
+ 
+
+
+VPN Connect Failed:
+
+Contacting honeywell us-west
+
+Hostscan is performing software scan
+
+Hostcan state idle
+
+Certificate validation failure
+
+The secure gateway has rejected the connection
+
+
+3. while installing webpack got an error: Maximum call stack size exceeded
+
+Removed the contents from .npmrc file 
+Home Machintosh HD > Users > anushreeshakya > .npmrc
+
+and tried the command again
+
+npm install webpack --save-dev
+
+4. Module not found: Error: Can't resolve 'dist/bundle.js' in '/Users/anushreeshakya/codes/react-components'
+
+--output must be specified explicitly. type the following code in the command line
+
+"build": "webpack src/js/app.js --output dist/bundle.js --mode development"
+
+
+
+Commands:
+
+https://confluence.honeywell.com/display/SENUI/Getting+Started
+
+On your .npmrc file
+@hw:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/hmiweb-npm-stable-local/
+@scuf:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/SCUF-10305-stable-npm-local/
+@cpsui:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/Connected-Performance-Services-8877-stable-npm-virtual/
+@forge:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/hub-npm-stable-local/ 
+
+dont use you auth when you are installing anything related to artifactory
+
+_auth = aDM3OTE3OTpBUDcyNGRmVU04Q1BkSnRuaUhqWmg1UTZzVEU=
+email = Anushree.Shakya@Honeywell.com
+always-auth = true
+
+1. you need to add @forge
+yarn global add @forge/cli
+
+1. you need to create forge experience. for that you need to have @forge
+
+
+create forge experience: 
+
+
+forge experience:create hcp-datatable
+forge experience:preview ./src/index.tsx
+
+
+
+git config --global user.email "anushree.shakya@honywell.com"
+git config --global user.name "Anushree"
+
+Anything related to the artifactory shouldnt have the auth. remove it.
+
+
+S
+
+
+
+
+
+
+
+<i class="h-icon common btn-icon sc-bdVaJa bQbtTD" title="" aria-label="" color=""></i>
+
+
+<i class="h-icon global slider-controls-plus scuf-large" title="" aria-label=""></i>
+
+
+
+5. Problems starting CPS-UI
+
+CPI-UI is an application that required backend. cannot be started with yarn start.
+Dunko can provide a link if you want to see it run but wont be able to debug.
+you can only check the codes there. 
+codes for icons for datatables and how datatables are named.
+it is an angular project.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
