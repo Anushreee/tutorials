@@ -198,19 +198,12 @@ document.write(sum(2,3,4,4));
 Class
 
 We have a simple class called "Robot", and, this class has four members: the "name" property,
-
 the constructor;
-
 This method is being called when we instantiate the class using the "new" keyword. In here we set up the
-
 property "name". The "askName" method which logs the Robot's name. And, the "move" method that moves the Robot
-
 by some distance. Later we instantiate the class using the "new" keyword,
-
 then, the class name, and in the parenthesis, we list the constructor arguments. And, we have only one argument,
-
 the "name", and then, we call the askName method which outputs:
-
 "My name is John". One class can inherit properties of another class.
 
 class Robot {
@@ -277,17 +270,18 @@ So, let's add another property and call it jetpack
 Size. It's a number. Let's set up this property in our child constructor.
 
 class FlyingRobot extends Robot {
-jetpackSize: number;
-constructor(name:string, jetpackSize:number) {
-super(name);
-this.jetpackSize = jetpackSize;
-}
+    jetpackSize: number;
+    constructor(name:string, jetpackSize:number) {
+        super(name);
+        this.jetpackSize = jetpackSize;
+    }
 
     move(distance: number) {
     	console.log(`${this.name} is flying`);
+        super.move(distance);
     }
 
-    super.move(distance);
+    
 
 }
 
@@ -317,6 +311,41 @@ flyingRobot.move(10);
 We move the robot by 10. And, we have "Jim is flying" from here and the "Jim moved 10 meters", from the parent
 
 class.
+
+class Robot {
+    name:string; //this name here refers to the properties of the class
+
+    constructor(name:string){ //name here refers to the arguments passed to the constructor.
+        this.name=name; //this.name refers to the property of the class. 
+    }
+    askName(){
+        console.log(`${this.name}`);
+    }
+    move(distance:number){
+        console.log(`${this.name} moved ${distance} meters`);
+    }
+}
+
+class FlyingRobot extends Robot {
+    jetpackSize:number;
+
+    constructor(name:string,jetpackSize:number){
+        super(name);
+        this.jetpackSize=jetpackSize;
+    }
+
+    move(distance:number){
+        console.log(`${this.name} is flying`);
+        super.move(distance);
+    }
+}
+const myRobot = new Robot('sdfsdf');
+myRobot.askName();
+myRobot.move(30);
+
+const flyingRobot = new FlyingRobot('Jim',2);
+flyingRobot.move(81);
+
 
 We can control the scope of class members using modifiers. There are 3 modifiers:
 
@@ -502,3 +531,537 @@ Copyright © 2019 Udemy, Inc.
 Terms Privacy Policy and Cookie Policy Help and Support
 
 ×Close alert
+
+
+Classes Quiz
+
+A private member can be accessed only from the class where it is declared and we cannot access it from the class instance (e.g. new SomeClass().somePrivateMember)
+A protected member can be accessed from both the class where it is declared and any subclass. And you cannot access this member publicly (e.g. new SomeClass().someProtectedMember).
+
+We have the following code:
+
+class Person {
+    constructor(
+        name: string,
+        protected email: string,
+        private salary: number
+    ) {}
+}
+ 
+class Employee extends Person {
+    getEmployeeInfo() {
+        return `${this.name} ${this.email} ${this.salary}`
+    }
+}
+ 
+const jack = new Employee('Jack', 'jack@example.com', 1000)
+console.log(jack.getEmployeeInfo())
+What will the console.log output?
+
+jack jack@example.com
+
+The salary property is private in the parent class, so we can't access it from the child.
+
+What is the correct way to create the setter and getter for the property amount?
+
+class A {
+    amount: number;
+}
+
+
+Class By Maxmiller
+
+Creating classes and Class Properties:
+
+So let's create a class,
+
+we do this with the class keyword and then we can pick whatever name we want,
+
+let's say person.
+
+This will give us a person class
+
+class Person {
+    
+}
+
+and if you are familiar with ES6 features, so far that's the same way how you create a class in ES6
+
+and for this module of course, it really helps to know about object-oriented programming
+
+and if you already know some other languages which use classes. I'm not going to dive super deep into
+
+explaining what classes are and what you use them for,
+
+basically they allow you to prepare some kind of blueprints for objects, so you can later on create objects
+
+based on a class to then make sure that this object already has some properties or methods which again
+
+you define in this class we're setting up here
+
+but if that is all new to you, definitely check out some tutorials on object-oriented programming and
+
+classes in general
+
+and it probably is a good idea to also have a look at ES6 classes.
+
+So enough of talking. I'm creating a class here to create such a blueprint and I could give this class
+
+a property, name for example, which should be of type string and that already is one important difference
+
+to ES6 classes.
+
+class Person {
+    name:string
+}
+
+You create properties just like that in TypeScript,
+
+you don't have to set them up with the this keyword in the constructor of a class,
+
+you assign them directly in the class body
+
+as you might know it from other languages, like again C# or Java. You could prefix or prepend this
+
+name property here with a public keyword and that would make this property available to
+
+whoever wants to access it but I can leave it out since the default is public,
+
+class Person {
+    public name:string;
+    private type:string;
+
+
+}
+
+so this property will be public which means accessible from outside.
+
+So I created the property on this class and I can add another one, let's say type but let's say that
+
+I want type to be a private property, which means you can only access it from inside of this class
+
+or later on whichever object you create
+
+based on this class. So you can't set or read it from outside of this
+
+and that also is a major addition because Javascript, no matter if we're talking about ES5 or ES6, doesn't
+
+offer this kind of support or these kinds of properties,
+
+it doesn't know private and public properties, everything is public there and you have to use some kind
+
+of hacks or workarounds to create kind of private properties.
+
+So here in TypeScript, I create a private property type like this and I assign a type of string to this
+
+property.
+
+I can also create a protected property
+
+and what's different because protected and private? Private properties are only available or accessible
+
+from the object you base or you create based on this person class,
+
+so only within this object. Protected properties
+
+also meet this definition
+
+but additionally, they're also accessible from any objects or classes which inherit from this class.
+
+So if we were to inherit from this person class and I will come back to inheritance later on, then
+
+the child class which inherited from person would also have access to a protected property but not
+
+to a private one,
+
+so let's say we have the protected property age which should be a number here.
+
+class Person {
+    public name:string;
+    private type:string;
+    protected age:number;
+
+}
+
+
+
+ That was quite a lot of
+
+talk about properties but it is important to understand how you can modify them to make them available
+
+only inside or outside of this class and it is important to understand that you set them up directly
+
+in the class body and not in the constructor.
+
+IT IS IMPORTANT TO UNDERSTAND THAT YOU SET THEM UP DIRECTLY IN THE CLASS BODY AND NOT IN THE CONSTRUCTOR.
+
+
+That being said, you can provide a constructor function which may take some arguments, like name and which
+
+then allows you to assign this name to the name property,
+
+class Person {
+    name:string;
+    private type:string;
+    protected age: number;
+
+    constructor(name:string) { // this name refers to the argument passed to the constructor.
+        this.name = name;
+    }
+}
+
+so this name here:
+    public name:string;
+
+ refers to the property of this class, whereas this name refers to the argument passed
+
+to the constructor. As a side note,
+
+there is a quick shortcut TypeScript offers you for setting up a property which you also want to
+
+set in the constructor.
+
+Imagine we have something like a username, so we have this name and we also have a username,
+
+then we could also say public username of type string.
+
+class Person {
+    name:string;
+    private type:string;
+    protected age: string;
+
+    constructor(name:string, public username:string){
+        this.name = name;
+    }
+}
+
+Notice the public keyword here,
+
+with that I'm telling TypeScript not only expect to get a username argument in the constructor function
+
+but also automatically create a public property in this person class
+
+and this could be private or protected too and assign the argument you get passed into the constructor
+
+to this property.
+
+So this expression here basically is a shortcut for creating a property up here, getting the argument
+
+and then assigning the argument, put it in other words,
+
+I could also write public name, rid of this, get rid of this and it will still work the same
+
+but I will leave this kind of mixed set up to have a good example of both possible ways of creating
+
+and assigning properties. Now before going more into detail,
+
+let's use this class and I do use a class by instantiating it, which means I create an object based on
+
+this class. I will store this object, make it a const, in this person constant here and I instantiate it
+
+with the new keyword,
+
+so I create a new person like this, new person.
+
+Now of course the person here expects to get two arguments since the constructor expects to get two
+
+arguments, as we call the constructor with this new person call here.
+
+So I pass Max as my name and the username might be max with a lower case M,
+
+very very creative here, I know.
+
+const person = new Person('Max','max');
+
+console.log(person);
+
+So I created my person and I can then log this person to the console and I will save this and then
+
+let's have a look at the console. You see my person here, it is of type person as you can see, it has the
+
+username max with a lowercase m and the real name is Max with an uppercase M.
+
+Person {username: "shree", name: "shreela"}
+
+So as you can see, this uses the constructor function, it is able to assign the username here with
+
+this shorter setup syntax ie. public username:string as well as the name with the longer setup syntax here
+
+and to prove this, I can also access name and username like this.
+
+console.log(person.name,person.age);
+
+Notice that my IDE doesn't offer me type or age because both are private or protected, which means not
+
+accessible from outside,
+
+I can only use them inside of this person object,
+
+I can't access them from outside like I'm doing with name or username. If I save
+
+this, I see Max and max here because I access the name and the username
+
+and this again proves that this shorter syntax here works too.
+
+
+58. Class Methods and Access Modifiers
+
+I already said that I can't access type and age from outside but what sense does this make to set up
+
+properties like this then?
+
+Well let's add a method to this person class because we can add methods too and let's say we have one
+
+which is called printAge and this is how we set up a method, like a function without the function keyword
+
+and printAge
+
+should simply give me this age.
+
+class Person {
+    name: string;
+    private type:string;
+    protected age: number;
+
+    constructor(name:string,public username:string) {
+        this.name = name;
+    }
+
+    printAge(){
+        console.log(this.age);
+    }
+}
+
+Now here, I can access age because I'm inside of this class or later on, inside of this object and private
+
+means accessible from inside,
+
+so I have no problem with accessing it. If I also want to set a protected or private property from outside,
+
+I could create the setType method, of course
+
+the name is up to you, pass a type which should be a string since the type property also is a string and
+
+then set this type equal to type,
+
+I can thereafter print this type to see that this worked. With these changes in place, I can call person
+
+printAge and I can call console log person or no, I don't have to console log, I can just call person setType
+
+cool guy because that's what I am.
+
+
+class Person {
+    name: string;
+    private type:string;
+    protected age: number;
+
+    constructor(name:string,public username:string) {
+        this.name = name;
+    }
+
+    printAge(){
+        console.log(this.age);
+    }
+
+    setType(type:string){
+        this.type = type;
+        console.log(this.type);
+    }
+
+  
+}
+
+const person = new Person("Max","max");
+console.log(person.name, person.username);
+
+person.printAge();
+
+person.setType('Cool Guy');
+
+
+So printAge and of course we would see undefined since age isn't set up, so I can initialize it up there,
+
+that also works.
+
+I can initialize properties right after or right when declaring them here,
+
+I don't have to initialize them through the constructor,
+
+I can do it up here
+
+too. With that if I save this, it gets compiled automatically while you still see Max max, then you see my age,
+
+so the initialization worked as did the try to access a private property inside of this class or object
+
+and you see that setType also worked
+
+since I see cool guy here and I printed this type after assigning it here in the setType method.
+
+So this is how you initialize properties right
+
+when declaring them, how you create methods which you may access from outside and how you can access
+
+private properties inside your person class.
+
+Now one important thing to know is that methods can also be private or protected
+
+which serves the same purpose as private and protected properties serve.
+
+You can't access them from outside but you can use them inside of your class.
+
+So if you set setType to private for example, well then we could say that we want to access it whenever
+
+we print the age and we want to set it to old guy.
+
+class Person {
+    name: string;
+    private type:string;
+    protected age: number =27;
+
+    constructor(name:string, public username:string){
+        this.name=name;
+    }
+
+    printAge() {
+        console.log(this.age);
+        this.setType('Old Guy');
+    }
+
+    private setType(type:string){
+        this.type=type;
+        console.log(this.type);
+    }
+
+
+}
+
+const person = new Person('anushree','anu');
+console.log(person.name);
+console.log(person.username);
+//person.setType("cool guy"); //commented out because it wont work with a private method. 
+
+person.printAge();
+
+
+ With that,
+
+I of course have to remove or comment out this line here cause it won't work with private method and
+
+if I save this, we now see Max max 27 and then old guy because I'm setting a type of old guy here and
+
+I call this setType whenever I print the age. Also important, you have to use this if you want to access properties
+
+or methods of an object when you are inside of it, like here in the constructor
+
+constructor(name:string, public username:string){
+        this.name=name;
+    }
+
+
+ or here when we print the age or
+
+  private setType(type:string){
+        this.type=type;
+        console.log(this.type);
+    }
+
+
+here when we assign the type or here when we print the age.
+
+ printAge() {
+        console.log(this.age);
+        this.setType('Old Guy');
+    }
+
+That was a lot of talking about this relatively simple yet complex class keyword and how to create and
+
+use classes. As you saw,
+
+it really makes creating such blueprints of which you can create new object simple and with the
+
+private and protected modifiers
+
+here, you get powerful ways of controlling who is able to access your properties and methods in a class.
+
+Another very important concept added with ES6 as well as with TypeScript is that your classes can also
+
+inherit from each other, so you may extend classes and implement inheritance.
+
+How?
+
+Well, let's have a look.
+
+59. Inheritance
+
+
+So let's have a look at inheritance next. Let's say I have my person class and I want to create a specific
+
+Max class of this person, just because well I like my name so much. So I create a class, Max
+
+and you probably should read one matching your first name or whatever you like
+
+and I want to use this person class,
+
+I just want to fine tune it a little bit.
+
+I want to have the printAge and the setType
+
+method, I want to have all these properties but I want name to be Max by default.
+
+Now rewriting this whole class would be not what I want because well I duplicate all the code and it
+
+makes my code less reusable and so on,
+
+so instead I extend the person class with extends keyword, I extend person, like this.
+
+class Max extends Person {
+    name = "Max"
+}
+
+What this means is take this person class, use all of the code inside of it and now whatever I specify
+
+in here gets either appended
+
+if it isn't included in the person class or overwritten if it was included.
+
+So if I were to say name should be equal to Max, then this will overwrite the name property in my person
+
+class, which means that if I now create a new person or a new Max to be precise, a new Max, like this
+
+and I print Max,
+
+well then you see I would get an error because the constructor here still expects two arguments because
+
+I'm still using this constructor. Again
+
+Max, this class has all the content of the person class plus or overwritten, whatever I define here.
+
+So I still have to use the constructor,
+
+so let's actually see what happens if I pass
+
+Anna here as a name and then lowercase max as a username,
+
+let's see what happens.
+
+You see the name is still Max, even though I passed Anna to the constructor which sets this name equal
+
+to
+
+Anna in this case, it gets overwritten by this property definition here in the Max class.
+
+So the content defined in the main class here always overwrites the content of your superclass, of your
+
+parent class,
+
+so it doesn't matter that I pass Anna here. Nonetheless, I might have solved this issue by adding a constructor
+
+here and I will come back to constructors in the next lecture.
+
+
+
+
+
+
+
