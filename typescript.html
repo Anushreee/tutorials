@@ -431,6 +431,8 @@ In this case the name is a string and this method should set the value of the pr
 
 Also, we cannot name our setters and getters the same as we named the property.
 
+WE CANNOT NAME OUR SETTERS AND GETTERS THE SAME AS WE NAMED THE PROPERTY. SO LETS RENAME THE PROPERTY. LETS ADD UNDERSCORE IN FRONT OF THE NAME.
+
 So let's rename the property.
 
 Let's add underscore in front of the name.
@@ -1058,6 +1060,139 @@ parent class,
 so it doesn't matter that I pass Anna here. Nonetheless, I might have solved this issue by adding a constructor
 
 here and I will come back to constructors in the next lecture.
+
+
+Getters and Setters:
+
+Another cool feature you might know from other languages are getters and setters and vanilla
+
+Javascript also has some ways to create getters and setters but TypeScript makes it really easy. I'll
+
+create a new class for this,
+
+it won't inherit from any class, it's a normal class here and I'll set up a private property called
+
+_species which should be of type string.
+
+Now generally, you shouldn't prefix your private properties with an underscore,
+
+that's the style guide for TypeScript
+
+but in this case I'll make an exception and you'll see why in a second because I don't want to be able
+
+to access this species property from outside
+
+but I want to offer a controlled access, which means through a getter or a setter which allow me to execute
+
+some code before actually returning or setting the value.
+
+I WANT TO OFFER A CONTROLLED ACCESS THROUGH GETTERS AND SETTERS WHICH ALLOWS MET TO EXECUTE SOME CODE BEFORE ACTUALLY RETURNING OR SETTING A VALUE.
+
+So let's say whenever I try to set this value, I want to check if the string provided is longer than,
+
+let's say at least three characters,
+
+so I don't want to set species to anything which has only three characters or less.
+
+So I can create a setter for that which allows me to execute some code whenever I try to set a value
+
+and I do it with the set keyword and then species.
+
+Now this name is up to you but this will be the property name accessible from outside later on.
+
+I do add parentheses here but I will not call it like a method from outside,
+
+that's important to understand,
+
+I will call it like a property but I set it up like a method because again, I can execute some code
+
+here, like a method which gets called. It will actually also get a parameter of type string and TypeScript
+
+will pass this parameter for me kind of. In the end, it will be Javascript code which looks differently
+
+anyways but you can think of this value being passed to this kind of only theoretically existent method
+
+here automatically.
+
+So again, I will and you will see this, only call this like a property
+
+but behind the scenes it will give me the value I want to assign as an argument to this method that
+
+it will execute automatically.
+
+So here, I then want to check if the length of value is greater than 3, if that is the case,
+
+I want to assign this species to this value, otherwise I will assign this species to default, something
+
+like that
+
+and I can also set it to this value up here, default value.
+
+So that is why I have this underscore because I want to use this species name and therefore, I have
+
+to make sure we have a different name for my private property.
+
+Now that allows me to set it
+
+but I also want to be able to read it.
+
+For this, I'll set up a getter, so I'll use the get keyword with species here, again like method here
+
+but with this time without an argument and then here, I decide what I want to return.
+
+I do have to return something because I try to get something in the end but I could also return hello
+
+and then I would always see hello when I try to access species, that would work fine but I can also return
+
+this species or transform it before showing it, whatever I want to do. With that,
+
+I set up some getters and setters and then I can create a new plant based on that and I can first log
+
+plant.species, notice how I act species without the underscore, that refers to this
+
+species property here which is called like a property, not like a function.
+
+If I save this, it gets compiled and we see default here, which makes sense because we have default
+
+as a default value. Next, if I try to set species to let's say AB,
+
+so only two characters and then I log plant.species again,
+
+well let's see what we now see in the console.
+
+Well we see default twice,
+
+so the first default here of course stems from this console log but the second default comes from this
+
+console log.
+
+So species wasn't set to AB because it didn't make it through this validation here,
+
+therefore we set it to default and we did not set the value.
+
+Now if I copy that code and set species to green plant and I save this,
+
+well let's have a look at the console now,
+
+now we see green plant being printed because it makes it through this check here
+
+and therefore we assigned this species the new value which would be green plant in this case.
+
+So that is a convenient way to use getters and setters to control access to your properties and make
+
+sure that certain criteria are met before assigning a value or returning a value.
+
+THAT IS A CONVENIENT WAY TO USE GETTERS AND SETTERS TO CONTROL ACCESS TO YOUR PROPERTIES AND MAKE SURE THAT CERTAIN CRITERIA ARE MET BEFORE ASSINING A VALUE OR RETURNING A VALUE.
+
+
+Video course
+Teach the world online
+Create an online video course, reach students across the globe, and earn money
+ Udemy
+Copyright © 2019 Udemy, Inc.
+Terms  Privacy Policy and Cookie Policy  Help and Support
+
+×Close alert
 
 
 
