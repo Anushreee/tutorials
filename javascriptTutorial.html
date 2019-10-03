@@ -1,0 +1,547 @@
+https://www.youtube.com/watch?v=pNJDbE-d77w
+
+1. Splice method
+
+Splice method helps to add or remove stuff from the middle of the array. 
+
+var array = [1,2,3,4,5];
+
+if you do this:
+delete array[1];
+here 1 in the bracket is the index of the array.
+
+this will actually delete the 2 but will also leave undefined, so now the output right here will just have the empty space. 
+
+[1, undefined, 3, 4, 5];
+
+Now, splice has three parameters that can be called. only two are required. the first one, is the index in which you want to start at. and the second one is how many inputs in the array you want to delete. 
+
+so in the first one, lets say we dont actually want to delete anything. but we want to add at that spot a new number for instance. 
+
+so for that:
+
+var array = [1,2,3,4,5];
+
+array.splice(1,0,200)
+
+here we are starting at index 1. 0 means we are not
+going to delete anything because this is where you define how many numbers you are going to delete. 
+now we want to add the number 200.
+so the output is (1,2,200);
+
+now we are going to delete two numbers but we are not going to replace anything as well.
+
+array.splice(1,2);
+Now our array would have the numbers [1,4,5]; and their respective indices would be 0,1,2
+
+Now lets delete two numbers and add two numbers starting at position 2.
+
+starting at index 1, we are going to delete two number and then we will put the numbers 11 and 12. so,
+
+array.splice(1,2,11,12)
+
+there are two required parameters here. and from 3rd paramter it is optional. 
+
+output: 1,11, 12, 4, 5, 6
+
+
+Slice Method:
+
+https://www.youtube.com/watch?v=QdwLGI1yNrk
+
+Slice method will return a copy of the portion of an array into a new array depending on the start and the end of 
+the index you supply to the slice method. also note that the end index will not be included. so, let me 
+
+let arr = [12,23,44,56,77,88,99,100];
+let r = arr.slice(2,4);
+
+arr.slice(2,4);
+2 is the starting index and 4 is the ending index. so it will start at 44 and end at 77.
+
+so it should copy 44 and 56 and place it into r. 
+
+Now as i had noted earlier that end index is not included which is why 77 is not included in the subset you get from the slice. also, note that original array will not be affected by slice. 
+
+if you dont specify the end index, then it will assume that you want to slice till the end of the array.So, in this case it will start at 44 and give you the numbers till the end. 
+
+
+output: [44,56,77,88,99,100];
+
+also, if you do not supply any values, then it will copy from the beginning to the end of the array. so it will give you the entire array.
+
+let arr = [12,23,44,56,77,88,99,100];
+let r = arr.slice(2);
+console.log(r);
+
+output: [12,23,44,56,77,88,99,100];
+
+
+Difference between slice and splice
+
+Although slice and splice sound very similar and confusing, they are very distinct. 
+
+Slice:
+
+Slice returns a portion of the array as a second array. so, really it is taking a sub array and it returns it as a second array.
+
+Slice does not modify the array it is invoked on.  this is different from splice. splice modifies the array it is invoked on. 
+
+First argument specifies the starting element. 0 marks the first element and so on. 
+
+second argument specifies the ending argument. remember it doesnt remove them. it doesnt modify that array. it just takes those elements and creates a second array. 
+
+second argument is optional. 
+
+so this is our array:
+
+let arr =[1,2,3,4,5,6];
+and let me declare another variable where the subset of the array will be placed.  let me name it arr1.
+
+now i am going to take the slice of the arr array. and i am going to begin with the first element. and i am going to extract up to 2. here the index number 2 will not be included.
+
+let arr1 = arr.slice(0,2);
+
+output arr1 = [1,2];
+
+now let us check whether we modified the arr at all,
+
+console.log(arr);
+output: [1,2,3,4,5,6];
+
+so it didnt modify the array that it is invoked on. 
+
+Another example:
+
+let arr2= arr.slice(2,3);
+
+so it will start with the number 3 because it is on index 2. it will go up to but not include number 4. 
+console.log(arr2);
+output arr2:[3];
+
+it doesnt mutate the original array at all.
+
+
+Some people tend to avoid splice because splice will mutate the array. 
+
+Now i had said that in slice, the second argument is optional.
+
+so, 
+
+let arr3 = arr.slice(4);
+
+output: [5,6];
+
+now the original array is not mutated.
+
+So that is slice.
+
+
+Now, lets take a look at splice. 
+1 letter difference to slice. and that is why everyone mixes them up. 
+
+Array.splice(start,delete);
+
+
+JSON:
+
+JSON stands for Javascript Object Notation. And, it is lightweight data-interchange format. it is used to send data back and forth to a server as text.
+
+it is actually based on a subset of javascript: javascript object literals. 
+
+Json is very easy to read and write.
+
+json has replaced XML and it is often used with ajax.
+
+it is ironic that ajax uses json more than xml. ajax is used to send data back and forth between client and server without having to refresh the page in the browser.  and later on i am going to show you how to make an ajax request too. 
+
+code word for parse: opapa when meanse for object it is parse
+
+json can also be parsed with any modern programming languages either natively or through libraries. 
+
+now lets look at the different datatypes that can be used with Json. 
+
+1. Number: no difference between integer and floats. 
+
+if you use a numeric with no quotes around it, it will be looked as a number.
+
+2. String: which is a string of unicode characters. these must be wrapped in double quotes.
+
+3. Boolean: True or false
+
+4. Array
+
+5. Object: we can have multi tier objects embedded in the json object.
+
+6. null: empty value. 
+
+when working with object literals, we can use any standard data types including functions and dates. but if it is specified as json values need to fit into one of these.
+
+and we do have supersets of json such as beeson which is used by mongo db that allow additional data types but thats beyond this course.
+
+
+
+Rules that the syntax follows:
+
+json works by using key value pairs:
+{"name":"Brad"}
+
+use double quotes for both the keys and values.
+
+if it was a javascript object literal, we wouldnt need the quotes around the key, just the string value but if we wanted this to be parsed as json, as valid json then we need the double quotes around both the key and the value. 
+
+
+if it's if it's valid json it also much must follow the specific data types that we just described.Now, if you
+want you can create a file that is strictly for Json it must be valid and it has to have a .json file extension.
+And then the mime type associated with Jason is application/json so if you are working with let's say a restful api that and you want to send Json you can use this type in the header. 
+
+all right so let's take a look at a really simple json example.
+{
+	"name":"Bradly",
+	"age":"35",
+	"address": {
+		"street": "5 main st",
+	},
+	"children": ["Brianna","Nicholas"]
+
+}
+
+
+
+
+Now lets go ahead and write some code:
+
+
+
+we're going to actually look at and write some code alright guys so I have an index.html file here that I just have in a folder called JSON sandbox and it just adds your basic HTML head and body tags and then we have this
+script to these script tags in the body this is where we're going to write our JavaScript so it's really important to understand that a JavaScript object and a JSON object are a little different and we went over some of this in the slides and you saw that  with Json you have to have double quotes around both the key and the value.when you're working with standard JavaScript objects you usually don't but you can. so what
+I'm going to do here is just create a variable called person and set that to an object which is represented with
+curly braces and in here we're going to say name and we're going to set that to
+a string called Brad.
+
+<script>
+
+	var person = {
+		"name" : "Brad",
+		"age" : 35,
+		"email": function(){
+			return 'brad@gmail.com'
+		}
+	}
+
+	console.log(person.email());
+
+</script>
+
+
+console.log(person);
+
+
+okay so this is
+actually a JavaScript object this is not valid Json.
+
+So what we can do here is we can access I'm just going to use
+console.log you can use alert well actually you can't use alert because it's an object but what this will do is
+just log to the console down here log out person all right so if we reload this you'll see that it gives us an object.
+
+ And it  has the key value pair name and Brad now this works in JavaScript in fact this is what you would do but this is not valid Json if we go to jsonlint.com which is adjacent validator and we take actually let's just go ahead and put in here name Brad and we say validate Jason it's going to give us it's going to tell
+us that this is not valid and the reason for that is because it doesn't have
+double quotes around the key.
+
+https://www.youtube.com/watch?v=wI1CWzNtE-M&t=89s
+
+
+so if we go ahead and do that and click validate it says valid Json now we can in fact go over here and put double quotes like that and then if we go back and reload this is still going to work alright but
+I'm going to leave those quotes off now when we log this out it's it's logging out the object if we want to access a certain property such as name which is the only property it has then we can just do dot name and if we reload we get Brad we can add on to this and let's say age 35 and then down here we can say
+person dot age and that will give us 35
+now.
+
+When using JavaScript objects we can set the data type of the value to anything that we can do in JavaScript
+even a function so if we wanted to say email and set that to a function and then just return say Brad at gmail.com
+and then go down here and say person dot email which is a function so we need to
+put in our parentheses reload and we get Brad at Gmail alright and this is certainly not valid Jason although it is a valid JavaScript object so if we go over here and we try to do that let's say email
+email and we'll set that to function and
+we'll return Brad at Gmail and we try
+and run that of course that is not valid
+
+<script>
+
+	var person = {
+		"name" : "Brad",
+		"age" : 35,
+		"email": function(){
+			return 'brad@gmail.com'
+		}
+	}
+
+	console.log(person.email());
+
+</script>
+
+all right it has to be one of the data
+types that we specified in the slides
+which is number string boolean null and
+array and object okay.
+
+ it has to be one
+of those all right so I'm just going to
+take this this email off right here.
+
+<script>
+
+	var person = {
+		"name" : "Brad",
+		"age" : 35,
+		
+	}
+
+	person = JSON.stringify(person);
+	console.log(person);
+
+</script>
+
+
+ this
+function and I want to show you that we can prepare this as jason if we wanted to send it through Ajax to a server or do something that requires it to be valid Json okay.
+
+
+
+ We can actually change it to adjacent string so to do that we can use a function called stringify so
+what I'll do here is just say person
+equals Jason dot stringify and then pass
+in that person object 
+
+person = JSON.stringify(person);
+console.log(person);
+
+
+and then down here
+let's console.log person okay so we'll
+go back here and reload and now you can
+see it gives us a string that is
+formatted correctly it has quotes around
+the keys and around the string but not
+around the number okay so that's valid
+Jason.
+
+output:
+
+{"name":"Brad","age":35}
+
+ we could send to a server now if
+you want to take this JSON string and
+turn it back to an object that's easy as
+well and you would do that because if we
+try to do person dot name 
+
+console.log(person.name);
+
+var person = {
+		"name" : "Brad",
+		"age" : 35,
+		
+	}
+
+	person = JSON.stringify(person);
+	console.log(person.name);
+
+output: //undefined
+
+and reload
+we're going to get undefined okay.
+
+ so what we want to do is parse it back into an object so for that we would use Jason
+dot parse okay and we'll pass in person
+and now if we reload we're able to get
+Brad okay it's back to an object all
+right so I'm just going to comment these
+out here and then I'm going to add some
+more stuff to this so let's say we want
+address and we'll set that to an object
+which will have a streak
+se5 main street which isn't my real
+address by the way and then city will
+say Boston alright 
+
+
+var person = {
+	"name" : "Brad",
+	"age" : 35,
+	
+}
+
+person = JSON.stringify(person);
+
+person = JSON.parse(person);
+console.log(person.name);
+
+now lets comment these out and lets add more stuff to this person object.
+
+var person = {
+	"name" : "Brad",
+	"age" : 35,
+	address: {
+		street: "5 main st",
+		city: "Boston"
+	},
+	children: ["Brianna","Nicholas"]
+	
+}
+
+console.log(person.address.street);
+
+//output: 5 main st
+
+Now lets say we want to access Brianna
+
+console.log(person.children[0]);
+
+Now lets create an array of objects:
+
+var people = [
+	{
+		name: "Brad",
+		age: 35
+	}, 
+	{
+		name: "John",
+		age: 40
+	},
+	{
+		name: 'Sara',
+		age:34
+	}
+]
+//Now print John
+
+console.log(people[1].age);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
