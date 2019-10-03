@@ -49,6 +49,7 @@ interface A {
 [key: string]: number
 }
 
+
 Now we can use this interface to describe this object.
 
 So index signature allows us to describe dynamic properties. If the interface has a specific property, like someProp, the type of the value of this property should match
@@ -60,6 +61,7 @@ someProp: string,
 [key:string]:number| string
 }
 
+
 Error:"Property someProp of type 'string' is not assignable to string index type number". to make someProp a string we could use the union type for the index signature like this. So the index signature takes either number or string.
 
 const a: A = {
@@ -67,6 +69,7 @@ someProp:'some prop'
 }
 a.x = 1;
 a.y = 2;
+
 
 We can also use interfaces to describe functions
 
@@ -76,11 +79,15 @@ interface Sum {
 (a:number,b:number):number
 }
 
+
+
 Now lets create a function of this type.
 
 const sum: Sum = (a,b)=>{
 return a+b
 }
+
+
 
 and we should continue to grab the properties of the interfaces as usual.
 
@@ -94,6 +101,8 @@ x:string;
 
 interface Child extends Parent {
 }
+
+
 
 Now the child interface inherits property 'x' from the parent. we need to define the property x that exists on the parent.
 
@@ -186,7 +195,7 @@ this check.
 
 quite frequently we create functions that take unknown number of arguments.
 
-we have a function calle sumEverything. it takes a lis of numbers and we use rest operator to gather all the numbers into an
+we have a function calle sumEverything. it takes a list of numbers and we use rest operator to gather all the numbers into an
 array of numbers, and then, we call the reduce method on this array to sum these numbers up.
 
 function sum(...numbers){
@@ -285,9 +294,10 @@ this.jetpackSize = jetpackSize;
 
     move(distance: number) {
     	console.log(`${this.name} is flying`);
+         super.move(distance);
     }
 
-    super.move(distance);
+   
 
 }
 
