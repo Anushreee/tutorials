@@ -1,0 +1,852 @@
+React memo is used to wrap this component to avoid unnnecessary re-render cycles so that the component only rerenders when the props that depend on it changes and not always when the parent component changes.
+
+so not always when the ingredients change. but also when ingredients change and when we are passing props 
+
+So ingredient form wont rerender when the whole ingredient rerenders.
+
+const IngredientForm = React.memo(props=>{
+	
+})
+
+we can build an entire react app with just the functional components. 
+
+Lesson4
+
+we bind the input user enters to some state so that we update the state at every keystroke and then send the value back into the input. thats the two way binding. 
+
+in this app, all starts with us gathering the input.we can make this add Ingredient button work. in React 16.8 earlier, we used state and setState there. now with react hooks you dont have to do that. instead you can import something new from react. 
+
+import React,{useState} from 'react';
+
+ I mentioned that all these hooks start with use and then they have various names. So here is the useState. and this is the crucial,probably the core hook provided by React. It allows us to manage state in functional components. it works a bit different than the state in the class based components. we will see the difference in a second. 
+
+ useState ALLOWS US OT MANAGE STATE IN FUNCTIONAL COMPONENTS
+
+So, how do we use it then? you have to use functional component. In your functional component body you call useState.
+
+const Ingredients = React.memo(props=>{
+	useState();
+})
+
+TO use useState() IN YOUR FUNCTIONAL COMPONENT BODY YOU CALL useState()
+
+useState() CAN BE INITIALISED WITH THE DEFAULT STATE.
+
+Now that alone doesnt do much though. useState can be initialised with the default state. and the default state can be anything. It can be an object, array, number, string, boolean. it doesnt have to be object. it can be any value. 
+
+so here, lets create an object.
+
+Again, it doesnt have to be object. i choose to use one here because i have two values which i want to manage. and, that could be
+
+useState({
+	title: '',
+	amount:''
+})
+
+
+And, lets set amount to also an empty string. Now you could argue that amount should store number and we should assingn 0 initially. 
+
+Actually managing this will be easier with the string because values of input elements are always strings even though it is of type number - it will always get a string. if you want to work with number in our app, then we would simply have to convert that value whenever we use it. but when we fetch it, when we manage it as a string avoids some straight side effects where we might not be able to edit this value in the way we want to.
+
+WHEN WE MANAGE AS STRING AVOIDS SOME STRAIGHT SIDE EFFECTS WHERE WE MIGHT NOT BE ABLE TO EDIT THIS VALUE IN THE WAY WE WANT TO.
+
+so both values here are strings. And now the question is what does this useState call do? 
+
+useState({
+	title: '',
+	amount:''
+})
+
+
+because just initialising with the default state wont set up a connection between our states we are trying to manage here and our inputs.
+
+now, useState actually returns something. 
+
+useSTATE RETURNS SOMETHING.
+
+the return value is an array with exactly two elements. thats important. useState is built in hook always returns an array with exactly two elements. 
+
+useState IS BUILT IN HOOK, ALWAYS RETURNS AN ARRAY WITH EXACTLY TWO ELEMENTS.
+
+the first element is always your current state snapshot. and whenever your useState updates, this component will rebuild so this function is reexecuted and useState ofcourse is also executed again but react internally says that you have already configured the state with the help of useState for this component  and will not reinitialise.
+
+but instead useState manages this state-detach this state from the component -independent from your component so that the state survives rerenders of the component. so that the state survives when the component function gets executed again. 
+
+So the first value in the useState is the current state snapshot. and this current state snapshot for this rerender cycle of this component. 
+
+this means that when you update the state, we get the updated state here. you get back an array and that will have 2 elements and the first element is always the current state snapshot: either the initial state or if you change it the updated state. 
+
+CURRENT STATE SNAPSHOT HAS EITHER THE INITIAL STATE OR IF YOU CHANGE IT THE UPDATED STATE.
+
+
+this ofcourse leads to the question, how do you update the state. thats where the second element in this array comes. As i mentioned, this array always has exactly two elements. 
+
+First element is your current state snapshot.  Second element is your function that allows you to update your current state.  So dispatch thing here is a function that will always be a function which you can call with a new data for your state to update that state. 
+
+useState<{title:string;amount:string;}>
+(initialState:{
+	title: string;
+	amount: string;
+}|(()=>{title:string;amount:string}))
+
+So therefore what we can do here is:
+
+useState({title:'',amount:''})
+
+we can store this array with exactly two elements in a constant. 
+
+const inputState = useState({title:'',amount:''})
+
+we manage everything we need to manage, for our state for these two inputs here-hence the name inputState. 
+
+
+Now, we store our array with the state snapshot and the state updating function, here in input state connected to our inputs. 
+
+And there, we will use a similar approach we will showed you earlier in the course, with two way binding in the end. where we bind the value of this input to the current state snapshot so that we pass the current state back into the input. 
+
+<input type="text" value={inputState[0]} />
+
+
+And i do this by simply, referring to the input state and then the first element. Remember input state is an array with exactly 2 elements. and the first element with the index 0 will be your current state snapshot.
+
+so that will be what we want to feed back into the input. Ofcourse, our state is an object though not the string. so therefore, for the title i want to put inputState[0].title
+
+<input type="text" value={inputState[0].title} />
+
+cause our state is the object with the title and the amount property. 
+
+and, for the amount input here, i will therefore set value = {inputState[0].amount}
+
+<input type="number" value={inputState[0].amount} />
+
+Now, we feed the current state for the respective inputs back into the input elements. ofcourse, we also need to update the state when we type into these inputs. 
+
+WE ALSO NEED TO UPDATE THE STATE WHEN WE TYPE INTO THESE INPUTS.
+
+And for that just as we do always, also in class based components we can listen to the onchange event which fires for every key stroke. 
+
+and there we get this event object, so here i am executing an anonymous function in the end. we get the event object automatically and we need to update our state. and, as i mentioned we do this with the second element in this array useState.
+
+SO HERE, I AM EXECUTING AN ANONYMOUS FUNCTION IN THE END. WE GET THE EVENT OBJECT AUTOMATICALLY AND WE NEED TO UPDATE OUR STATE>
+
+
+and this is a function, so we can execute it as a function by adding parantheses here. 
+
+
+<input type="text" value={inputState[0].title} 
+onChange={event=>inputState[1]()}
+/>
+
+
+and now here i am on the title input so i am going to update the title. so here we simply pass a new object to input state to update our current state with the new state object. 
+
+<input type="text" value={inputState[0].title} 
+onChange={event=>inputState[1]({})}
+
+and there we can set the title property to the event.target.value because
+
+<input type="text" value={inputState[0].title}
+onChange={event=>inputState[1]({title: event.target.value})} />
+
+Now lets repeat the same logic for the amount input
+
+<input type="text" value={inputState[0].amount}
+onChange={event=>inputState[1]({amount: event.target.value})} />
+
+we can type in the inputs now which means that we are feeding the state back into these inputs. but we also get a warning that
+a component is changing controlled input of type number to be uncontrolled. Input elements should not switch from controlled to uncontrolled. Decide between 
+
+ERROR: A COMPONENT IS CHANGING CONTROLLED INPUT OF TYPE NUMBER TO BE UNCONTROLLED.
+
+So what is the reason for this warning. what is wrong with the way we are saving our state here. and why we are getting warning about input of type number which is our second input if we type into the first one.
+
+
+React Hook 5
+
+The way we use useState is correct.  we are passing in a state. we are getting back the array in this constant.
+
+const inputState = useState({title:'',amount:''})
+
+The way we update the state is not correct. there is a super important difference when you compare useState and how you work with useState in functional components to how you work with setState and in class based components. 
+
+THE WAY YOU UPDATE THE STATE IS NOT CORRECT.
+
+there is an important difference between these two concepts. 
+
+For useState you can manage any state. it doesnt have to be object. we could just manage text here. 
+
+but here i decided to work with an object, we have here two types of state or two input fields which i want to manage.
+
+in class based component, we had to use object but there whenever you setState whichever objects you pass into setState was merged with your existing state.
+
+we passed the object with the title property would be merged with our current state. and the amount property would not be lost, but simply the title property would be updated and all old state would be kept.
+
+useState that is different. this updating function:
+this second element of our array does update the state. but it does so by replacing the current state with this
+<input type="text" 
+onChange={event=>inputState[1]({title:event.target.value})}
+
+
+which in this case, means, if we type into the title our new state simply is an object which only has the title property and we drop the amount property. 
+
+REPLACES THE CURRENT STATE
+
+
+useState is an object which simply doesnt have the amount property anymore. that is why i am getting the warning that input of type number is uncontrolled. it is like an input and i am getting the warning regarding the input when we type into the first input because the second input i.e this amount input ofcourse refers to the amount property in our state. and if we type into our first input, the updated state now has only the title property. hence the property we are trying to access in the second input i.e the amount property simply doesnt exist.  that is exactly whats causing this error. 
+
+does update the state. but it does so by replacing the current state with this. 
+
+our new state is an object which simply has only the title property. 
+
+our state in the object doesnt have the amount property. 
+
+the solution is simple. when we update the state we have to ensure that we  dont loose any old data. that now our responsibility because react doesnt merge that automatically for us. and whilst this might sound like a bad change, it might sound like react should do that for us, you will later learn why react actually doesnt merge for us anymore. because now we actually have more flexibility regarding how we manage state.
+
+REACT DOESNT MERGE THE STATE AUTOMATICALLY FOR US.
+
+WE ACTUALLY HAVE MORE FLEXIBILITY REGARDING HOW WE MANAGE STATE.
+
+if we decide to manage some objects state though which very well might be the case in situations, we have to make sure that whenever we update it we dont loose any old data. 
+
+
+<input type="text" 
+onChange={event=>inputState[1]({title:event.target.value,
+			  amount: inputState[0].amount
+})} />
+
+on the other hand, when we update the amount, we make sure that we dont loose the title
+
+<input type="text" 
+onChange={event=>inputState[1]({amount:event.target.value,
+			  title: inputState[0].title
+})} />
+
+Now, if you update that, we dont loose any information. 
+now, if i type here in these inputs, these inputs are now working correctly. 
+
+Nonetheless, our updated code is not 100% correct. the reason for that is I am accessing the current state snapshot on the first array element and ofcourse that does hold the current state snapshot for this render cycle of the component. 
+
+But the way react updates the state- we are not having a 100% guarantee here, that our current state snapshot actually is the latest state we committed. and this might sound strange. but due to the way react rerenders component on state updates and so on- you could theoretically have a case where there is a lot going on in your page- a lot of animations stuff that react decides to defer state update until there is less work going on.  
+
+WE ARE NOT HAVING A 100% GUARANTEE HERE,THAT OUR CURRENT STATE SNAPSHOT ACTUALLY IS THE LATEST STATE WE COMMITTED.
+
+ And therefore, the user might be typing here
+<input type="text" /> 
+
+  into the title input before the latest amount input, because we are also typing to the amount input a second ago, before that state change has been rendered to the screen. now it is very unlikely for this to happen. in this simple application here, it will never happen actually. 
+
+but in more complex apps, you could have a case where you are changing some state, and your latest state change hasnt been committed yet: hasnt been rendered to the screen. Hence, if you have a new state change, that also depends on your latest snapshot, then you dont have the guarantee that this state snapshot has already been committed or created. and thereofore this here, accessing our latest state value like this is not the ideal way.
+
+YOU COULD HAVE A CASE WHERE YOU ARE CHANGING SOME STATE, AND YOUR LATEST STATE HASNT BEEN COMMITTED YET, HASNT BEEN UDPATED TO THE SCREEN.
+
+Instead,
+
+that the updating function, the function stored as the second element in your array, has an alternative form you can use. Instead of just passing a value to that update functions, so to that function that sets a new state- you can also pass function to that function- an anonymous function for example. but it could also be a named one. and if you pass a function here, which ofcourse has to return your new state value in the end. 
+
+INSTEAD OF JUST PASSING A VALUE THAT UPDATE FUNCTIONS, YOU CAN ALSO PASS FUNCTION TO THAT FUNCTION- AN ANONYMOUS FUNCTION FOR EXAMPLE. 	
+
+<input type="text"
+value = {inputState[0].title}
+onChange = {event=>
+	inputState[1](prevInputState =>(
+		{
+		title: event.target.value,
+		amount: inputState[0].amount
+		}
+	)
+		
+
+	)
+}
+
+So here this function will actually tell react that we want to get the latest state that we set, even if it hasnt been fully committed yet for this render cycle. 
+so now prevInputState allows us to access the previousInputState like this:
+
+amount:prevInputState.amount
+
+<input type="text"
+value = {inputState[0].title}
+onChange = {event=>
+	inputState[1](prevInputState =>(
+		{
+		title: event.target.value,
+		amount: prevInputState.amount //like this
+		}
+	)
+		
+
+	)
+}
+
+And the difference to using the inputState[0] that we are not using the latest state which has been fully committed and which is used in this render cycle of this component, but that we are using the latest state we set within the updating function nomatter if react already  recreated the function or not based on that last update. 
+
+so now here we have the guarantee that we get the latest state at all times. that is ofcourse what we want here.
+
+So now this is the approach i also want to use down there for the amount input. we get our prevInputState and then we return a js object and in that object, we use that prevInputState and set the title or the amount.
+
+
+<input type="number"
+	  value = {inputState[0].amount}
+	  onChnge = (event=>
+	  	inputState[1](prevState=>({
+	  		amount: event.target.value,
+	  		title: prevInputState.title
+	  }))
+	  )
+
+
+Now if you do that and start typing in the browser, you will actually see a strange behavior though. you will get an error. and that error tells that: this syntetic event is reused for performance reasons. 
+
+ERROR: THIS SYNTETIC EVENT IS REUSED FOR PERFORMANCE REASONS:
+
+now the problem here is that when we are passing a function to this function here inputState[1]() i.e to this stateState function in the end, then we are having an anonmyous function here
+and that is a closure.
+
+//this is an anonymous function which is a closure
+
+(prevState=>({
+	  		amount: event.target.value,
+	  		title: prevInputState.title
+	  }))
+
+
+
+ a function that closes over surrounding values. in this case, it closes over our event here. 
+
+ the event is fed into this onChange anonymous function and in that function which we have , upon a change, we are calling the setState function:
+ inputState[1]() // this is a setState function
+
+
+ and then i am also defining another nested function here.
+
+so we have function 1 which is our event function and we have function 2 starting from prevInputState which is our updating function. 
+
+now the problem with that is in this inner function here, i am using the event from the outer function. 
+
+prevState=>({
+	  		amount: event.target.value,
+	  		title: prevInputState.title
+	  }))
+
+NOW, THE PROBLEM WITH THAT IS IN THIS INNER FUNCTION HERE, I AM USING THE EVENT FROM THE OUTER FUNCTION.
+
+then the event will be locked in for the first keystroke essentially, which means for the subsequent keystrokes we dont use the new keystroke event but the previous one which ofcourse is then resued. and which causes this error. 
+
+now, now normally that wouldnt be a problem ofcourse because yes this inner function: this state updating function, is a closure and therefore it closes over the event object which means it saves this event object for its execution so that when this inner state updating function runs which happens aynchronously, we are guaranteed to use the event that was triggered for that keystroke. so that it was created for that keystroke.
+
+the problem with events and it is really exclusive to events in react, is that reacts event are not the dom events but special synthetic events created by react which basically replicates the native dom events you would normally get but react adds a special factor to that. it pulls this event objects, which simply means - it reuses the event object.
+
+So, instead of creating a new event object for each keystroke it instead reuses the previous object.and the consequence of this is that for second keystroke since we have the closure and we locked in the event for the first keystroke. for the second keystroke we still reuse that same object we had for the first keystroke. and that simply is a problem here. we are reusing the wrong event object because of the way react handles the event objects. now i am aware that this is sounding really confusing. in the end this is really a special case, because of the way react handles this event objects. 
+
+the solution is this: outside of the setState function, we create a constant for example which here on the title could call newTitle. And there we store event.target.value
+
+const newTitle = event.target.value;
+
+<input type="text" id="title" value={inputState[0].title} ibChange={event=>
+const newTitle = event.target.value;
+inputState[1](prevInputState => ({
+	title: event.target.value,
+	amount: prevInputState.amount
+}))
+
+}
+
+now this will be recreated whenever we are typing.
+so now we need a real function body though- wrap this into curly braces.
+
+<input type="text" id="title" value={inputState[0].title} onChange={event=>{ //wrap this into curly braces
+		const newTitle = event.target.value;
+		inputState[1](prevInputState => ({
+		title: event.target.value,
+		amount: prevInputState.amount
+	}))
+}
+ because we actually have more than one line. we are actually not just executing one expression - we have two statements here. so now here, we are storing the newTitle for our every keystroke. 
+
+ and now this here: the setState function with the nested inner function can use newTitle and this will therefore now close over this new extracted title for every keystroke instead of using that same event everytime. 
+
+ inputState[1](prevInputState => ({
+		title: event.target.value,
+		amount: prevInputState.amount
+
+})
+
+const newTitle = event.target.value;
+inputState[1](prevInputState => ({
+		title: newTitle,
+		amount: prevInputState.amount
+})
+
+
+
+Section 6: Array Destructuring
+
+Now let me get into that dummy title output. and lets look at the overall syntax we are using here. thus far we were using the array we get back into the input State.
+
+const inputState = useState({title:'',amount:''});
+
+we can absolutely do that but it means we have to use inputState[0] if we want to get the values. and inputState[1] if we want to get the function to update the values. Ofcourse, we can do that but it is a bit of hard to understand for eg
+
+inputState[1] in a function is not immediately obvious.
+
+we can use a modern javascript syntax to make that easier to understand. we can use a feature called Array destructuring. how does it work?
+
+it allows you to pull elements out of an array and put them in seperate variables. here you know, that you get an element with exactly two elements. 
+
+const inputState = useState({title:'',amount:''});
+
+you can add square brackets on the left side of the equal sign. so by adding the square brackets on the left side you are not using them to create a new array. that would be the case if you add them on the right side. instead, this now is the js syntax that allows you to pull elements out of the array and store them in variables. and you add as many variables here, variable names of your choice here, in the square brackets on the left side, as you have elements in the array. 
+
+so here we have exactly two elements. so we can add two values here, with whatever names you want. the first element will be our data. here it could be inputState. and the second will be the function to update that data. typically you name this setInputState because you are setting it to new value: you are not merging it, you are not updating it - you are overriding it-so you are setting some new data. 
+
+const [inputState,setInputState]= useState({title:'',amount:''});
+
+so, now we are using array destructuring. and our input State will be our data and that will be the function to update the data. thats way easier to use now. 
+
+
+that way we can use inputState without the 0  to work with our data. and we use setInputState instead of inputState[1] to update our data. 
+
+Before:
+<input type="text" id="title" value={inputState[0].title} />
+
+After:
+
+<input type="text" id="title" value={inputState.title} />
+
+
+Before:
+<input type="text" id="title" value={inputState[0].title} onChange={event=>
+const newTitle = event.target.value;
+inputState[1](prevInputState => ({
+	title: event.target.value,
+	amount: prevInputState.amount
+}))
+
+After:
+
+<input type="text" id="title" value={inputState[0].title} onChange={event=>
+const newTitle = event.target.value;
+setInputState(prevInputState => ({
+	title: event.target.value,
+	amount: prevInputState.amount
+}))
+
+
+
+i think that is much easier to read and understand that it was before to be honest. if we save, it just works just as before but now we have a syntax thats way easier to understand. 
+
+Section 7: React Hooks: Multiple state:
+
+I hope it is clear how the useState hooks generally works now. when things which are not liking too much however is how complex for us to update the state. ofcourse, this is not a complex state here.
+
+it only two properties: it has only two things-title and amount. 
+but still we have to ensure that when we update the title, we dont loose the old amount and when we update the amount we dont loose the old title. now, that is doable here. but imagine we have a longer form here. you would have to write a lot of code just to always save the old state when you update something. 
+
+so whilst you can ofcourse manage state that is an object, and whilst this often might make sense, you should also be aware that there is a huge important difference when you compare the state added by useState to the state you used in a class based component.
+
+ in a class based component state had to be an object- react merged it for you automatically. in functional components with useState, state doesnt have to be an object. and react doesnt merge it for you.
+
+but what you can do is you can register multiple states. so what would make much sense here, is that you dont have an object but lets say just a string here. and you have entredTitle instead of inputState and setEnteredTitle Function instead of setInputState
+
+const [enteredTitle, setEnteredTitle] = useState('');
+
+and then we have another state here which is our
+enteredAmount and we have setEnteredAmount and that is useState with an empty string initally. 
+
+const [enteredAmount, setEnteredAmount] = useState('');
+
+
+so now we have two states which are managed independently by react for this component, which is stored in different variables and which is set with different functions. 
+
+so i dont have to manually merge anything because these are managed independently. So, if we update one, the other one will be kept around and vice versa because as i mentioned already, these states survive rerender cycles. so, they survive updates of other states. but we dont have to merge it manually because we are not object anymore, but two separate strings which are managing the state. so now here when we are working with the title
+
+THESE STATES SURVIVE RERENDER CYCLES. SO, THEY SURVIVE UPDATES OF OTHER STATES. 
+
+IMPORTANT:
+BUT, WE DONT HAVE TO MERGE IT MANUALLY BECAUSE WE ARE NOT OBJECT ANYMORE, BUT TWO SEPARATE STRINGS WHICH ARE MANAGING THE STATE. 
+
+so,now here when we are working with title:
+
+<input type="text" value={inputState.title} />
+
+we coulld just output the
+
+<input type="text" value={enteredTitle} />
+
+
+
+<input type="text" value={inputState.title}
+
+onChange = {event=>{
+	const newTitle = event.target.value;
+	setInputState(prevInputState => ({
+	title: newTitle,
+	amount: prevInputState.amount
+}))
+}}
+
+we could just output the 
+
+<input type="text" value={enteredTitle}
+	onChange = {event => {
+	const newTitle = event.target.value;
+	setEnteredTitle(newTitle);
+}}
+ />
+
+and here we are not caling setInputState.  and all we are calling and it is so much easier is simply is 
+
+setEnteredTitle(newTitle);
+
+however, we dont have to store this in a new separate variable, we dont have the closure problem anymore. there is no innerclosure and this function anymore. 
+Instead, we just call setEnteredTitle(event.target.value);
+
+
+we dont have to manage anything, merge anything because we manage this as two separate states. 
+
+so this is actually my recommened way of doing this:
+
+const [enteredTitle, setEnteredTitle] = useState('');
+const [enteredAmount, setEnteredAmount] = useState('');
+
+Split your state into multiple states. that is how useState is intended to be used. 
+
+and only use objects or arrays as values for your state - when you really have data that changes together or where you need to change multiple things together. otherwise manage your state independently. it is so much easier. so much easier to write. you dont have to merge anything manually it is a bridge to use it as you can see.
+
+ONLY USE OBJECTS OR ARRAYS AS VALUES FOR YOUR STATE- WHEN YOU REALLY HAVE DATA THAT CHANGES TOGETHER OR WHERE YOU NEED TO CHANGE MULTIPLE THINGS TOGETHER. OTHERWISE MANAGE YOUR STATE 
+
+
+Rules of Hooks. 
+
+useState is the most important hook. if you analyze it then it is clear that the idea behind use state is that we can manage state in a functional component by calling useState(initialState); 
+
+and then some initial state which we set up. you dont have to pass an initial state by the way. you are going to have null or undefined as the initial state when you pass no arguments at all to useState.
+
+YOU DONT HAVE TO PASS AN INITIAL STATE BY THE WAY. YOU ARE GOING TO HAVE NULL OR UNDEFINED AS THE INITIAL STATE WHEN YOU PASS NO ARGUMENTS AT ALL TO useState
+
+ and this creates the state which is managed by react behind the scenes and which survives rerender cycles. and what you get back from useState is the array with exactly two elements - a pointer at your state that is the first element and the state update function which is the second element. this is how useState work.
+
+there are two important rules when you work with hooks. with any hooks not just useState but also with any other hook you will learn about in this module.
+
+
+1. you must only use the hooks in functional components or inside of another custom hooks which we will build later. 
+
+2. you always have to use the hooks on the root level of the component. that means you cant use a hook inside some nested function,
+
+eg. here i have the submitHandler which is not really doing right now. but we cant use useState  here for example. 
+
+const submitHandler = event => {
+	useState();
+	event.preventDefault();
+}
+
+and we get an error here saying submitHandler is neither a React function component or a custom React function. and therefore it is not allowed to use it here. you are also not allowed to use a hook in some if statement. so if you had some condition, then you want to create some state- it is also not allowed. 
+
+if(true){
+	useState();
+}
+
+you must not use hooks in for loops and if statements or in another function. use it on the root level functional component or on the root level of other hooks. 
+
+Section 9: Passing state data across ingredients
+
+
+so that was a lot of talking about useState but ofcourse as i said it is important. lets make sure that we can actually press that button. we do add these ingredients somewhere. 
+
+for that in the submitHandler i want to submit my data.
+
+const IngredientForm = React.memo(props=>{
+	const [enteredTitle, setEnteredTitle] = useState('');
+	const [enteredAmount, setEnteredAmount] = useState('');
+
+	const submitHandler = event => {
+		event.preventDefault();
+	}
+
+
+	return(
+		<div className="App">
+			<IngredientForm />
+		</div>
+		<section>
+			<Search />
+			<IngredientList />
+			
+		</section>
+	)
+})
+
+ now lets say we are managing our ingredients not in our ingredient form but in the ingredients.js file in the ingredients component there.  Here i am creating the component like this with the function keyword. 
+
+function Ingredients() {
+	
+}
+
+In the ingredientForm i am creating it like this storing in a form and using the arrow function on the right side. it is totally upto you what you wnat to use. both is valid functional components. both has nothing to do with the react hooks. 
+
+const IngredientForm = React.memo(props=>{
+	return(
+		<div className="App">
+			<IngredientForm />
+		</div>
+		<section>
+			<Search />
+			{/* Need to add list here */}
+		</section>
+	)
+})
+
+
+so back in the ingredients function here, which we just to avoid confusion, could also write like this:
+
+import IngredientForm from './IngredientForm';
+import Search from './Search';
+
+const Ingredients = () => {
+	return (
+		<div className="App">
+			<IngredientForm />
+
+			<section>
+				<Search />
+				{/* Need to add list here ! /*}
+			</section>
+		</div>
+	)
+}
+
+so here in the ingredients function, i have the ingredients form. and here in this functional component, i want to manage my ingredients. I guess that makes a lot of sense. there i will also output the list of ingredients.
+
+so it is the component that has access to both our inputs and output later. so i want to manage ingredients in there. 
+
+this ofcourse means that we want to add useState here because our list of ingredients i.e our array of ingredients will ofcourse be some state that should survive rerender cycles that will change over time and where every change should rerender this:
+
+<div className="App">
+	<IngredientForm />
+
+	<section>
+		<Search />
+		{/* Need to add list here ! /*}
+	</section>
+</div>
+
+
+ So once we do add our list to output our ingredients, well we can see some change when we add ingredients. so in the ingredients functional component,  i will again use array destructing to manage our ingredients and to have setIngredients function and in there with useState i will start with an empty array. 
+
+const Ingredients = () => {
+	const [ingredients,setIngredients] = useState([]);
+}
+
+
+
+here i will use an array because the ingredients ofcourse  is a list of ingredients. and, we will always update the list as a whole, when we add the ingredient or when we delete the ingredient and so on. so we got our ingredients. 
+
+Now we can also import the IngredientList component from IngredientList js file which i prepared for you. you can just add in here. <IngredientList />
+
+
+import IngredientList from './IngredientList';
+
+
+const IngredientForm = React.memo(props=>{
+	return(
+		<div className="App">
+			<IngredientForm />
+		</div>
+		<section>
+			<Search />
+			<IngredientList />
+			
+		</section>
+	)
+})
+
+And ingredientList is a component that actually takes a property: ingredients which is the output and there besides the title and the amount i also want to have the id. 
+
+const IngredientList = props => {
+	return(
+	<section className="ingredient-list">
+		<h2>Loaded Ingredients</h2>
+		<ul>
+			{props.ingredients.map(ig=>(
+				<li key={ig.id} >
+					<span>{ig.title}</span>
+					<span>{ig.amount}</span>
+				</li>
+			))}
+		</ul>
+	</section>
+	)
+}
+
+const Ingredients= ()=>{
+	return(
+		<div className="App">
+			<IngredientForm />
+		</div>
+		<section>
+			<Search />
+			<IngredientList ingredients={ingredients} />
+			{/* Need to add list here */}
+		</section>
+	)
+})
+
+So in the ingredients.js i want to pass ingredients props which <IngredientList/> expects to IngredientList and the value here will be my ingredients up there.
+
+const Ingredients = () => {
+	const [ingredients,setIngredients] = useState([]);
+	return (
+		<div className="App">
+			<IngredientForm />
+
+			<section>
+				<Search />
+				<IngredientList ingredients = {ingredients} />
+			</section>
+		</div>
+	)
+}
+
+it can be confusing because it is the same name. 
+so may be we name this up here userIngredients and setUserIngredients.
+
+const Ingredients = () => {
+	const [userIngredients,setUserIngredients] = useState([]);
+	return (
+		<div className="App">
+			<IngredientForm />
+
+			<section>
+				<Search />
+				<IngredientList ingredients = {userIngredients} />
+			</section>
+		</div>
+	)
+}
+
+Now userIngredients is what i pass here to the ingredientList. 
+
+
+
+
+
+
+
+
+
+it is the same name so it might seem confusing. 
+
+lets rename this:
+
+const Ingredients = () => {
+	const [userIngredients,setUserIngredients] = useState([]);
+}
+
+
+const Ingredients= ()=>{
+	return(
+		<div className="App">
+			<IngredientForm />
+		</div>
+		<section>
+			<Search />
+			<IngredientList ingredients={useIngredients} />
+			{/* Need to add list here */}
+		</section>
+	)
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
