@@ -1,0 +1,151 @@
+import React from 'react';
+
+interface Task {
+    title: string;
+}
+
+interface Props {
+    tasks: Task[];
+}
+
+class TasksList extends React.Component<Props> {
+    
+    render() {
+        const {tasks} = this.props; // we should take this props from the global state provided by redux
+        return(
+            <ul>
+                {tasks.map((task)=>{
+                    return <li>{task.title}</li>
+                })}
+            </ul>
+        )
+    }
+
+
+
+We should take this props from the global state provided by redux. 
+const {tasks} = this.props; 
+
+And, inorder to pass state to this component, we use react-redux connect function. It takes some parameters and the component.
+
+it takes some parameters and the component.
+
+it takes some parameters and the component and wraps it into hoc.
+it takes some parameters and the compnent and wraps it into hoc that passes all the state parameters this component may need. lets describe this.
+
+we will export another component and call it connectedTaskList
+
+
+ConnectedTaskList is connected to state. 
+
+we import connect function from react-redux
+import 'connect' from 'react-redux';
+
+And, this function call returns another function that takes the component. and wraps it into hoc.
+
+connect()(TasksList);
+
+--------------------**---------------------------------
+
+2ned part:
+
+And, the first call takes the arguments: two functions
+
+one is to map state into component props. another one is to match Dispatch actions to the component props.
+
+lets see how to use this function. i will command click on it. and now we can see its signatures. it has multiple overloads. 
+and the one we need is the one which has 4 generic parameters, 
+1. Parameters for the props that should come from the state.
+2. Parameters for the Dispatch Props.
+3. then we should pass the interface that describes the components own props. 
+4. and the app's global state interface as well. 
+
+the type for own props describes the props the component exposes. these are the props that are not taken from the state. 
+
+
+------------------------****--------------------------
+
+3rd Part:
+
+
+interface StateProps {
+    
+}
+
+First we should describe the interface for the props that should come from State. And this is the tasks list props. we will take it from the global state. and we can name this interface AllProps.
+
+And, it will extends all the other interfaces that describe other types of props. For the moment it is the StateProps. 
+
+interface StateProps {
+    tasks: Task[];
+}
+
+interface AllProps extends StateProps {
+    
+}
+
+export class TasksList extends React.Component<AllProps>
+
+    So, we have the first generic type parameter we need. lets place it to the connect function. 
+
+    export const ConnectedTasksList = connect<StateProps>()
+
+        Now,we need to describe the dispatchProps. lets create another interface.
+
+        interface DispatchProps {
+
+    }
+
+    this interface contains methods that dispatch some actions. and in our case, i would like to have the method that fetches tasks. this function dispatches some actions to redux. and, doesnt return anything.
+
+    interface DispatchProps {
+        fetchTasks: () => void;
+    }
+
+    and the AllProps interface should extend this interface as well.
+
+    interface AllProps extends StateProps,DispatchProps {}
+
+     export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps>()
+
+     and the next parameter is the OwnProps. lets create this interface.
+
+     and again, AllProps should extend it.
+
+     interface AllProps extends StateProps,DispatchProps, OwnProps {}
+
+     and the last generic type parameter we need is the State.
+
+     lets describe state into the reducer file. 
+
+     reducer.ts
+
+     export interface AppState {
+        tasks: Task[]
+
+    }
+
+    And for now AppState has one property state which is a list of tasks. 
+
+
+
+export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps,AppState>()(TaskList);
+
+-------------------********----------------------------
+
+4th Part:
+
+
+Now, lets create the function taht maps state to props and we pass it as the first argument to connect. 
+
+
+export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps,AppState>(state=>({
+    tasks: state.tasks
+}))(TaskList);
+
+And, becoz we listed all the types as generic type parameters for the connect function, Typescript is able to infer that this state is the AppState. and this function should return the stateProps interface. 
+
+Also, lets implement the other function taht maps dispatchers to props. it takes one argument: the dispatch funciton. and returns the object described by the dispatch props interface. and, we need teh fetch task dispatcher.
+
+
+
