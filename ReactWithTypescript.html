@@ -45,10 +45,6 @@ And, this function call returns another function that takes the component. and w
 
 connect()(TasksList);
 
---------------------**---------------------------------
-
-2ned part:
-
 And, the first call takes the arguments: two functions
 
 one is to map state into component props. another one is to match Dispatch actions to the component props.
@@ -62,10 +58,6 @@ and the one we need is the one which has 4 generic parameters,
 
 the type for own props describes the props the component exposes. these are the props that are not taken from the state. 
 
-
-------------------------****--------------------------
-
-3rd Part:
 
 
 interface StateProps {
@@ -121,7 +113,6 @@ export class TasksList extends React.Component<AllProps>
      reducer.ts
 
      export interface AppState {
-        tasks: Task[]
 
     }
 
@@ -130,11 +121,6 @@ export class TasksList extends React.Component<AllProps>
 
 
 export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps,AppState>()(TaskList);
-
--------------------********----------------------------
-
-4th Part:
-
 
 Now, lets create the function taht maps state to props and we pass it as the first argument to connect. 
 
