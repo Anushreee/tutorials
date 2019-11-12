@@ -1,0 +1,344 @@
+React Tutorial
+
+1. Print two variables next to each other.
+2. Call a function and return a function inside the return statement.
+3. Pure Component
+4. How you would manipulate the data in json format but in ts file
+5. A new ! post-fix expression operator
+6. What is the use of stringify and then parse a JSON object
+7. Export Default considered Harmful
+
+1. Print two variables next to each other.
+Use tilde and currency operator of es6 
+
+const FormatMoney = (value: number, currencySymbol: string | undefined)=>{
+  return `${currencySymbol} ${value}` ;
+}
+
+2. Call a function and return a function inside the return statement.
+
+export function BulletChartCard(props: IFinancialDetailsProps){
+  const {productivity, growth, currencyInfo} = props;
+
+  if(!productivity || !growth) {
+    return <NoDataView />
+  }
+
+  const currencySymbol = !!currencyInfo ? currencyInfo.symbol :"$";
+
+  return (
+   <div>
+     <Grid>
+       <Grid.Row>
+         <Grid.Column width={10} sWidth={9}>
+           {FormatMoney(data.actual,currencySymbol)}
+
+         </Grid.Column>
+       </Grid.Row>
+     </Grid>
+   </div>
+  )
+
+
+}
+
+const GetBulletChart = (value:number, currencySymbol: string | undefined) =>{
+	return `${value} ${currencySymbol}`
+}
+
+3. Pure Component
+
+Pure Component in the end is the normal Component that already implements shouldComponentUpdate with a complete props check, so that checks for any changes in any prop of that component.	
+
+So if that is what you need, you can also just use pure component instead of manually implementing this shouldComponentUpdate check. 
+
+PURE COMPONENT is one of the most significant ways to optimize React applications. The usage of Pure Component gives a considerable increase in
+
+https://codeburst.io/when-to-use-component-or-purecomponent-a60cfad01a81
+
+When to use Component or PureComponent
+I switched to using PureComponent awhile back on the premise of it being a more performant version of Component. This turned out to be true, but the performance gains come with a few strings attached. Let’s dig in to PureComponent and understand why we should be using it.
+Component and PureComponent have one difference
+PureComponent is exactly the same as Component except that it handles the shouldComponentUpdate method for you. When props or state changes, PureComponent will do a shallow comparison on both props and state. Component on the other hand won’t compare current props and state to next out of the box. Thus, the component will re-render by default whenever shouldComponentUpdate is called.
+Shallow Comparison 101
+When comparing previous props and state to next, a shallow comparison will check that primitives have the same value (eg, 1 equals 1 or that true equals true) and that the references are the same between more complex javascript values like objects and arrays.
+
+4. Call a function:
+
+export default class FinancialsWidget extends React.Component {
+  financialWidgetContent() {
+    return (
+      <Grid.Row>
+        <Grid.Column width={7}>
+          <p>Hello leafnutes</p>
+        </Grid.Column>
+      </Grid.Row>
+    );
+  }
+  render() {
+    return (
+      <div>
+   
+        <Card>
+          <Card.Header title={'Financial Savings'} />
+          <Card.Content>{this.financialWidgetContent()}</Card.Content>
+        </Card>
+      </div>
+    );
+  }
+}
+
+4. How you would manipulate the data in json format but in ts file
+
+So, I have the data in json format but in ts file. The file name is mockData.ts
+
+const data = {
+	groupPerformances: [
+	    {
+	      criterion: 'Best',
+	      groups: [
+	        {
+	          name: 'APAC',
+	          value: 100
+	        },
+	        {
+	          name: 'EMEA',
+	          value: 50
+	        },
+	        {
+	          name: 'US',
+	          value: 0
+	        }
+	      ]
+	    },
+	    {
+	      criterion: 'Worst',
+	      groups: [
+	        {
+	          name: 'US',
+	          value: 0
+	        },
+	        {
+	          name: 'EMEA',
+	          value: 50
+	        },
+	        {
+	          name: 'APAC',
+	          value: 100
+	        }
+	      ]
+	    }
+  	]
+}
+
+So in my index.js file
+
+I import the data like this:
+
+import mockdata from '../src/mock/mockData';
+
+So i have given the data the name of mockdata. Now i can manipulate it just by using its name. So here i dont have to do
+mockData.data.groupPerformances. I just have to go straight: mockData.groupPerformances.
+
+mockData.groupPerformances.map(performance=>{
+	return {    //the map function can return an object. 
+		list: p
+	}
+})
+
+const performanceData = mockData.groupPerformances.map((item) => {
+  return {
+    text: item.criterion,
+    list: item.groups.map((group) => {
+      return {
+        name: group.name,
+        value: `${group.value}% of Target`
+      };
+    })
+  };
+});
+
+Output:
+
+[
+	{
+		text: 'Best'
+		list: [
+			{
+				name: 'APAC',
+				value: 100
+			},
+			{
+				name: 'EMEA',
+				value: 50
+			},
+			{
+				name: 'US',
+				value: 0
+			}
+		]
+	}
+	
+	{
+		text: 'Worst',
+		list: [
+			{
+				name:'US',
+				value: 0
+			},
+			{
+				name:'EMEA',
+				value: 50
+			},
+			{
+				name:'APAC',
+				value 100
+			}
+		]
+	}
+
+]
+
+return (
+	<FinancialsWidget 
+	savings={object('Financials Widget Data', mockData.mainChartData)} 
+	performance={object('Performance Data', performanceData)} />
+)
+
+5. A new ! post-fix expression operator
+
+https://www.triplet.fi/blog/what-is-the-use-of-exclamation-mark-operator-in-typescript/
+
+A new ! post-fix expression operator may be used to assert that its operand is non-null and non-undefined in contexts where the type checker is unable to conclude that fact. Specifically, the operation x! produces a value of the type of x with null and undefined excluded.
+
+The description contains many fancy words, but in plain English, it means: when you add an exclamation mark after variable/property name, you're telling to TypeScript that you're certain that value is not null or undefined.
+
+
+6. What is the use of stringify and then parse a JSON object
+
+https://stackoverflow.com/questions/36710307/what-is-the-use-of-stringify-and-then-parse-a-json-object
+
+I think you may have a fundamental misunderstanding. JSON is a textual notation for data exchange. If you're dealing with JavaScript source code, and not dealing with a string, you're not dealing with JSON.
+
+You don't "take a JSON object and stringify it." If it's an object, it's not JSON; if it's JSON notation for an object, it's a string and you wouldn't stringify it.
+
+Here's an object:
+
+var foo = {answer: 42};
+Here's using stringify on it:
+
+var str = JSON.stringify(foo);
+Now str is a string containing JSON, with this content:
+
+{"answer":42}
+...exactly as though you had written this:
+
+var str = '{"answer":42}';
+You can parse that back into an object (note: not a "JSON object," just an object):
+
+var foo2 = JSON.parse(str);
+Now, foo refers to the original object, and foo2 refers to a different object with copies of the properties:
+
+console.log(foo == foo2);               // false, they're different object
+console.log(foo.answer == foo2.answer); // true, they each have an answer property
+                                        // and their values match
+console.log(foo.answer);                // 42
+console.log(foo2.answer);               // 42
+foo2.answer = 67;
+console.log(foo.answer);                // 42 | the objects and their properties
+console.log(foo2.answer);               // 67 | are not connected in any way
+Is there any specific reason for stringify a JSON object and parse it again.
+
+Sometimes people use that as a poor man's cloning method, as the object you get back is not the same object you stringified; it's a new object with the same properties (provided that all of the properties of the original could be serialized to JSON; properties referring to functions or with the value undefined can't be, and many other values [such as dates] don't convert back without a "reviver" function for JSON.parse, so they end up being strings or numbers).
+
+console.log("the stringified performance is", JSON.stringify(this.props.performance!));	
+
+FinancialsWidget.tsx:150 the stringified performance is
+
+ [
+ 	{
+	  	"text":"Best",
+	 	"list":[
+	 		 {"name":"APAC","value":"100% of Target"},
+	 		 {"name":"EMEA","value":"50% of Target"},
+	 		 {"name":"US","value":"0% of Target"}
+	 		]
+	},
+
+	{
+		"text":"Worst",
+		"list":[
+				{"name":"US","value":"0% of Target"},
+				{"name":"EMEA","value":"50% of Target"},
+				{"name":"APAC","value":"100% of Target"}
+			]
+	}
+]
+
+
+console.log("the parsed performance is", JSON.parse(JSON.stringify(this.props.performance!)));
+
+parsed performance is 
+(2) [{…}, {…}]
+0:
+list: Array(3)
+0: {name: "APAC", value: "100% of Target"}
+1: {name: "EMEA", value: "50% of Target"}
+2: {name: "US", value: "0% of Target"}
+length: 3
+__proto__: Array(0)
+text: "Best"
+__proto__: Object
+1:
+list: Array(3)
+0: {name: "US", value: "0% of Target"}
+1: {name: "EMEA", value: "50% of Target"}
+2: {name: "APAC", value: "100% of Target"}
+length: 3
+__proto__: Array(0)
+text: "Worst"
+__proto__: Object
+length: 2
+__proto__: Array(0)
+
+7. Export Default considered Harmful
+
+https://basarat.gitbooks.io/typescript/docs/tips/defaultIsBad.html
+Consider you have a file foo.ts with the following contents:
+class Foo {
+}
+export default Foo;
+You would import it (in bar.ts) using ES6 syntax as follows:
+import Foo from "./foo";
+There are a few maintainability concerns here:
+If you refactor Foo in foo.ts it will not rename it in bar.ts.
+If you end up needing to export more stuff from foo.ts (which is what many of your files will have) then you have to juggle the import syntax.
+For this reason I recommend simple exports + destructured import. E.g. foo.ts:
+export class Foo {
+}
+And then:
+import { Foo } from "./foo";
+Below I also present a few more reasons.
+Poor Discoverability
+Discoverability is very poor for default exports. You cannot explore a module with intellisense to see if it has a default export or not.
+With export default you get nothing here (maybe it does export default / maybe it doesn't ¯\_(ツ)_/¯):
+import /* here */ from 'something';
+Without export default you get a nice intellisense here:
+import { /* here */ } from 'something';
+
+Autocomplete
+Irrespective of if you know about the exports, you evenautocomplete at this import {/*here*/} from "./foo"; cursor location. Gives your developers a bit of wrist relief.
+Typo Protection
+You don't get typos like one dev doing import Foo from "./foo"; and another doing import foo from "./foo";
+
+
+
+
+
+
+
+
+
+
+
+

@@ -136,7 +136,7 @@ export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps,AppS
 4th Part:
 
 
-Now, lets create the function taht maps state to props and we pass it as the first argument to connect. 
+Now, lets create the function that maps state to props and we pass it as the first argument to connect. 
 
 
 export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps,AppState>(state=>({
@@ -145,7 +145,66 @@ export const ConnectedTasksList = connect<StateProps,DispatchProps,OwnProps,AppS
 
 And, becoz we listed all the types as generic type parameters for the connect function, Typescript is able to infer that this state is the AppState. and this function should return the stateProps interface. 
 
-Also, lets implement the other function taht maps dispatchers to props. it takes one argument: the dispatch funciton. and returns the object described by the dispatch props interface. and, we need teh fetch task dispatcher.
+so this function takes state and then returns the props that are described by this StateProps interface. 
+
+interface StateProps {
+    tasks: Task[];
+}
+
+so we should return the tasks.
+state =>({tasks: state.tasks})
+
+Also, lets implement the other function that maps dispatchers to props. it takes one argument: the dispatch funciton. and returns the object described by the dispatch props interface. and, we need the fetch task dispatcher. and this is the function that calls dispatch with the necessary action creator. 
+
+dispatch => ({
+    fetchTasks: ()=> dispatch()
+})
+
+so let create the action creator for the fetchTasks action. 
+
+
+    interface DispatchProps {
+        fetchTasks: () => void;
+    }
+
+---------------5th Task------------
+
+actions.ts
+
+I will create another file called actions and export the fetch task action creator from here.
+
+export const fetchTasksAction = () => ({
+    type: 
+})
+
+action creator should return the action object which contains the type property.
+
+lets describe this action object in another interface. 
+
+import {Action} from 'redux';
+
+export interface fetchTasksAction extends Action{
+    
+}
+
+export const fetchTasks = () => ({
+    type:
+})
+
+Redux provides us with the action interface that we should extend.  And, this interface takes one generic type parameter. It take the type parameter to describe the type property.  and for the fetchTasks Action i wiould like to name the  type
+<'FETCH_TASKS'>
+
+export interface fetchTasks extends Action<'FETCH_TASKS'>
+
+And, in the action creator lets describe this action.
+
+export const fetchTasks =():FetchTasksAction
+
+
+
+
+
+
 
 
 

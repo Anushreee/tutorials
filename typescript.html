@@ -1,3 +1,8 @@
+1. What is [string, number][] 
+https://github.com/Microsoft/TypeScript/issues/3428
+[string, number][] is an array of [string, number] tuples.
+
+
 6. Interfaces
 
 interface Profile {
@@ -604,23 +609,14 @@ class Person {
 }
 
 and if you are familiar with ES6 features, so far that's the same way how you create a class in ES6
-
 and for this module of course, it really helps to know about object-oriented programming
-
 and if you already know some other languages which use classes. I'm not going to dive super deep into
-
 explaining what classes are and what you use them for,
-
 basically they allow you to prepare some kind of blueprints for objects, so you can later on create objects
-
 based on a class to then make sure that this object already has some properties or methods which again
-
 you define in this class we're setting up here
-
 but if that is all new to you, definitely check out some tutorials on object-oriented programming and
-
 classes in general
-
 and it probably is a good idea to also have a look at ES6 classes.
 
 So enough of talking. I'm creating a class here to create such a blueprint and I could give this class
@@ -825,11 +821,9 @@ and this again proves that this shorter syntax here works too.
 58. Class Methods and Access Modifiers
 
 I already said that I can't access type and age from outside but what sense does this make to set up
-
 properties like this then?
 
 Well let's add a method to this person class because we can add methods too and let's say we have one
-
 which is called printAge and this is how we set up a method, like a function without the function keyword
 
 and printAge
@@ -919,12 +913,9 @@ since I see cool guy here and I printed this type after assigning it here in the
 So this is how you initialize properties right
 
 when declaring them, how you create methods which you may access from outside and how you can access
-
 private properties inside your person class.
 
-Now one important thing to know is that methods can also be private or protected
-
-which serves the same purpose as private and protected properties serve.
+Now one important thing to know is that methods can also be private or protected which serves the same purpose as private and protected properties serve.
 
 You can't access them from outside but you can use them inside of your class.
 
@@ -1038,9 +1029,7 @@ class Max extends Person {
 }
 
 What this means is take this person class, use all of the code inside of it and now whatever I specify
-
 in here gets either appended
-
 if it isn't included in the person class or overwritten if it was included.
 
 So if I were to say name should be equal to Max, then this will overwrite the name property in my person
@@ -1081,9 +1070,7 @@ here and I will come back to constructors in the next lecture.
 Getters and Setters:
 
 Another cool feature you might know from other languages are getters and setters and vanilla
-
 Javascript also has some ways to create getters and setters but TypeScript makes it really easy. I'll
-
 create a new class for this,
 
 it won't inherit from any class, it's a normal class here and I'll set up a private property called
@@ -1095,35 +1082,29 @@ Now generally, you shouldn't prefix your private properties with an underscore,
 that's the style guide for TypeScript
 
 but in this case I'll make an exception and you'll see why in a second because I don't want to be able
-
 to access this species property from outside
-
 but I want to offer a controlled access, which means through a getter or a setter which allow me to execute
-
 some code before actually returning or setting the value.
 
 I WANT TO OFFER A CONTROLLED ACCESS THROUGH GETTERS AND SETTERS WHICH ALLOWS MET TO EXECUTE SOME CODE BEFORE ACTUALLY RETURNING OR SETTING A VALUE.
 
 So let's say whenever I try to set this value, I want to check if the string provided is longer than,
-
 let's say at least three characters,
-
 so I don't want to set species to anything which has only three characters or less.
 
 So I can create a setter for that which allows me to execute some code whenever I try to set a value
-
 and I do it with the set keyword and then species.
-
 Now this name is up to you but this will be the property name accessible from outside later on.
-
 I do add parentheses here but I will not call it like a method from outside,
-
 that's important to understand,
 
+I DO ADD PARANTHESES HERE BUT I WILL NOT CALL IT LIKE A METHOD FROM OUTSIDE. THATS IMPORTANT TO UNDERSTAND.I WILL 
+CALL IT LIKE A PROPERTY BUT I SET IT UP LIKE A MEHTOD BECAUSE AGAIN, I CAN EXECUTE SOME CODE HERE, LIKE A METHOD 
+WHICH GETS CALLED.
+
+
 I will call it like a property but I set it up like a method because again, I can execute some code
-
 here, like a method which gets called. It will actually also get a parameter of type string and TypeScript
-
 will pass this parameter for me kind of. In the end, it will be Javascript code which looks differently
 
 anyways but you can think of this value being passed to this kind of only theoretically existent method
@@ -1131,21 +1112,16 @@ anyways but you can think of this value being passed to this kind of only theore
 here automatically.
 
 So again, I will and you will see this, only call this like a property
-
 but behind the scenes it will give me the value I want to assign as an argument to this method that
-
 it will execute automatically.
 
 So here, I then want to check if the length of value is greater than 3, if that is the case,
-
 I want to assign this species to this value, otherwise I will assign this species to default, something
-
 like that
 
 and I can also set it to this value up here, default value.
 
 So that is why I have this underscore because I want to use this species name and therefore, I have
-
 to make sure we have a different name for my private property.
 
 Now that allows me to set it
@@ -1155,6 +1131,8 @@ but I also want to be able to read it.
 For this, I'll set up a getter, so I'll use the get keyword with species here, again like method here
 
 but with this time without an argument and then here, I decide what I want to return.
+
+WITHOUT AN ARUGMENT. I DO HAVE TO RETURN SOMETHING.
 
 I do have to return something because I try to get something in the end but I could also return hello
 
@@ -1201,14 +1179,415 @@ sure that certain criteria are met before assigning a value or returning a value
 THAT IS A CONVENIENT WAY TO USE GETTERS AND SETTERS TO CONTROL ACCESS TO YOUR PROPERTIES AND MAKE SURE THAT CERTAIN CRITERIA ARE MET BEFORE ASSINING A VALUE OR RETURNING A VALUE.
 
 
-Video course
-Teach the world online
-Create an online video course, reach students across the globe, and earn money
- Udemy
-Copyright © 2019 Udemy, Inc.
-Terms  Privacy Policy and Cookie Policy  Help and Support
+63. Static Properties and Methods
 
-×Close alert
+Typescript also allows you to define Static Properties and Methods. I will create a new class which i will name Helpers. 
+
+and this class should bundle some helper properties and methods I can use throughout my application for example. 
+
+class Helpers {
+    
+}      
+
+lets say i want to get access to PI. I would create a new property PI of type number.
+
+class Helpers {
+    PI: number = 3.14;
+}
+
+Now if i define it like this, the only way to access it is by instantiating this helper class.
+
+However i dont want to always instantiate it. Consider i have this calculation, wehre i just want to calcuate two times pi. 
+
+class Helpers {
+    PI: number = 3.14;
+}
+
+console.log(2 * Helpers.PI);
+
+Now i cant do this, because Helpers is the calss and not an instance of that class. so that is annoying. that wont work. So that is a non working code here. 
+
+I can make this PI property here accessible to outside of this class without needing others to instantiate the class by adding the static keyword. 
+
+that means you may always use this property, even if you dont instantiate this helper class and helper classes are good example for use cases where you would use the static keyword.   
+
+class Helpers {
+    static PI: number = 3.14;
+}
+
+Ofcourse, I can also provide a static method. So we use the static keyword and then lets stay I have the calcCircumference method here which gives me the circumference of a circle. I pass the diameter as an argument which should be a number. and, ofcourse i return a number here. and in here, i return this pi, accessing this pi property here ofcourse times diameter.
+
+class Helpers {
+    static PI: number = 3.14;
+    static calcCircumference(diameter: number):number{
+        return this.PI * diameter
+    }
+}
+
+with this, I can do two things. First, I can call Helpers*PI if i just need PI 
+
+console.log(2*Helpers * PI);
+
+or i can also log and pass some arbitrary diameter. Both will work, as i have a look over the console. 
+
+console.log(Helpers.calCircumference(8));
+
+So, that is how you create static methods and properties. And, again, mostly useful for some helper classes which bundles some helper tools you want to create for your application or any other application which uses this. 
+
+64. Abstract Classes
+
+what are Abstract Classes? Abstract classes are marked with the abstract keyword, so thereafter we have this normal class declaration and abstract classes cannot be instantiated directly. 
+
+abstract class Project {
+    
+}
+
+so what is the sense of abstract classes then? well you have to inherit from them always. they are basically just there to be inherited from. and why would you want to create a class which you cant instantiate, which needs to be executed? 
+
+well may be because this class never needs to be instantiated but only provide some basic setup other more specialized classes wheich then will be instantiated need. 
+
+
+65. Private Constructors & Singletons(added with typescript 2.0) 
+
+
+TypeScript 2.0 also gives us some nice new features regarding classes.
+
+The first feature I want to show here is about private constructors,
+
+now this certainly might sound strange,
+
+let's have a look at it.
+
+I added a class here and this class uses a static property instance here which is private, which is
+the first thing which might look strange since
+what's the sense of a static property which is private,
+we can't access it from outside,
+right?
+
+class OnlyOne {
+    private static instance: OnlyOne;
+
+    private constructor(public name:string) {}
+
+    static getInstance 
+}
+
+The second and even more confusing thing is the constructor here, it's also private and now this really makes no sense at all because how can we use a class if we can't construct it, if we can't create an instance of it and we need a constructor for that. In all the code above when we use the new keyword like here,
+
+we were using our class or/and the constructor
+each class has to create a copy of that blueprint this class provides us. Well turns out here we're having
+a pattern which is called a singleton class,
+you could already create this before, without these private accessors, like that.
+
+That was possible before
+and this allows you to set up a class where you only want to have one instance during runtime.
+This pattern is something you see in a lot of languages, it's nothing TypeScript specific,
+a lot of or all object-oriented languages offer this pattern and it might be useful if you know
+
+well I want to have an instance of this class and not a static class but I only need one instance because
+I want to have, let's say an array of data in this class and this array has to be the same in my
+whole application.
+
+So that would be where you use such a singleton
+and again, you could create this before but now since you can mark constructors as private,
+you can force this class to only be used as a singleton, which means you can't instantiate this class
+from outside anymore.
+
+Indeed if I run tsc here, you'll see that I get an error that the constructor of class OnlyOne is
+private and only accessible within the class declaration.
+
+So this code here leads to an error,
+the code I need to use to create an instance can be found inside of this class in this public static
+method, getInstance, which I'm calling here.
+
+So when I call this method here, I checked if I already have such an instance, so it that if it has been instantiated
+this one time I want to instantiate it and if it has been instantiated, then I simply return this instance,
+
+otherwise I create a new instance and thereafter, no more instances will be created and I can control
+this since no instances can be created from outside too due to this private accessor here added to the
+constructor.
+
+
+Map:
+
+using objects does have few pitfall. the first one is with inherited objects. 
+
+obj inherits from base. Object.create creates a new object whose prototype points to the base.
+
+we create a map using the new keyword 
+let map = new Map();
+we can then add entries by using a set method.
+
+let map = new Map();
+map.set("A",1);
+map.set("B",2);
+
+the set method is also chainable. so, 
+set function when you call it itself returns another instance of a map. we can call set on it again. 
+
+So we can actually do this.
+
+let map = new Map()
+    .set("A",1)
+    .set("B",2);
+
+A new instance of Map gets created and we then call set on it straight away. 
+
+It is easier to see if you use it like this:
+
+let map = new Map().set("A",1).set("B",2);
+
+
+Generics:
+
+
+
+
+Inorder to understand what generics do, why are they useful, lets start with a very simple generic here.
+
+function echo(data: any) {
+    return data;
+}
+
+the above simple function gets data of any type which makes this function very generic. and i return this data.
+
+let me call the echo function now. 
+
+console.log(echo("Max"));
+console.log(echo(27));
+console.log(echo({name:'Max',age:27}))
+
+so with all that being my input, i then go to console.log and compile. 
+
+i can see 
+Max
+27
+Object 
+
+Nothing great is happening here right now. one
+thing to realise here is that this function is kind of generic function as it has any type here. but we do have a big disadavantage with the any type. 
+
+i get back any data i entered. since i enter a string in the first echo call, i could not only log the data i entered. but i could also enter length. 
+
+console.log(echo("Max").length);
+
+because string like an array has a length property.  if we compile the code, we see 3 here. 
+
+the issue is when i enter dot.
+
+console.log(echo("Max").
+
+
+
+
+we dont know the type here. it would be nice if we would get a compilation error if we try to access length on number. but we cant get this, as the data type is any for typescript doesnt 
+
+function betterEcho<T>(data){}
+
+with the T character here, we are telling typescript hey when using this function give me the type and then i will be able to use this type. therefore, we can use T here
+
+function betterEcho<T>(data: T){}
+
+and we know that data we get will be of type T.
+
+with that i can still return data here. 
+
+console.log(echo("Max"));
+console.log(echo(27));
+console.log(echo({name:'Max',age:27}))
+
+now if i change the echo here to betterEcho
+
+console.log(betterEcho("Max"));
+
+and press the dot at this. we will get the better IDE support. 
+
+console.log(betterEcho("Max").length);
+
+console.log(betterEcho(27).length); //here i dont have the ide support. and if i try to use length here, i am getting an error.
+"Property length doesnt exist on type number"
+
+And that is exactly what we want. with this set up here, 
+function betterEcho<T>(data: T){}
+
+i do have a generic function. I can use a number but i cant use the length property on it thereafter. 
+
+you can also do like this:
+
+
+console.log(betterEcho<number>(27));                
+    with this it is clear that i want to have a number. and if i pass string here.
+
+console.log(betterEcho<number>("27"));
+
+Function generics are a strong tool to improve your code, make your code both flexible and manageable by script compiler. 
+
+3. Built in Generics:
+
+Prominent built in generic probably is the array. lets say we have some testResults. and they are stored in an array. now, we can simply create an array like so:
+
+const testResults = [1,2,3,4];
+but in the back is the generic type. we can assign a type to this testResults array. and the type would be array. 
+const testResults = Array [1,2,3,4];
+
+And then assign which types this array should hold.
+const testResults = Array<number>
+
+const testResults = Array<number> = [1,2,3,4];
+testResults.push(-2.90);
+
+now if i want to push number on that array that works. but if we try to push a string, well by ide is already complaining. and so is typescript if i try to compile this. 
+
+" Argument of type 'string' is not assignable to parameter of type 'number'"
+
+Normally you can mix strings, numbers and so on. but if you want to be explicit and dont want to have the mix, well then this is.
+
+so Array is a generic type by default. 
+
+
+4. Speaking of arrays: you can also assign a generic type to be an array for example. what do i mean with that. well, we will look at this function printAll which is a generic function and which takes some arguments. And, then we can also say that the arguments are the array of the type i use in this function. 
+
+function printAll<T>(args:T[])
+
+function printAll<T>(args:T[]){
+    args.forEach
+}
+
+and with that i can call forEach because typescript knows that the element are of type 
+
+it doesnt know the type of array. but it knows that it will be an array. 
+
+function printAll<T>(args:T[]) {
+    args.forEach((element)=>console.log(element))
+}
+
+with that i can now call printAll. pass an array of Apple, Banana,
+
+printAll(["Apple","Banana"]);
+
+that would be fine. but i can also be more explicit and also tell typescript that this will of type string: just string not string array because arguments here is an array of strings.
+
+printAll<string>(["Apple","Banana"])
+
+
+
+
+
+function printAll<T>(args:T[])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

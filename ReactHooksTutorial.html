@@ -1,0 +1,858 @@
+Introduction to React Hooks
+
+ Welcome to this module in this module we'll have a
+look at a feature called react hooks and that's a relatively new feature in the
+history of react. We'll have a look at what exactly it is how it changes the way
+you write react code and no it's not like everything changes but it gives you or
+react hooks give you a nice way of building your components and of thinking
+about your components as you will learn about this module. So let's dive right
+in and let's see what react. Hooks are and how they affect your code and how you
+can use them in your projects.
+
+
+ New lecture:What are React Hooks: So what I react
+hooks react hooks help us work with our components in a more efficient way you
+could say in this course you'll learn that you even have functional or class
+based components and react. And that is the case now in functional components
+you've got props and you returns JSX code they are great for presentation
+for presenting your content but as you learned you can't change internal state
+there. So they have for each Functional Component typically is focused on one or
+only a few purposes and simply there to output something you could say if you
+would want to react to a button you would do that by getting a handler a
+function pointer as a prop and then by executing that function through that prop
+so that the parent component which at some point has to be a class based
+component is able to for example change some internal state upon that button
+press because class based components unlike functional components do not just
+receive props but in addition they can also manage state and state is that
+changeable thing which triggers a rebrand or when you change it. 
+
+Therefore your
+business logic typically lives in class based components because typically when
+something changes you want to re rendor and class based components are the only
+components that can have something that changes and causes the render.
+Therefore you typically all use class based components to orchestrate your
+components and overall you have class based and functional components works
+together.
+
+ Now with all been at the point where we had a functional component and
+all of a sudden we needed to manage some state in there for example you have
+inputs there and you want to stored input the user entered in your state and
+send it back into the input it is classic two way binding thing. Now in such a
+case you would have to convert your functional component to a class based one
+but of course this conversion is annoying it's a lot of redundant work in the
+end. 
+
+Now in addition to managing state class based components all were the only
+components that could have lifecycle methods also called lifecycle hooks which
+are not to be confused with reactive hooks. Now these lifecycle hooks or
+lifecycle methods also could be hard to use- it could be annoying to add
+component that mound component did update and ensure that you run the right logic
+at the right point of time and maybe add the right if checks to a wide
+unnecessary reminders or infinite loops and for these reasons for example to get
+rid of the conversion we have react hooks because react hooks essentially allow
+us to work with functional components only. 
+
+Yes that's right. When working with
+this new feature you don't need to build any more class based components you
+still can but you don't have to. You can now make everything work and functional
+components that previously required a class based component so you can write
+functional components everywhere and hooks replace class only functionalities
+they replaced state management and they replace lifecycle hooks as you will
+learn in this module now react hooks them selves are in the end just JavaScript
+functions not components functions which can only be used inside of functional
+components or inside of other hooks because as it turns out and as you will
+learn this module too You can also write your own hooks.
+
+REACT HOOKS AND JUST JAVASCRIPT FUNCTIONS NOT COMPONENTS FUNCTIONS WHICH CAN ONLY BE USED INSIDE oF
+FUNCTIONAL COMPONENTS OR INSIDE OF OTHER HOOKS
+
+ Now how do you
+recognize react hooks react hooks are JavaScript functions named like this
+starting with a lowercase use and then your function name something like Use
+state and so on. You will see plenty of hooks throughout this module. Now of
+course that's just a rule the REACT team came up with. It's not a technical
+javascript thing it's not a hard rule imposed on you by the language by
+javascript it's just a rule the REACT team came up with hooks are named like
+this and modern react projects got built in lending which are automatically code
+checks that will basically recognize such functions and at you if you're using
+them incorrectly or if you're using a hook in a place where you're not intended
+to use it for example in a normal non hook javascript function the idea behind
+react hoax is dead. 
+
+You can't expose certain possibly state full functionalities
+to functional components like managing state but also like adding lifecycle
+methods a bit different than with class based components. But in the end you can
+make everything work that you could make working class based components. 
+
+HOOKS ARE HIGHLY REUSABLE AND THATS OUR CORE IDEA BEHIND THEM. YOU CAN USE ONE AND THE SAME 
+HOOK IN MULTIPLE FUNCTIONAL COMPONENTS OR OTHER HOOKS 
+
+Hooks
+are highly reusable and that's our core idea behind them. You can use one and
+the same hook in multiple functional components or other hooks in each place
+that uses a hook uses it independent from the other places.
+ So you're not using
+hooks to share data between components but instead you can simply share
+functionality between components. 
+
+YOU ARE NOT USING HOOKS TO SHARE DATA BETWEEN COMPONENTS BUT INSTEAD YOU CAN SIMPLY SHARE
+FUNCTIONALITY BETWEEN COMPONENTS.
+
+That's a difference you can add certain logic
+to multiple components but every component will then run that logic on its own.
+So to sum it up hooks allow you to add state to functional components although
+the lifecycle method thing two functional components and you can share logic
+across components with hooks and that logic can even be state full and all of
+that will of course make more sense. 
+
+The deeper we dive into UX for this module
+so that's just a rough first summary here it's important to keep in mind that
+react hooks have nothing to do with lifecycle methods. You can't actually
+replace lifecycle methods with hooks but the name react Hooks has nothing to do
+with lifecycle hooks. These are different hooks react hooks or just hooks are
+called hooks because you hook a certain functional t into your functional
+components or you hook into a certain react functionalities if you will
+lifecycle hooks are really just a synonym for lifecycle methods and they are
+restricted to class based components so don't confuse these. 
+
+It's also important
+to keep in mind or to understand that react hooks this feature was introduced
+with react sixteen dot eight. So if you having a project that runs on an early
+awareness of react you can't use react hooks. You can use everything else you
+learn in this course but you can't use react tweaks you can't use what you'll
+learn in this module they allow you to use functional components only and you
+can use them for managing state or also for a side effects for example for
+sending HBP requests and then handling the response of these requests. 
+
+
+You can
+all the built custom hooks to share state full or stateless logic across
+multiple components and we'll all do this in this module. So this is now a first
+overview. Obviously it's still entirely unclear what exactly reactants are and
+how you use them. So therefore let's dive into a dummy project and start using
+them I think that makes it easiest to learn react hooks. 459. 
+
+
+The Starting
+project For this I prepared a little project which will render this year onto
+the screen and you'll find this starting Project attached to this lecture here.
+So this is a simple react project created with create react app. It runs on a
+workshop in later than 16 not eight and that's important. You need to have react
+sixteen dot eight or higher. Otherwise you can't use reactor hooks while an
+average than that there is nothing special in here it's just a normal reactor
+application with a couple of components already built for you.
+
+ So let me quickly
+walk you through what we have here. Before we start work with Dad and before we
+start using react hooks with our indexed to fall which is pretty trivial I'm
+importing indexed CSX which sets up some global styling imports of fun sets up
+some well global styling for to fund for buttons and that's it. And then here I
+rendered the app component which is living in the app J.S. file. It's a very
+simple component doesn't do much. It will do more later which is why I have this
+extra component. But for now it just returns the ingredients component which we
+get from the components folder there from the ingredients sub folder and then
+from the ingredients J as file which would be this file here now in there I in
+the end have a div I render ingredient form component which lives in the
+ingredient form j ust file and then I have a section where rendered a search
+component which unsurprisingly lives in the search J S file and if we have a
+look at the ingredient form then we see that this is a component that uses a
+custom card component which lives in the UI folder. We'll have a look at that
+folder in a second and then the ingredient form here. 
+
+I do have my form here I
+have a section which is a normal form with a couple of inputs to inputs to be
+precise for a title and amount with a button. And I'm also using react memo here
+to wrap this component to a wide unnecessary renders so that this only read
+renders this component only really renders when the props it depends on changed
+and not always when the parent component changed. 
+
+So not always when ingredients
+changed but only when ingredients changed and we're passing you props to
+ingredient form which right now we're never doing so right now ingredient form
+won't re render when ingredients we renders. That's just this tiny side note
+you'll learn about react memo earlier in the course in the component deep dive
+module.
+
+ Now that's the ingredients folder while almost we also have ingredient
+list there. I'm just rendering a list of ingredients. Right now we're not
+getting any ingredients from anywhere and they offered well we're not using this
+we'll use it for this module of course and in the search j ust fall will there I
+also use break memo for the same reasons I do it in the ingredient form and it
+just output a search box. This input here in a cart and that's of course disk
+box here at the bottom I got a couple of C is s false there too you can of
+course go through that if you want just a bit of styling to make this all look
+good. So that we have a nice looking app to work with. Now in the UI folder I
+prepared a couple of UI components like a card here which simply wraps whatever
+we pass between its opening and closing tag and gives it this nice card look
+with these styles here. I got the error modal which I am right now not using but
+which we will use fraud. This module and this is just using react fragment which
+is a replacement for the OCS component. We manually built throughout this course
+it's just a wrapper component to satisfy this condition of having one root
+wrapper per react component so that we don't have to use the unnecessary div
+here. Then I render a backdrop there and the modal itself where we can output a
+custom content like a custom error message we get a button to close that click.
+The backdrop should all the close to modal but it will be up to us to our up.
+This logic I mean always using react memo here and here I got some styles for
+the modal and I have a loading indicator which is just a spinner which we can
+render to indicate that while loading data so Data's what we have here. These
+are the components I'm giving you and Red now does app doesn't do anything. You
+can enter something here but hitting this button won't do anything because now
+it's up to us to Wired is up. And if you watch closely you'll see that all these
+components here they're all functional components. There is not a single class
+based component in there and we'll leave these components as functional
+components so we'll not change that because as you will now learn this module we
+can build an entire react tab with just functional components. With the help of
+hooks therefore let's dive right in and let's learn about our first took the
+most import took probably. Video course Teach the world online Create an online
+video course, reach students across the globe, and earn money Udemy Copyright ©
+2019 Udemy, Inc. Terms Privacy Policy and Cookie Policy Help and Support ×Close
+alert 460. Getting Started with use State() Now it is worth mentioning that I
+also touched on hooks for all this course. So some of the hooks all dive deeper
+into you in this module are hooks already mentioned for all this course but then
+I always mentioned that we will dive into it later. Well now is dead. Later Now
+we will dive it in more detail and let's start with the ingredient for jazz
+fall. There we have a couple of inputs and one thing we typically would do here
+is that we bind the input the user enters to some state to stem state property
+and we update that state on every keystroke and then sent the value back into
+the input. Right. That's Step Two where binding you learn about in this course
+and we did this multiple times when you work with inputs. I want to do the same
+here because ultimately it all starts in this app here with us gathering the
+user input so that we can make this add ingredient pattern work so that we do
+something useful when does buttons pressed. Now if you wouldn't know about hooks
+or if you would you is react 16 dots 7 or earlier than you would have to
+transform this to a class based component and use state and set state there. Now
+with react hooks you don't have to do that. Instead you can import something new
+from react by not just importing the default export which is that react object
+but by importing a named export and that is use state. I mentioned that all
+these hooks start with use and then they have various names. So here it's to use
+state. And this is a crucial probably the core hook provided by react. It allows
+us to manage state and functional components. It works a bit different than
+state in class based components. But we'll see the difference in a second. So
+how do we use it then. Well we go into our functional component and that's
+important you have to use it in your functional component body. So let's say
+here we call it we call use state. Now that alone doesn't do much though use
+state can be initialized with a default state and that state can be anything can
+be an object can be an array can be a number it can be a string a boolean can be
+any value it doesn't have to be an object it can be any value. So here we could
+create a new state that should manage to input for the title and the amount. So
+let's create the object here again doesn't have to be an object. I choose to use
+one here because I have two values which I want to manage and that would be
+title and initially it's an empty string and amount and let's set amount also to
+an empty string. Now you could argue that that should store number and hence you
+want to set it to zero or something like that initially. But actually managing
+this will be easier if we said to a string because input elements the values of
+input elements are always strings even if itself type number will always get a
+string. If we would want to work with a number in our app then we would simply
+have to convert that value whenever we use it. But when we fetch it when we
+manage it managing it as a string a wide some strange side effects where we
+might not be able to edit this value in the way we want to. So both values here
+are strings and now of course the question is what does is get us what does this
+use state called do. Because just that alone of course won't set our connection
+between well our state we're trying to manage here and our inputs now U.S. State
+actually we return something this year might be complicated to read but this in
+the end describes how does function to use state function is defined and after
+it is cold in here we see the return value and we see that the return value
+actually is an array and it's an array with exactly two elements. And that's
+important U.S. state is built in Hook always returns an array with exactly two
+elements The first element then always is your current state snapshot and
+whenever your state updates to which I'll come back in a second. This component
+will rebuild. So this component function is read executed and use state of
+course then for all those executed again but react internally save stead you
+already configured a state with the help of use state for this component and
+will not re initialize it but instead use state manages this state detach from
+your component so to say is so independent from your component so that the state
+survives re renders off this component so that the state survives when this
+component function gets executed again and therefore use state does first value
+which is returned here is your current state snapshot and it's the current state
+snapshot for this revenge or cycle of this component. This means that when you
+update the stage you'll get the updated state here so you get back an array and
+use state and data array has two elements and the first element is always your
+current state snapshot. Even the initial state or if you changed it the updated
+state that of course leads us to the question how do you change the state. How
+do you update the state. And that's where the second element in disarray is
+helpful. As I mentioned this array always has exactly two elements. First
+element is your current state snapshot. Second element is a function that allows
+you to update your current state. So this year this strange looking thing this
+dispatch thing here that's a function that will always be a function which you
+can call with a new data for your state to update that state. So therefore what
+we can do here. We can store this array with exactly two elements in a variable
+or in a constant here actually. Because for this render cycle it's not going to
+change. Hence it can be a constant and all named as input state. The name is
+totally up to you but in the end here we manage everything we need to manage for
+our well state for these two inputs here. Hence the name input state now added
+we store our array with the state snapshot and the state updating function here
+in an input state we can connect it to our inputs and there I'll use a similar
+approach. I showed you earlier in the course with Q way binding in the end where
+we bind the value of his input to the current state snapshot so that we pass the
+current state back into the input so to say and I do this by simply referring to
+input state and then the first element remember input state is an array with
+exactly two elements and the first element at index 0 will be a current state
+snapshot. So Dad will be well what we want to feed back into the input now of
+course our state is an object though not a string. So for the title input here I
+want to access input state zero dot title because our state is an object with a
+title and an amount property to manage while input for these two inputs and
+forward the amount input here all day for set value equal to input state for the
+first element which is our current state snapshot. Amount now we feed the
+current state for the respective inputs back into the input elements. Of course
+you also want to update the state when we type into these inputs though and for
+that just as we do it always falls in class based components. We can listen to
+the on change event which fires or every keystroke and there we get this event
+object. So here I am executing an anonymous function in the end we get Steve
+event object automatically and we want to update our state. And as I mentioned
+we do this with the second element in this array. Use state gives us back. So
+here we access db element and index 1 which is the second element and this is a
+function so we can execute it as a function by adding parentheses here. Now here
+I'm on the title input so I want to update the title. So what we do here is we
+simply pass a new object to input state to update our current state with this
+new state object. And there we can set the title property to event target value
+because event DST change events the target is our input field and the value
+property then holds the value the user entered. So let me reformat that and now
+repeat that same logic here for the amount and put down there. So there we also
+add on change but of course we update the amount field. So with that if we save
+this we go back to our program here and now enter apples five here. Well we see
+this generally works we can type here which is a good sign which means we are
+feeding the state correctly back into these inputs and so on. But we also get a
+warning that a component is changing which controlled input of type number to be
+uncontrolled. So what's the reason for this warning what's wrong about the way
+we're saving our state here and why am I getting a warning about the input of
+type number which is our second input. If I type into the first one. Video
+course Teach the world online Create an online video course, reach students
+across the globe, and earn money Udemy Copyright © 2019 Udemy, Inc. Terms
+Privacy Policy and Cookie Policy Help and Support ×Close alert 461. More on
+useState() & State Updating The way we use you state is correct. We're passing
+an estate. We're getting back this array which were storing in this constant but
+the way we update the state does not correct. There is one super important
+difference when you compare use state and how you work with state and functional
+components to how you worked with set state and to state and class based
+components. There is an important difference between these two concepts for you
+as a state. As I mentioned earlier you can't manage any state it doesn't have to
+be an object you could just manage Some text here. But here I decided to work
+with an object because I have well two types of state or two input fields which
+I want to manage now in class based components. You always had to use an object
+but there whenever you called said state which ever object you passed into said
+state was merged with your existing state. So there if we passed it an object
+with the title property it would be merged with our current state and the amount
+property would not be lost but simply the title property would be updated and
+all old state would be kept with you as state that's different. This updating
+function. The second element of our array does update to state but it does so by
+replacing the current state with this which in this case means if we type into
+the title our new state simply is an object which only has a title property and
+we drop the amount property. Our new estate is an object that simply doesn't
+have an amount property anymore. That's why I'm getting this warning that the
+input of type number is uncontrolled. That's our second input and I'm getting a
+warning regarding debt input when we type into the first input because the
+second input is amount input here which is of type No. This of course refers to
+the amount property in our state. Now if we type into the first input we update
+the state to now be an object which only has a title property hence the property
+we're trying to access on a second input. The amount property simply doesn't
+exist anymore and that's exactly what's causing this error. The solution is
+simple when we update the state we have to ensure that we don't lose any old
+data. That's not our responsibility because react doesn't merge that
+automatically for us. And whilst this might sound like a bad change whilst this
+might sound like it should do that for us you'll later learn why react actually
+doesn't merged as for us anymore because now we actually have more flexibility
+regarding how we manage state if we decide to manage some object state though
+which very well might be the case in many situations. We have to ensure that
+whenever we updated we don't lose any old data. So when we update the title here
+we also have to set the amount property and simply set it to our will current
+account state. So to the unchanged amount state by accessing input state 0 so
+the current state snapshot dollar amount for example on the other hand when we
+update the amount we should also make sure that we don't lose the title by also
+setting this to input state 0 dot title. Now if you do that if you make sure
+that when you update the state you don't lose any information. Now if I type
+here you see I get no warnings anymore. And of course this button doesn't do
+anything because we haven't connected it anymore. But these inputs are now
+working correctly nonetheless. Our code here the updated code is not 100 percent
+correct yet reason for data is that I'm accessing the current state snapshot on
+the first array element and of course that does hold the current state snapshot
+for this render cycle of component. But the way react updates to state we are
+not having a 100 percent guarantee here that our current state snapshot actually
+is the latest state we committed. And this might sound strange but due to the
+way we act re renders components up on state updates and so on. You could
+theoretically have a case where there's a lot going on on your page. Let's say a
+lot of animations or a lot of stuff that react decides to defer a state update
+until there's less work going on and therefore a user might be typing here into
+the title input before the latest amount input because the user also typed into
+the amount input field. A second ago before dat state change has been rendered
+to the screen. Now it's very unlikely for this to happen. And in this simple
+application here it will never happen actually. But in more complex apps you
+could have a case where you're changing some state and your latest state change
+hasn't been committed yet hasn't been rendered to the screen yet. Hence if you
+have a new state change that also depends on your latest state snapshot. Then
+you don't have a guarantee that this state Snapshot has already been well
+committed or created and data for this year. Accessing our latest state value
+like this is not the ideal way. Instead it does updating function so this
+function is stored and stored as a second element in your array has an
+alternative form which you can use instead of just passing a value to debt
+update function so to that function that sets a new state. You can also pass a
+function to that function an anonymous function for example. But it could of
+course also be a named one and if you pass a function here which of course has
+to return your new state value in the end. And I'm wrapping it in brackets here
+so that I can use this inline notation here. This inline arrow function notation
+that after the arrow business t value where returning and returning an object
+here without the extra brackets this would be treated as the function body and
+this would simply be an incorrect function body. Now we indicate to javascript
+that this here is our function body and this is actually the return value which
+is just an object. So now we're returning that object. But in this function
+which we're passing through this set state function here so to say there we get
+an argument passed in automatically by react. And that's our previous input
+state or whatever you want to call it. And we can omit these brackets here. So
+here this function will actually tell react that we want to get the latest state
+that we set. Even if it hasn't been fully committed yet for this render cycle so
+now previous input state allows us to access this previous input state like
+this. And the difference to using input state 0 is that we're now not using the
+latest state which has been fully committed and which is used in this render
+cycle of this component but we're using the latest state we set with an updating
+function no matter if react already recreate it the function or not based on
+that last update. So now here we have to guarantee that we get the latest state
+at all times. That's of course what we want here here a missing extra bracket by
+the way to close that input state one function. So now this is the approach I
+always want to use down there for D amount input. We get our previous input
+state and then here we are returning a javascript object and in that object it
+can use that previous input state to set the title or the amount now is that if
+we save that and we go back you'll actually notice a strange behavior though. If
+you start typing you'll get an error and that error tells you that you reused an
+event essentially. Now the problem here is that when we're passing a function to
+this function here to this set state function in the end then we're having this
+anonymous function here and that's that's a closure. So that's simply a function
+that closes over surrounding values and in this case it closes over our event
+here. The event is fed into this on change anonymous function and in that
+function which we have here upon a change we're calling these set state
+functions so we're calling a function but then I'm also defining yet another
+nested function here. So we have function 1 which is our event function and
+function 2 which is our updating function. Now the problem with that is that if
+in this inner function here I use something from the outer function which I'm
+doing I'm using the event then this event will be locked in for the first
+keystroke essentially which means that for a subsequent keystrokes we don't use
+the new keystroke event but the previous one which of course is then reused and
+which causes this error. Now normally that wouldn't be a problem of course
+because yes this inner function this state updating function is a closure and
+therefore it closes over a DB an object which means it saves this event object
+for its execution so that when does interstate updating function runs which
+happens asynchronously we're guaranteed to use the event that was triggered for
+that keystrokes or it was created for a keystroke. The problem with events
+that's not really exclusive to events and react just is that react events are
+not the native Dom events but special synthetic events created by react which
+basically replicate the native Dom events he would normally get but react adds a
+special factor to that it pulls these event objects which simply means it reuses
+event objects. So instead of creating a new event object for every keystroke it
+instead reuses the previous object and the consequence of this is that for the
+second keystroke since we have a closure and we locked in the event for the
+first keystroke for the second keystroke we still reuse that same object we had
+for the first keystroke and dead sublease the problem here we're reusing the
+wrong event object because of the way react handles event objects. Now I'm aware
+of this sounding very confusing Indian. This is really a special case because of
+the way react handles these event objects. The solution is that outset of this
+set state function we create a constant for example which we hear on the title
+could call new title and their I store event target value. Now it is will be
+recreate it whenever wherever we're typing. And now we need a real function body
+though. So we need to wrap this into curly braces because now we actually have
+more than one line. We're not just returning something we're not just executing
+one expression what we have two statements here. So now you're I'm storing the
+new title for every keystroke and now this here this sets that function with
+this nested inner function can use new title and this will Dale for now close
+over this new extract the title for every keystroke. Instead of using that same
+event all the time that same event object of course we do the same for the
+amount they are. We now need curly braces around this entire function expression
+here. Then we get our new I want a mount from event target not titled value here
+and the amount now is simply new amount again simply because we're using a
+closure here and we want to make sure that we're generating a new amount for
+every keystroke. And then this will automatically be considered by this inner
+function instead of reusing that same event object all the time. Now with that
+we can save this go back and now start typing here and that now all works. Video
+course Teach the world online Create an online video course, reach students
+across the globe, and earn money Udemy Copyright © 2019 Udemy, Inc. Terms
+Privacy Policy and Cookie Policy Help and Support ×Close alert 462. Array
+Destructuring Now let me get rid of that dummy title output and let's work on
+the overall syntax we're using here. Thus far we're storing this array we're
+getting back in the input state and we can absolutely do that. But it means that
+we have to use input state 0 if we want to get the values in input to say one if
+we want to get the function to update the values. Of course we can do that but
+it's a bit of hard to understand syntax for example that this is a function is
+not immediately obvious. We can't use a modern javascript syntax to make that
+easier to understand. We can use a feature called array restructuring. How does
+it work. It allows you to pull elements out of an array and stored them in
+separate variables. So here where you know that you get an array with exactly
+two elements you can add square brackets on the left side of the equals sign. So
+by adding them on the left side you're not using them to create a new array or
+anything like that. That would be the case if you use them on the right side.
+But instead this now is a javascript syntax that allows you to pull elements out
+of that array and stored them in variables and you add as many variables here
+variable names of your choice here between the square brackets on the left side
+as you have elements the array. So here we have always exactly two elements. So
+we can add two values here with any names you want. The first element will be
+our data. So here that could be input state. And the second will be a function
+to update that data. Typically you name this set input state or asset whatever
+you named your data because your well setting this to a new value you're not
+merging it. You're not updating it. You're overwriting it. So you're setting
+some new data. So now we're using a radio structuring in our input stage will be
+our data and that will be the function to update the data. That's way easier to
+use. Now we can use input state here without the zero to work with our data and
+we use set input state instead of input state one to update our data. And I
+think that's much easier to read and to understand than it was before to be
+honest. If we save that it works just as before but now we have a syntax that's
+way easier to understand. A side note of course this pattern still doesn't do
+anything because we haven't hooked up any logic but we'll do that step by step.
+So this is the syntax we'll actually using the syntax you've seen the official
+box you'll see for the rest of this course and the syntax which is much better
+to use when we're working with the U.S. state. Hook. Video course Teach the
+world online Create an online video course, reach students across the globe, and
+earn money Udemy Copyright © 2019 Udemy, Inc. Terms Privacy Policy and Cookie
+Policy Help and Support ×Close alert 463. Multiple statesss I hope it's clear
+how to use state hook generally works. Now one thing which I'm not liking too
+much however is how complex it is for us to update the state. Of course this is
+not a complex state here it only has two properties only cute things title and
+amount. But still we have to ensure that when we update the title we don't lose
+the old amount and when we up the diamond we don't lose the old title. And
+obviously that's doable here. But imagine that we had a longer form here. You
+would have to write a lot of code just to always save all the old state when you
+update something new. So whilst you can of course manage state that is an object
+and waltzes off might make sense. You should also be aware that there is a huge
+important difference when you compare the state added by you state to the state
+you used in class based components in class based components state had to be an
+object and react merged it for you automatically and functional components with
+the U.S. state. State doesn't have to be an object and really doesn't merge it
+for you but what you can do is you can register multiple states. So what would
+make much more sense here is that you don't have an object but let's say just a
+string here and that this is your title. Maybe your entered title to make it
+really clear what you were saving here and then you have to set entered the
+title function and then we add another state here which is our entered amount
+and we have set entered amount here and debts use state with an empty string
+initially too. So now I have two states which are both managed independently by
+react for this component which is stored in different variables and which it can
+set with different functions. So now I don't have to manually merge anything
+because these are managed independently so if adopted one the other one will be
+kept around and wise whereas up because as I mentioned already these states
+survive re render cycles so they survive updates of other states but we don't
+have to merge manually because it's now an object anymore but instead we have
+two separate strings which were managing a state. So now here when we're working
+with the title we could just output the entered title here and here we're not
+calling set input state but all we're calling and it's so much easier is simply
+set entered title and we can pass in the new title here however we no longer
+have to store it as a separate variable. We don't have that closure problem
+anymore because there is no inner closure in dysfunction anymore. Instead we
+just call set enter title and set this to event target value. We don't have to
+manage anything merge anything because we managed this as two separate states.
+So the same here for on change on the amount we just call set entered amount and
+set this to event target value. It's as easy as that and if we save this we
+still have the same behavior as before. But now in a much easier way and this is
+actually my recommended way of doing this. Split your state into multiple
+states. That is how you state is intended to be used and only use objects or
+arrays as values for your state. If you really have data that changes to gather
+or where you need to change multiple things to gather otherwise manage your
+state independently. It's so much easier so much easier to write. You don't have
+to merge anything manually it's a breeze to use it as you can see. Video course
+Teach the world online Create an online video course, reach students across the
+globe, and earn money Udemy Copyright © 2019 Udemy, Inc. Terms Privacy Policy
+and Cookie Policy Help and Support ×Close alert 464. Rules of Hooks So we spend
+a lot of time on youth state but it is the most important state react offers
+react offers more hooks than just you state. But it really is an important hook.
+If we analyze it then it's clear that the idea behind youth status that we can
+manage state and a functional component by calling you state with some initial
+state which we can set up you don't have to pass an initial state by the way you
+want to have null or undefined as initial state you simply pass no argument at
+all to you state. And this creates a state which is managed by react behind the
+scenes in which survives we render cycles. And what you get back by you state is
+that array with exactly two elements a pointer at your estate. That's the first
+element and a state update function that's the second element. This is how you
+use state works. Now there are two important rules when you work with hooks with
+any hooks not just with U.S. state but also with any other hook you'll learn
+about in this module for one you must only use the hooks in functional
+components or inside of our custom hooks which we'll build later. The second
+important rule is Did you always have to use the hooks on the root level in your
+component. Now what does this mean. It means that you can't use a hook in some
+nested function. Here I have to submit handler which isn't doing much right now
+but we can't use you state in here for example. And actually we already get an
+error here because modern react projects already have code checks which
+determine that this year is using a hook in something that's never a react
+function component nor a neighbor hook and efforts not allowed to use it here.
+You're also not allowed to for example use a hook in some if statement. So if
+you had some condition and then you want to create some state that's also not
+allowed here. Unfortunately my project doesn't determine that this is wrong but
+this is simply not allowed. You must not use your hooks in a for loop in a if
+statement or in another function. Use it on the root level of your functional
+component or on the root level of other hooks. Video course Teach the world
+online Create an online video course, reach students across the globe, and earn
+money Udemy Copyright © 2019 Udemy, Inc. Terms Privacy Policy and Cookie Policy
+Help and Support ×Close alert 465. Passing state data across components So that
+was a lot of talking about you state but of course as I said it is important.
+But now let's continue and let's make sure that we actually can press that
+button and we do at this ingredient somewhere. So for that and to submit handler
+I want to submit my data. Now let's say we're managing our ingredients not in
+the ingredient form but in the ingredients J.S. followed in the ingredients
+component there and just because I'm seeing it here I'm creating that component
+with the function keyword like this in ingredient form. I'm creating it like
+this storing it in a constant then by using a Erol function on the right side of
+the concept. It's totally up to you what you want to use both creates valid
+functional components both has nothing to do with react hooks. So back in the
+ingredients function here which we just to what confusion could. All right. Like
+this in his ingredients function I have two ingredients for him. And here in
+this functional component I want to manage my ingredients I guess that makes a
+lot of sense because there I will all later output the list of ingredients. So
+it is a component that has access to both our input into our output later. So I
+want to manage the ingredients in their does of course means that we want to add
+use state here because our list of ingredients our array of ingredients of
+course will be some state that should survive re render cycles that will change
+over time and where every change should re rendered is so that once we do add a
+list to output our ingredients Well we can actually see some change there when
+we add we did so in the ingredients Functional Component all again use aerated
+structuring to manage my ingredients and to have a set ingredients function and
+then there with you state I start with an empty array here I use an array
+because ingredients of course will be a list of ingredients and we will always
+update that list as a whole when we add an ingredient or when we later delete an
+ingredient and so on. So we got our ingredients now we can also import the
+ingredient list component from the ingredient list J as follow which I prepared
+for you you can just add it here ingredient list and ingredient list this
+component actually takes a property ingredient which is an output and there
+besides the title and d amount I also want to have an I.D. that idea is then
+used as a key so in ingredients j ust I want to parse ingredients this prop
+which ingredient list expects to ingredient list and the value here will be my
+ingredients up there now can be confusing because it's always the same name name
+so maybe we named this up here. User ingredients and named this here is set.
+User ingredients you don't have to renamed us just because you renamed that but
+to really make it clear that these two belong together. I like to have to say
+names just as a set in front of our updating function here and now user
+ingredients what is what I pass here to the ingredients prop. So I hope this is
+clear which ingredients is what that's the prop of the ingredient list. So we're
+passing particles in here. Now the ingredient form should be able to add a new
+ingredient. So let's define a function here in the ingredients Functional
+Component add ingredient or add ingredient handler maybe and that's a function
+which will ultimately receive a new ingredient here which should store it is in
+our ingredients array. So here the idea will be to call set user ingredients and
+now important we'll need to update the existing list of ingredients and add a
+new one. Now that means we depend on the current state and they offer it's best
+if we use the functional forum where we're guaranteed to get the latest state.
+So we get our previous ingredients here our older array basically the current
+state. The most recent state of this list here and we return a new array where I
+use all previous ingredients. This is a spread operator taking all elements of
+our old array and adding them as elements to this new Array which I'm
+constructing with the square brackets. And then to add one new element here and
+that's the ingredient we're getting now important ingredient we're getting from
+the ingredient form we'll have a title and an amount but probably not an I.D.
+because the I.D. should be somehow auto generated. Now I'll later use a web
+server which does this for us. For now let's create a new object here with an
+I.D. which for now can just be moth random to string. And that's not truly a
+unique I.D. but unique enough for you for our cases here. It's a good dummy
+I.D.. And then I of course want to keep my title and my amount from ingredient.
+And we can again use to spread operator on ingredient now. So on this argument
+we're getting because this argument will be an object let's say the spread
+operator then takes all key value cares from that object and adds some ASCII
+value pairs to this new object. So now we're adding a new object with an I.D.
+title in amount to our list of ingredients here. That's the add ingredient
+handler. Now we need to pass a pointer at that add ingredient handler to the
+ingredient forum because Data's where we want to trigger the addition of an
+ingredient right. Because that's where we have our button that well submits this
+form. This button is of type submit data for it triggers the ENS up mature and
+the submit handler and in here I now want to well call something which I'm
+getting from the ingredients component. So let's say we pass a prop which could
+be named on ADD ingredient. And the name is totally up to you. And there we
+point at the add ingredient handler. So this is how you parse function reference
+is down to components right you learned that from the course hasn't changed has
+nothing to do with reactants so now we'll have a on ADD ingredient prop in the
+ingredient for him. And dad will have a pointer at this function so in the
+ingredient form in the submit handler we can call props on ADD ingredient as a
+function. Because again this will hold a pointer at that function in the
+ingredients J as file and there will pass into object because here I expect to
+get ingredient as object I pass an object which has a title in amount. So here
+title is My entered title and amount is my entered amount just like that. So
+this is getting sent to the ADD ingredient handler. This will add a new
+ingredient and update our ingredients array and we're passing this ingredients
+array to the ingredient list. So now our hope would be to see changes in that
+list when we add an ingredient. So here's our ingredient list. Now let's add
+five apples and we're getting an error notice error is coming from the
+ingredient list there. I'm registering a click on the ingredients to bind to on
+remove item. That is something we'll need later to remove ingredients. So for
+now let's simply go to the ingredient list component we're using in the
+ingredients component and passed you on remove list prop in there. And this
+should point at a function which for now simply doesn't do anything. Just so
+that ingredient list does receive a function and bind therefore does work so
+with debt. Let's try again let's add five apples and here they are now clicking
+on them doesn't do anything for now but we can now add our ingredients. Video
+course Teach the world online Create an online video course, reach students
+across the globe, and earn money Udemy Copyright © 2019 Udemy, Inc. Terms
+Privacy Policy and Cookie Policy Help and Support ×Close alert 466. sending http
+requests So enough about you state for now. Let's now send this to a web server
+so we can also dive into some of other hooks. For example hooks that help us
+replace class lifecycle methods. It is all again use Firebase as a dummy back
+and we'll just create a new project here react hooks update you can aim is
+whatever you want. Create does project here and I'm just using firebase here
+because I don't want to write any complex server side logic I just want to have
+a server we can talk to which automatically has a database attached to it so
+that the data all that gets stored there. So let's wait for this to finish and
+then dive into this newly created Project and in their go to database and now
+make sure to set up a new database there and don't use fire the where but scroll
+down a bit and use the real time database click on Create database and start in
+test mode which means that everyone is allowed to read and write because here
+will just use this as a dummy backend does this to you are L you can thousand
+requests to to store data in that database and to send requests we can use
+access as we did in this course or we used to build and fetch API which is built
+right into javascript it's totally up to you what you want to do to mix things
+up all used to fetch API built into JavaScript So when we're adding an
+ingredient besides updating this locally I also want to send the H to the p
+request and I do this by calling fetch. And again this is a function the browser
+understands it's not a react function not a react hooks function it's a browser
+function so to say the fetch API as it's called is built into modern browsers
+this will send a behind the scenes HDP request and fetch takes a U R L you want
+to send the request to which is a string now a case that's not just this year L
+but let's say we want to stored ingredients in ingredients node and firebase
+then all requires a dot Jason at the end that's just a firebase thing nothing to
+do with react nothing to do with react hooks. So this is where we want to send
+our data to and you got to know what have fetched by default will send a get
+request a firebase once a post request though if we want to store data hence we
+pass a second argument to fetch and that's an object that allows us to configure
+this request in on this object we can set the method property to post default
+the set then you never need to set that but we want to set this to post you then
+also can add a body property to define what you want to send and that has to be
+Jason data which means you can use Jason which is another thing built into the
+browser it's a it's a class Indian built in to browsers which has a string you
+find method. This will take a javascript object or array and convert it into
+valid Jason format it's a convenience feature built into the browser although it
+has nothing to do with react so here I want to pass that ingredient we're
+getting basically ingredient like this without an I.D. because now firebase will
+generate that idea for us so we don't have to do that manually now when
+everything you also need to set now is headers this allows us to set our own
+headers and debt in turns a javascript object and nested javascript object and
+there you can set headers you want to spend to this request and they are
+firebase expects de content type header and set this to application Jason with
+access we didn't have to do that because access did it for us fetch doesn't do
+it for us just as it doesn't convert data to Jason for us so we have to do the
+data conversion manually we have to add this header manually to inform firebase
+that we got some incoming Jason data and fetch will now return a promise which
+will eventually resolve once does requests successfully was sent or of course
+once it fails that could be an option to let's say we want to update our data
+locally when this promise is done then we can use then here and get the response
+inside of this nested function in India I then went to update my ingredients
+because as you'll learn from this course with promises the thing is that the
+function you're passing to then will not execute immediately when this gets
+executed but only when this request is done in this case so then I want to
+update my ingredients you could all use async await here if you wanted to of
+course but I will stick to this then approach because I think it makes it really
+clear that this executes at a later point of time. Now the good thing is here by
+the way this response actually will get some data back from firebase which
+contains that automatically generated Aidid response itself however is a more
+complex object we're interested in the body of that responds and you get that by
+calling the Jason method there. This will extract the body and convert it from
+Jason to normal javascript code however dissolves returns a promise so we'll
+actually return response. Jason here and move this code into a neighbor then
+block which a change here which will be my my body or my response date I get
+this in this function here which I passed the second then block which executes
+once this body has been passed and now response data will be an object which has
+a name property which contains does automatically generate that I.D. that's just
+how firebase works. So here we can now set I.D. equal to responds data dog name
+again that we can access code name here has nothing to do with react or with the
+fetch API that's just firebase it returns some data which the end is a
+javascript object which has a name property and that name property will have
+that unique I.D. which was generated by firebase. If you're using a different
+API this will probably not be named but for firebase it is. And now we're
+creating our ingredient locally we're updating it there based on all our
+previous ingredients. With that gradient we got here and with our name with our
+I.D. generated by firebase so let's see whether that works. Let's save that.
+Let's go back to our application let's add five apples and you see it takes a
+while until it appears here. Which makes sense because we're sending HDP request
+and then here we are indeed having regions added. And this is this unique I.D.
+And if I add bananas 10 again it takes a while not that long because firebase is
+very quick but a short while we also see it here. So that's working as soon as
+we reload though all data is lost. So the next goal is to fetch our data
+whenever we reload. So whenever our app starts or whenever ingredients get it
+gets rendered. So to say. And for Dad we normally would have used lifecycle
+methods. We would have used component did mount and we can't use that anymore
+here unless we transform this to a class based component of course which is not
+the goal but react hoax got us covered. Video course Teach the world online
+Create an online video course, reach students across the globe, and earn money
+Udemy Copyright © 2019 Udemy, Inc. Terms Privacy Policy and Cookie Policy Help
+and Support ×Close alert 467. UseEffect and Loading datass So we want to fetch
+all ingredients whenever these ingredients component gets rendered. Now as I
+mentioned at the end of the last lecture normally we would have used component
+that mount for that to fetch something when this component mounts. But this is
+now not an option anymore unless we transform this to a class based component.
+But there is another hook that helps us with that. It's to use effect took. How
+does it work just like you state the same rules apply. You can only use it in
+functional components or Robert Hooks and you have to use it on the root level.
+Let's maybe use it here. Use effect use a fact has to name because it is there
+for you to manage side effects in HBP requests are a typical side effect side
+effect basically means that you have some logic that runs that does affect your
+application for example we are fetching some data here but it's not getting
+finished in this current renderer cycle or maybe it affects something which is
+outside of the scope of your J ex code down there maybe you're setting the
+document title anything like that. So anything you can not manage with your
+normal dos component is getting rendered flow use effect and that's important by
+default gets executed right after important after every component render a
+cycle. So after this component has been rendered to first time the function you
+pass to use effect because you have to parse a function there will get executed.
+So this runs when ever this component got re rendered. And that's really
+important to keep in mind after and for every render cycle these are two
+important pieces not before not simultaneously but after and for every render
+cycle. Now why do we need use effect though we could just call fetch to get our
+data like this out sort of use effect right. We could call fetch point at this
+you or l it will automatically send a get request and indeed day offer we will
+get our our data back and then we can at then block we'll get a response and we
+can return responds Jason to get access to the response body and we can add a
+number then block which is our response data and yes we also should handle
+errors we'll do that later. So here we got our response data. This gets executed
+when this component renders and that is what we want right when this gets
+rendered for the first time we went to fetch this. So here we got our response
+data and response data and fire base case will actually be an object not an
+array. So we'll have to transform this our loaded ingredients let's say is an
+empty array that's a helper constant here I'm creating then I use a for in loop
+to go for all my keys in that response data because again response data will be
+an object every key will be and you can basically see that object here every key
+will be such a unique idea and the value for that key will be the actual data
+for our ingredient. So we'll have that overall object with these new I.D. keys
+here and then these nested objects. So here a key will be this unique idea and
+devalue for response date. Key will then be our concrete ingredient data. So
+therefore here I can use loaded ingredients that array I'm creating here and
+push a new ingredient onto it. It's constant but with Pausch we're not editing
+the value stored and loaded ingredients we're editing. The array stored in
+memory and if that's not clear to you attach to find a resource on javascript
+reference reference and primitive types which have something to do with that. So
+here I portion you object onto this loaded ingredient array. The idea is that
+key and the title is responds data for that key with this dynamic syntax here.
+DOBBS title and the amount is response date of for dead key dot amount. So this
+how I load my ingredients how I transform this object to an array and once this
+transformation is done so often does for loop here we can of course call set
+user ingredients and set as equal to the loaded ingredients so to this array we
+generated. This approach has one huge issue. If you save this you actually end
+up with an infinite loop here conceit is if you access the network tab you're
+sending tons of requests. Therefore I'll quickly comment out the set user
+ingredients line here so that this reloads and we stop sending this. So why are
+we entering a infinite loop here if we're fetching data like this. If you fetch
+data right here in your render function then whenever ingredients renders you're
+sending HDP request and when you then as a result often does HDP request update
+your state. What happens if you update your state component renders again so
+ingredients renders again and what does this mean. We send an outraged GDP
+request what does this mean. We update the state at some point. What does this
+mean. We render. We send another request. We update the state we render ends on.
+So that's the infinite loop. That's why sending this here is not an option. So
+let's catch this here and let's instead move it into this use effect function
+here. Now the comments back in. Now we're executing this after every runner
+cycle but still by default for every render cycle and hence unsurprisingly if I
+safeties and we go to the network tab we still have an infinite loop. So again
+let's comment out this here and safeties to update our page and stop that loop.
+So how can we fix that use effect. Actually all it takes a second argument. The
+first argument is this function which it executes after every render cycle. The
+second argument is an array with the dependencies of your function and only when
+such a dependency changed only then the function will rerun. So this allows you
+to control how often does function runs by default for every render cycle. But
+you can change this. Now here we actually have no external dependencies and with
+external dependencies I mean variables or data you're using which you define in
+your component outside of the use affect function. We're not using anything of
+that thus you are El is hardcoded response is a variable created here on the
+fly. Response data loaded ingredients it's all created on the fly set. User
+ingredients. That's actually a function stored in a variable. Coming from
+outside. But that's a special function since it's generated by use. State react
+automatically creates it such that dysfunction never really changes and doesn't
+have to be considered as a dependency. So that's an exception because it is a
+function generated by use state and therefore this use affect function here
+actually has no external dependencies and so we can add an empty array but we
+have to do that admitting it is not an option. Dennis runs for every render
+cycle. If you do add an empty array though what happens is that this now runs
+when this component gets first rendered. So it runs this one time. It's not
+admitted entirely but it runs one time but it never runs thereafter. So with an
+empty array it's like component did mount can kind of memorized debt with an
+empty array as a second argument. The function you have has to use effect is
+like component did mount so if we save this now if we go to the network tab we
+see no ongoing requests down there and we see our data was loaded. That was if I
+again saved as you see our data gets loaded so this is now working with the help
+of use effect. Video course Teach the world online Create an online video
+course, reach students across the globe, and earn money Udemy Copyright © 2019
+Udemy, Inc. Terms Privacy Policy and Cookie Policy Help and Support ×Close alert

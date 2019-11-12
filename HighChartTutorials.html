@@ -1,0 +1,421 @@
+Let's briefly look at the key components of a standard chart.
+
+In this image from the high chart site we can see the main features of any standard chart. 
+
+1. Title
+
+At the top we have the title.
+It usually appears above the main graphic and also provides a succinct description of what the data
+in the graph refers to.
+
+
+2. Axes
+the dimensions in the data are often displayed on the axes.
+If a horizontal and vertical axis are used they are usually referred to as the x axis and y axis respectively.
+Each axis will have a scale denoted by regular graduations and usually accompanied by numerical or categorical
+indications.Each axis will typically have a label displayed side or beside it describing the dimension represented.
+If the scale is numerical the label will often be suffixed with the unit of that scale in parenthesis.
+In this image of a sample temperature chart that unit would be the degrees centigrade unit.
+
+
+Within the graph a grid of lines may appear to aid the visual alignment of data.
+The grid can be enhanced by visually emphasizing the lines at regular points.
+The lines are then called major grid lines and the remainder are minor grid lines.
+
+The data of a chart can appear in a variety of formats such as textual labels.
+Dots shapes etc. when the data appearing in the chart contains multiple variables.
+The chart may include a legend also known as a key. The legend contains a list of variables appearing in
+the chart and an example of their appearance.
+
+This information allows the data from each variable to be identified in the charts.
+
+5. Configuring the title, subtitle and Axes of the Chart
+
+Welcome back to the second video of this section:Configuring the title subtitle and axes of your chart.
+
+Now we've established the generic structure of a standard charge.
+Let's go into more depth on each of these components by looking at their code representation in high
+charts. By understanding where you need to place code, you can configure the title and subtitle of a chart.
+We will also look at the axis labels, tick marks and grid lines as they are closely linked and or scale
+all together.
+
+Let's start by looking at the high chart's code to describe the title and subtitle of a chart.
+
+$("#container").highcharts({
+	title:{
+		floating: true,
+		align: 'left',
+		x: 100,
+		y:40
+
+	}
+
+	subtitle:{
+		text: 'this is the subtitle',
+		floating: true,
+		align: left,
+		x: 100,
+		y: 60
+
+
+	}
+})
+
+Here we can see code to set up the title and subtitle for this chart the title and subtitle can also
+be moved around by a variety of layered settings such as a align, float, margin, vertical-align and so on
+For all available options check out the highchairs API page.
+
+In this example both the title and the subtitle have been aligned to the left of the chart.
+
+By default the floating setting is set to false. When set to true, the plot area will not move to make space for the title.In other words true the title on top of the plot area.
+
+Let's change the title setting to false and see what happens.
+Now you can see that the title no longer sits on top of the chart.
+You can also align the title.
+
+The horizontal alignment of the title can be either left, center or the right.
+
+Currently I have it set to align left.
+Change the alignment to center and you should see it aligned to the center of the chart
+the x and y settings specify the location of the title.
+You can change the settings to see how the title gets repositioned.
+
+Next we'll look at configuring the axes of the chart in this image we see how the axis, labels, tick marks
+and grid lines are represented. The axis labels, tick marks and grid lines are closely linked and all scale
+all together.
+
+NOTE: THE AXIS LABELS, TICK MARKS AND GRID LINES ARE CLOSELY LINKED AND ALL SCALE TOGETHER.
+
+Their positioning is always calculated in highcharts to best fit the data present in the chart even when the image is resized. If we look at the tick marks we see them as lines placed along the axis to show the units of measurement.
+The spacing between ticks is decided by the tick interval options.
+
+NOTE: THE SPACING BETWEEN TICKS IS DECIDED BY THE TICK INTERVAL OPTIONS.
+
+For example we have minor tick interval configuration option set to 5 on the graph.
+
+$("#container").highcharts({
+	xAxis: {
+		categories: ['Jan','Feb']
+	},
+	yAxis:{
+		minorTickInterval: 5,
+		minorTickLength: 0
+	},
+	series:[{
+		data:[135,164,100,124]
+	}]
+})
+
+We can see the horizontal lines marking out the minor tick intervals.
+
+The Major Tick intervals represented by the bold lines.
+
+If we change the take setting to 10.
+
+Notice that the tick spacing increases.
+
+$("#container").highcharts({
+	xAxis: {
+		categories: ['Jan','Feb'],
+		min: 3,
+		max: 10
+	},
+	yAxis:{
+		minorTickInterval: 10,
+		minorTickLength: 0,
+		min: 30,
+		max: 300	
+	},
+	series:[{
+		data:[135,164,100,124]
+	}]
+})
+
+We can also add a minimum and maximum value to both axes.
+
+For example if we add minus three and max 10 to the x axis it will automatically adjust the viewable
+
+number of categories on the x axis.
+
+If we add a minimum and maximum value to the y axis
+
+we can see that in this example it will try to adjust the ticks so that it best fits the visible area.
+
+In this video we learned about adjusting a basic configuration options such as title subtitle and axes.
+
+In the next video we will look into implementing data series and legend manipulation.
+
+
+Data Series, Legends, Layouts and Color Settings:
+
+Welcome to video 3 on data series Legend layout and color settings. In our previous video we looked at
+how we can adjust basic configuration options such as title subtitle and axes.
+Now let's look at how we can represent our data in a chart in a standard chart a data set is represented
+as a series.
+
+DATA SERIES:
+
+A Data Series refers to the sets of values that are going to be on the chart-Be it a line chart, a bar chart, a pie chart etc. Different types of charts can work with different kinds of series.
+
+High chart will detect what data you have chosen and define it into series for the purpose of being on
+the chart. You can do things like give names to the series or set colors for them or put titles and legends on
+the charts for them and lots of other things.
+
+There are three different ways of setting up a data series.
+
+Firstly the series can be represented as a list of numerical values.
+
+An example would be where values are separated by commas.
+data: [0,5,45,46]
+
+Next the data will be represented as pairs.
+data: [[5,2],[3,2],[6,3]]
+
+An example would be like this where value pairs are in square brackets separated by commas.
+
+The fine representation is a list of objects with named values.
+
+data: [{
+		name: 'Point1',
+		color: 'green',
+		y: 0
+	},
+	{
+		name: 'Point2',
+		color: 'yellow',
+		y: 0
+	},
+]
+
+Let's look at these approaches in a bit more detail.
+
+
+
+Now let's open up data series one dot h t m l Data Series 2 dot h m l Data Series 3 8 shemale and data
+
+labels ADOT HMO using code editor a series is a set of data.
+
+For example a line graph or a set of columns.
+
+As mentioned earlier there are three ways to represent the data series in high charts.
+
+Let's see them in action.
+
+In this h t m l example.
+
+We have a single list of numerical values which will be represented as y values the x values in this
+
+example will be represented as categories of months as shown here in the next HGL example the data series
+
+is represented as pairs separated by square brackets.
+
+The first value of the pair represents the x value and the second value will represent the y value in
+
+the final a Shemin example.
+
+We have a list of objects with named values.
+
+Putting data into objects gives us much more control over each piece of data.
+
+If we look here we have an object called Point 1 and it has a color attribute and a Y value of 5 in
+
+the next example.
+
+We have enabled the data labels configuration by setting the enabled setting to true.
+
+This allows data labels to be displayed for each point of data in a series on the chart.
+
+The final feature we will look at is the legend component of a chart.
+
+Let's opened up legend.
+
+Customized dot H.T. mail file in our code editor the legend displays the series in a chart with a predefined
+
+symbol such as a square or a circle and the name of the series.
+
+The series can be disabled and enabled from the legend here.
+
+I've set a range of different configuration settings that can access from the legend configuration section
+
+of the high chart's API page for example.
+
+I aligned the legend to the right side of the chart and vertically aligned the legend to be at the top
+
+of the chart no let's change the background color of the label by typing in this line of code background
+
+color code on single quote hash F C F F C 5 a single quote.
+
+Now let's give it a border and color and we do this by typing in this line of code border color code
+
+alone single quote hash.
+
+See 9 8 6 5 7 single quote.
+
+Next.
+
+Let's change the legend border with by typing in this line of code border with Colon one.
+
+Now let's add the border radius border radius colon for.
+
+I've now given the legend a background color a border color border width and border radius.
+
+Notice how easy it is to add a configuration setting.
+
+But notice that we're adding it in a list fashion to the legend code segment which begins here and separating
+
+each configuration with a comma to access a comprehensive list of customization settings.
+
+Go to the high charts API site
+
+for example.
+
+Type in the search box.
+
+The word legend
+
+a long drop down list of options will appear.
+
+Scroll down and select the legend background color option.
+
+You can read information about this setting but I find it much easier to understand the feature by clicking
+
+on the try it link which opens up a live demo exhibiting the feature in James Fidele allowing you to
+
+directly test the code.
+
+We've just looked to the components that go into making up a chart.
+
+However we also need to consider how the chart itself is laid out and positioned on your web page.
+
+This diagram from high charts shows the main regions where high charts elements can be positioned using
+
+x and y values relative to the top left corner and using the A line and a vertical line options.
+
+The align option can have the values left right and center the vertical align align.
+
+Option can have the values top bottom and middle.
+
+Let's look at an example where we define the height and width of a chart.
+
+Let's open.
+
+Lay out.
+
+Height width dot HVM L in our code editor
+
+here.
+
+We've set the height of the charge to be 350 pixels and the width to be 500 pixels.
+
+Let's change the width of the chart to 700 pixels
+
+in the next example.
+
+We have a margin top setting set to 100 pixels.
+
+Let's change that setting to 50 and see the effect.
+
+In this example we have a margin left set to 100 pixels.
+
+In this example we have a margin right set to 100 pixels.
+
+In this example we have a margin bottom set to 100 pixels in this example we have a spacing Aleft set
+
+to 100 pixels.
+
+In this example we have a speccing bottom set to 100 pixels.
+
+Now open up plot options series data labels dot h m l in code editor the plot options is a wrapper object
+
+for configuring options for each series type examples of series type.
+
+Our area area spline bar column PI scatter spline gauge and range.
+
+These configurations have properties such as plot options dot series which is used for calm and plotting
+
+options shared by the whole series.
+
+Let's look at an example of plot options configuration.
+
+We're going to look at the plot options dot series dot data labels.
+
+Here we have the plot options enable the data labels to be viewable and we do this by setting the enabled
+
+setting to be true.
+
+We provide the styling for each of those data labels such as their background color border with border
+
+color and so on.
+
+Note that plot options configures the default settings for the whole of the data series.
+
+However plot options can be overwritten and we can see an example of this here.
+
+Notice that the data label for the five four three point two is different from all the other data labels.
+
+It has a purple border.
+
+We can see this data label configuration for data value.
+
+Five four three point two.
+
+It has settings for border color border with that has different values than the one described in the
+
+plot series.
+
+If we look at this in the chart we see that the visual properties for that data point are different
+
+from the rest of the data series.
+
+Hi charts allows you to overwrite the plot options and is useful for unique cases like this example
+
+where you want to highlight a data label that is different from the rest of the series.
+
+Now let's look at how high charts deals with color.
+
+Open background color dot h t m l encode Ed..
+
+Hi chart's supports solid and semi-transparent colors as well as Linnea and radio gradients.
+
+This applies to all the color options in the high charts API list such as border color background color
+
+line color etc..
+
+It also supports solid colors given in the hex format.
+
+For example we have a color with hex value.
+
+It also supports our G-B colors semi-transparent colors in high charts a given in the R.G. be a format.
+
+For example our G.P.A. and four numbers.
+
+The first three numbers represent the red green and blue parameters respectively.
+
+The last parameter is the alpha or opacity that ranges from zero which means that the color is fully
+
+transparent to 1 which means the color transparency is fully opaque.
+
+We've come to the end of this section.
+
+We've briefly reviewed how a generic chart is constructed.
+
+We then look at how high child's implements those features.
+
+By looking at its code implementation This was followed by examining her high charts lays AGT and positions
+
+your chart in your web page.
+
+Next we looked at plot options and how we can configure objects for each series type and override those
+
+settings.
+
+And finally we covered color settings in high charts.
+
+Looking at a few examples such as setting up a linear gradient in the next section we will look at configuring
+
+highchairs with more options and covering existing features such as animation 3D tool tips and more.
+
+Join me there.
+
+
+

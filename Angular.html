@@ -14,3 +14,54 @@ What is a decorator in programming?
 In object-oriented programming, the decorator pattern is a design pattern that allows behavior to be added to an individual object, dynamically, without affecting the behavior of other objects from the same class.
 
 Decorators provide a simple syntax for calling higher-order functions. By definition, a decorator is a function that takes another function and extends the behavior of the latter function without explicitly modifying it.Aug 22, 2018
+
+https://alligator.io/angular/ngfor-directive/
+
+*ngFor Directive in Angular. NgFor is a built-in template directive that makes it easy to iterate over something like an array or an object and create a template for each item.
+
+NgFor is a built-in template directive that makes it easy to iterate over something like an array or an object and create a template for each item.
+
+<ul>
+  <li *ngFor="let user of users">{{ user.name }}</li>
+</ul>
+<ul>
+  <li>Al Dente</li>
+  <li>D. Liver</li>
+  <li>Pepe Roni</li>
+</ul>
+
+let user creates a local variable that will be available in the template.
+of users means that we’ll be iterating over the users iterable that should be made available in our component.
+The * character before ngFor creates a parent template. It’s a shortcut to the following syntax: template=”ngFor let item of items”.
+
+Available local variables
+You can also set local variables for the following exported values: index, first, last, even and odd. index will return the current loop index, and the other values with provide a boolean indicating if the value is true or false. For example:
+
+<ul>
+  <li *ngFor="let user of users; let i = index; let odd = odd"
+      [class.odd]="odd">
+    {{i + 1}}. {{ user.name }}
+  </li>
+</ul>
+Will produce the following markup:
+
+<ul>
+  <li>1. Al Dente</li>
+  <li class="odd">2. D. Liver</li>
+  <li>3. Pepe Roni</li>
+</ul>
+
+
+*ngIf Directive in Angular 2
+
+<div *ngIf="userHasPet">
+  {{ user.pet.name }}
+</div>
+
+
+
+https://blog.angular-university.io/angular-host-context/
+
+
+for styling
+ng::deep etc

@@ -1,3 +1,19 @@
+
+React hooks help us work with our components in a more efficient way
+
+REACT HOOKS AND JUST JAVASCRIPT FUNCTIONS NOT COMPONENTS FUNCTIONS WHICH CAN ONLY BE USED INSIDE oF
+FUNCTIONAL COMPONENTS OR INSIDE OF OTHER HOOKS
+
+hooks are JavaScript functions named like this
+starting with a lowercase use and then your function name : useState()
+
+Hooks are highly reusable and that's our core idea behind them. You can use one and the same hook in multiple functional components or other hooks.
+
+You are not using hooks to share data between components but instead you can simply share functionality between components.
+
+hat's a difference you can add certain logic
+to multiple components but every component will then run that logic on its own.
+
 React memo is used to wrap this component to avoid unnnecessary re-render cycles so that the component only rerenders when the props that depend on it changes and not always when the parent component changes.
 
 so not always when the ingredients change. but also when ingredients change and when we are passing props 
@@ -192,7 +208,9 @@ which in this case, means, if we type into the title our new state simply is an 
 REPLACES THE CURRENT STATE
 
 
-useState is an object which simply doesnt have the amount property anymore. that is why i am getting the warning that input of type number is uncontrolled. it is like an input and i am getting the warning regarding the input when we type into the first input because the second input i.e this amount input ofcourse refers to the amount property in our state. and if we type into our first input, the updated state now has only the title property. hence the property we are trying to access in the second input i.e the amount property simply doesnt exist.  that is exactly whats causing this error. 
+useState is an object which simply doesnt have the amount property anymore. that is why i am getting the warning that input of type number is uncontrolled.
+
+ it is like an input and i am getting the warning regarding the input when we type into the first input because the second input i.e this amount input ofcourse refers to the amount property in our state. and if we type into our first input, the updated state now has only the title property. hence the property we are trying to access in the second input i.e the amount property simply doesnt exist.  that is exactly whats causing this error. 
 
 does update the state. but it does so by replacing the current state with this. 
 
@@ -243,7 +261,7 @@ Instead,
 
 that the updating function, the function stored as the second element in your array, has an alternative form you can use. Instead of just passing a value to that update functions, so to that function that sets a new state- you can also pass function to that function- an anonymous function for example. but it could also be a named one. and if you pass a function here, which ofcourse has to return your new state value in the end. 
 
-INSTEAD OF JUST PASSING A VALUE THAT UPDATE FUNCTIONS, YOU CAN ALSO PASS FUNCTION TO THAT FUNCTION- AN ANONYMOUS FUNCTION FOR EXAMPLE. 	
+INSTEAD OF JUST PASSING A VALUE TO THAT UPDATE FUNCTIONS, YOU CAN ALSO PASS FUNCTION TO THAT FUNCTION- AN ANONYMOUS FUNCTION FOR EXAMPLE. 	
 
 <input type="text"
 value = {inputState[0].title}
@@ -278,7 +296,7 @@ onChange = {event=>
 	)
 }
 
-And the difference to using the inputState[0] that we are not using the latest state which has been fully committed and which is used in this render cycle of this component, but that we are using the latest state we set within the updating function nomatter if react already  recreated the function or not based on that last update. 
+And the difference to using the inputState[0] that we are not using the latest state which has been fully committed and which is used in this render cycle of this component, but that we are using the latest state we set within the updating function nomatter if react already  recreated the function or not, based on that last update. 
 
 so now here we have the guarantee that we get the latest state at all times. that is ofcourse what we want here.
 
@@ -335,6 +353,8 @@ then the event will be locked in for the first keystroke essentially, which mean
 now, now normally that wouldnt be a problem ofcourse because yes this inner function: this state updating function, is a closure and therefore it closes over the event object which means it saves this event object for its execution so that when this inner state updating function runs which happens aynchronously, we are guaranteed to use the event that was triggered for that keystroke. so that it was created for that keystroke.
 
 the problem with events and it is really exclusive to events in react, is that reacts event are not the dom events but special synthetic events created by react which basically replicates the native dom events you would normally get but react adds a special factor to that. it pulls this event objects, which simply means - it reuses the event object.
+
+REACT EVENTS ARE NOT THE DOM EVENTS BUT SPECIAL SYNTHETIC EVENTS CREATED BY REACT WHICH BASICALLY REPLICATES THE NATIVE DOM EVENTS YOU WOULD NORMALLY GET BUT REACT ADDS A SPECIAL FACTOR TO THAT. IT PULLS THIS EVENT OBJECTS, WHICH SIMPLY MEANS- IT REUSES THE EVENT OBJECT.
 
 So, instead of creating a new event object for each keystroke it instead reuses the previous object.and the consequence of this is that for second keystroke since we have the closure and we locked in the event for the first keystroke. for the second keystroke we still reuse that same object we had for the first keystroke. and that simply is a problem here. we are reusing the wrong event object because of the way react handles the event objects. now i am aware that this is sounding really confusing. in the end this is really a special case, because of the way react handles this event objects. 
 
@@ -424,7 +444,7 @@ inputState[1](prevInputState => ({
 
 After:
 
-<input type="text" id="title" value={inputState[0].title} onChange={event=>
+<input type="text" id="title" value={inputState.title} onChange={event=>
 const newTitle = event.target.value;
 setInputState(prevInputState => ({
 	title: event.target.value,
@@ -440,13 +460,20 @@ Section 7: React Hooks: Multiple state:
 I hope it is clear how the useState hooks generally works now. when things which are not liking too much however is how complex for us to update the state. ofcourse, this is not a complex state here.
 
 it only two properties: it has only two things-title and amount. 
-but still we have to ensure that when we update the title, we dont loose the old amount and when we update the amount we dont loose the old title. now, that is doable here. but imagine we have a longer form here. you would have to write a lot of code just to always save the old state when you update something. 
+
+but still we have to ensure that when we update the title, we dont loose the old amount and when we update the amount we dont loose the old title. now, that is doable here. 
+
+but imagine we have a longer form here. you would have to write a lot of code just to always save the old state when you update something. 
 
 so whilst you can ofcourse manage state that is an object, and whilst this often might make sense, you should also be aware that there is a huge important difference when you compare the state added by useState to the state you used in a class based component.
 
- in a class based component state had to be an object- react merged it for you automatically. in functional components with useState, state doesnt have to be an object. and react doesnt merge it for you.
+ in a class based component state had to be an object- react merged it for you automatically. 
+
+ in functional components with useState, state doesnt have to be an object. and react doesnt merge it for you.
 
 but what you can do is you can register multiple states. so what would make much sense here, is that you dont have an object but lets say just a string here. and you have entredTitle instead of inputState and setEnteredTitle Function instead of setInputState
+
+YOU DONT HAVE AN OBJECT BUT LETS SAY JUST A STRING HERE. 
 
 const [enteredTitle, setEnteredTitle] = useState('');
 
@@ -458,7 +485,13 @@ const [enteredAmount, setEnteredAmount] = useState('');
 
 so now we have two states which are managed independently by react for this component, which is stored in different variables and which is set with different functions. 
 
-so i dont have to manually merge anything because these are managed independently. So, if we update one, the other one will be kept around and vice versa because as i mentioned already, these states survive rerender cycles. so, they survive updates of other states. but we dont have to merge it manually because we are not object anymore, but two separate strings which are managing the state. so now here when we are working with the title
+SO WE HAVE TWO STATES WHICH ARE MANAGED INDEPENDENTLY BY REACT FOR THIS COMPONENT, WHICH IS STORED IN DIFFERENT VARIABLES AND WHICH IS SET WITH DIFFERNT FUNCTIONS.
+
+so i dont have to manually merge anything because these are managed independently. So, if we update one, the other one will be kept around and vice versa because as i mentioned already, these states survive rerender cycles. 
+
+THESE STATES SURVIVE RERENDER CYCLES. THEY SURVIVE UPDATES OF OTHER STATES.
+
+so, they survive updates of other states. but we dont have to merge it manually because we are not object anymore, but two separate strings which are managing the state. so now here when we are working with the title
 
 THESE STATES SURVIVE RERENDER CYCLES. SO, THEY SURVIVE UPDATES OF OTHER STATES. 
 
@@ -510,6 +543,8 @@ const [enteredTitle, setEnteredTitle] = useState('');
 const [enteredAmount, setEnteredAmount] = useState('');
 
 Split your state into multiple states. that is how useState is intended to be used. 
+
+SPLIT YOUR STATE INTO MULTIPLE STATES.
 
 and only use objects or arrays as values for your state - when you really have data that changes together or where you need to change multiple things together. otherwise manage your state independently. it is so much easier. so much easier to write. you dont have to merge anything manually it is a bridge to use it as you can see.
 
@@ -579,12 +614,6 @@ const IngredientForm = React.memo(props=>{
  now lets say we are managing our ingredients not in our ingredient form but in the ingredients.js file in the ingredients component there.  Here i am creating the component like this with the function keyword. 
 
 function Ingredients() {
-	
-}
-
-In the ingredientForm i am creating it like this storing in a form and using the arrow function on the right side. it is totally upto you what you wnat to use. both is valid functional components. both has nothing to do with the react hooks. 
-
-const IngredientForm = React.memo(props=>{
 	return(
 		<div className="App">
 			<IngredientForm />
@@ -594,8 +623,30 @@ const IngredientForm = React.memo(props=>{
 			{/* Need to add list here */}
 		</section>
 	)
-})
+}
 
+In the ingredientForm i am creating it like this storing in a form and using the arrow function on the right side. it is totally upto you what you wnat to use. both is valid functional components. both has nothing to do with the react hooks. 
+
+const IngredientForm = React.memo(props=>{
+	const [enteredTitle, setEnteredTitle] = useState('');
+	const [enteredAmount, setEnteredAmount] = useState('');
+
+	const submitHandler = event => {
+		event.preventDefault();
+	}
+
+
+	return(
+		<div className="App">
+			<IngredientForm />
+		</div>
+		<section>
+			<Search />
+			<IngredientList />
+			
+		</section>
+	)
+})
 
 so back in the ingredients function here, which we just to avoid confusion, could also write like this:
 
@@ -615,23 +666,35 @@ const Ingredients = () => {
 	)
 }
 
-so here in the ingredients function, i have the ingredients form. and here in this functional component, i want to manage my ingredients. I guess that makes a lot of sense. there i will also output the list of ingredients.
+so here in the ingredients function, i have the ingredients form. and here in this functional component, i want to manage my ingredients. I guess that makes a lot of sense. there i will also later output the list of ingredients.
 
-so it is the component that has access to both our inputs and output later. so i want to manage ingredients in there. 
+so it is the component that has access to both our inputs: <IngredientForm /> and output: {/* Need to add list here ! /*} later. so i want to manage ingredients in there. 
 
 this ofcourse means that we want to add useState here because our list of ingredients i.e our array of ingredients will ofcourse be some state that should survive rerender cycles that will change over time and where every change should rerender this:
 
-<div className="App">
-	<IngredientForm />
+import React,{useState} from 'react';
+import IngredientForm from './IngredientForm';
+import IngredientList from './IngredientList';
+import Search from './Search';
 
-	<section>
-		<Search />
-		{/* Need to add list here ! /*}
-	</section>
-</div>
+const Ingredients = () => {
+	
+	const [ingredients,setIngredients] = useState([]);
 
 
- So once we do add our list to output our ingredients, well we can see some change when we add ingredients. so in the ingredients functional component,  i will again use array destructing to manage our ingredients and to have setIngredients function and in there with useState i will start with an empty array. 
+	return (
+		<div className="App">
+			<IngredientForm />
+
+			<section>
+				<Search />
+				{/* Need to add list here ! /*}
+			</section>
+		</div>
+	)
+}
+
+simply So once we do add our list to output our ingredients, well we can see some change when we add ingredients. so in the ingredients functional component,  i will again use array destructing to manage our ingredients and to have setIngredients function and in there with useState i will start with an empty array. 
 
 const Ingredients = () => {
 	const [ingredients,setIngredients] = useState([]);
@@ -644,21 +707,29 @@ here i will use an array because the ingredients ofcourse  is a list of ingredie
 Now we can also import the IngredientList component from IngredientList js file which i prepared for you. you can just add in here. <IngredientList />
 
 
+import React,{useState} from 'react';
+import IngredientForm from './IngredientForm';
 import IngredientList from './IngredientList';
+import Search from './Search';
+
+const Ingredients = () => {
+	
+	const [ingredients,setIngredients] = useState([]);
 
 
-const IngredientForm = React.memo(props=>{
-	return(
+	return (
 		<div className="App">
 			<IngredientForm />
+
+			<section>
+				<Search />
+				{/* Need to add list here ! /*}
+				<IngredientList />
+			</section>
 		</div>
-		<section>
-			<Search />
-			<IngredientList />
-			
-		</section>
 	)
-})
+}
+
 
 And ingredientList is a component that actually takes a property: ingredients which is the output and there besides the title and the amount i also want to have the id. 
 
@@ -678,30 +749,28 @@ const IngredientList = props => {
 	)
 }
 
-const Ingredients= ()=>{
-	return(
-		<div className="App">
-			<IngredientForm />
-		</div>
-		<section>
-			<Search />
-			<IngredientList ingredients={ingredients} />
-			{/* Need to add list here */}
-		</section>
-	)
-})
+
 
 So in the ingredients.js i want to pass ingredients props which <IngredientList/> expects to IngredientList and the value here will be my ingredients up there.
 
+import React,{useState} from 'react';
+import IngredientForm from './IngredientForm';
+import IngredientList from './IngredientList';
+import Search from './Search';
+
 const Ingredients = () => {
+	
 	const [ingredients,setIngredients] = useState([]);
+
+
 	return (
 		<div className="App">
 			<IngredientForm />
 
 			<section>
 				<Search />
-				<IngredientList ingredients = {ingredients} />
+				{/* Need to add list here ! /*}
+				<IngredientList ingredients = {Ingredients} /> />
 			</section>
 		</div>
 	)
@@ -755,6 +824,464 @@ const Ingredients= ()=>{
 		</section>
 	)
 })
+
+Now, in the <IngredientForm> we should be able to add a new Ingredient. So lets define a function here in ingredients.js
+
+addIngredientHandler is a function that will ultimately receive a new ingredient which should store this in our ingredients array. so the idea here will be to call
+setUserIngredients(); and now important, we will need to update the existing list of ingredients: add a new one. that means, we depend on the current state, therefore, it is best if we use the functional form where we are guaranteed to get latest state.
+
+const addIngredientHandler = (ingredient) => {
+	setUserIngredients(prevIngredients => [...prevIngredients,{id: Math.random().toString(),...ingredient}])
+}
+
+so we get our prevIngredients here. and we return a new array where i use all the previous ingredients. this is a spread operator taking all the elements of our old array, adding them as elements to the new array which i am constructing with the square brackets. and i add one new element here and that is the ingredient we are getting.
+
+Now Important: the ingredient we are getting from ingredient form will have a title and amount. but probably not an id because an id should somehow autogenerate. 
+
+now i will later use a web server which does this for us. 
+for now lets create a new object here with an id which can be Math.random().toString() and ofcourse i want to keep the title and the amount from ingredient and we again use the spread operator on ingredient now, so on the argument that we are getting
+
+
+...ingredient
+
+because this ingredient argument will be an object lets say and spread operator takes all the key value pairs from the object. and adds them as keyvalue pairs to this new object.
+
+so, now we are adding a new object with an id, title and amount to our list of ingredients here. 
+
+now we need to pass a pointer at the addIngredientHandler to the 
+<IngredientForm> because that is when we want to trigger the addition of ingredient. Because thats where we have our button that submits the form. 
+
+This button triggers onSubmit here, the submitHandler and here in submitHandler I now want to call something which i am getting from the ingredients component. 
+So lets say we pass in a prop which i say
+onAddIngredient and there we point at the addIngredientHandler
+
+<IngredientForm onAddIngredient = {addIngredientHandler} />
+
+So this is how we pass functional reference.
+
+So now we will have the onAddIngredient prop in the IngredientForm. and that will have a pointer at this function. 
+
+so in the IngredientForm - in the submitHandler we can call
+
+props.onAddIngredient();
+
+as a function because then this will hold a pointer at that  function in the ingredient.js file. there i will pass in an object. because here i expect to get an ingredient as an object.
+
+const addIngredientHandler = ingredient => {
+	
+}
+
+So, I pass in the object which has a title and the amount. 
+
+props.onAddIngredient({title: enteredTitle, amount: enteredAmount});
+
+So title is my enteredTitle and amount is my enteredAmount. 
+
+so this is getting sent to the ingredient handler 
+
+12. Sending Http Requests
+
+
+So enough about useState() for now. Lets now send this to a web server so that we can also dive into some other hooks for eg. hooks that help us replace class lifecycle methods. 
+
+I will use firebase as a dummy backend. 
+
+Name the project react-hooks-update 
+
+then go to database and set up a new database there. use the Realtime database. Click in database and start in test mode which will allow us to read and write because here we will start as a dummy backend. 
+
+so this is the url you can now send request to
+
+https://react-hooks-update.firebaseio.com/ to store data in the database. 
+
+and, to send request we can use axios as we did in the course. or we can use the built-in fetch api built right into javascript.  i will use the fetch api.
+
+so when we are adding an ingredient, besides updating this up locally,
+
+const addIngredientHandler = (ingredient) => {
+	setUserIngredients(prevIngredients => [...prevIngredients,{id: Math.random().toString(),...ingredient}])
+}
+
+i also want to send the http request. and i do this by calling fetch. and again this is a function that browser understands. its not a react or react hook function. it is a browser function. so to say the fetch api is called. 
+
+FETCH API IS CALLED. 
+
+it is built into modern browsers. it will send behind the scenes http requests. and fetch takes the url u want to send the request to which is a string. 
+fetch('https://react-hooks-update.firebaseio.com/ ')
+but in our case it is not just this url. lets say we want to store the ingredients in the ingredients node. firebase also requires a .json at the end. thats just a firebase thing- nothing to do with react or react hooks. 
+
+fetch('https://react-hooks-update.firebaseio.com/ingredients.json ')
+
+Now you got to know that fetch by default will send a get request. Firebase wants the post request though because we want to store data. hence we pass a second argument to fetch and thats an object that allows us to configure this request. and on this object we can set the method property. 
+
+method: 'POST'
+
+The default is 'GET' and we never need to set that. but we want to send the POST. you can also then add a body to define what you want to send.
+
+body: JSON.stringify();
+
+ and that has to be json data which means you can use JSON which is another thing built in the browser. 
+
+ JSON IS ANOTHER THING BUILT IN THE BROWSER. IT IS THE CLASS IN THE END BUILT INTO THE BROWSER WHICH HAS A STRINGIFY METHOD.
+
+ it is the class in the end built into the browser which has a stringify method. this will take a javascript object or array and convert it into valid json format. 
+
+ it is a convenience feature built into the browser. also has nothing to do with react. so here in stringify method i want to pass that ingredient we are getting. basically ingredient like this:
+
+ body: JSON.stringify(ingredient);
+
+ without an id because firebase will generate an id for us. we dont have ot do that manually. now one other thing you also need to set now is headers. and that is a nested javascript object and there you can set the headers you want to append. and there firebase expects the content-type header and set that to application/json. 
+
+ const addIngredientHandler = ingredient => {
+ 	fetch('https://react-hooks-update.firebaseio.com/ingredients.json '), {
+ 		method: 'POST',
+ 		body: JSON.stringify(ingredient),
+ 		headers: {'Content-Type':'application/json'}
+
+ 	}
+}
+
+with axios we didnt have to do that. because axios did it for us. fetch doesnt do it for us. as it doesnt convert data to json for us.
+
+ we have to do the data conversion manually. we have to add these headers manually to inform firebase that we have got and incoming json data. 
+
+ fetch will now return a promise which will eventually resolve once this request was sucessfully sent. or ofcourse once it fails. that could be an option too. 
+
+ so now lets say we want to update our data locally once this promise is done.
+
+  then we can use then method here and get the response instead of this nested function and in there i then want to update my ingredients because you learnt through out this course, with promises, the thing is the function you are passing to then will not execute immediately when this gets executed only when this fetch request is done in this case. 
+
+const addIngredientHandler = ingredient => {
+ 	fetch('https://react-hooks-update.firebaseio.com/ingredients.json ', {
+ 		method: 'POST',
+ 		body: JSON.stringify(ingredient),
+ 		headers: {'Content-Type':'application/json'}
+
+ 	}). then(response => {
+ 		response.json();
+ 		setUserIngredients(prevIngredients => [
+ 		...prevIngredients,
+ 		{id: Math.random().toString(),...ingredient}])
+ 	})
+}
+
+
+so then i want to update my ingredients. 
+
+then(response => {
+ 		response.json();
+ 		setUserIngredients(prevIngredients => [
+ 		...prevIngredients,
+ 		{id: Math.random().toString(),...ingredient}])
+ 	})
+
+ 	you could also use async await here. but i will stick to this then approach because i think it makes it really clear that this method: setUserIngredients, executes at a later point in 
+
+
+time. 
+
+the good thing is that this response actually will get some data back from firebase which contains that automatically generated id. response itself however is more complex object. we are interested in the body of that response. and you get that by calling the json method there.
+
+response.json();
+
+this will extract the body and convert it from json to normal javascript code. however this also returns a promise.  so i will actually 
+return response.json();
+and move the setUserIngredients code to another then block which will be my body or response data. this second block executes once this body has been parsed through response.json().
+
+const addIngredientHandler = ingredient => {
+ 	fetch('https://react-hooks-update.firebaseio.com/ingredients.json ', {
+ 		method: 'POST',
+ 		body: JSON.stringify(ingredient),
+ 		headers: {'Content-Type':'application/json'}
+
+ 	}). then(response => {
+ 		response.json();
+ 	}).then(responseData => {
+
+ 		setUserIngredients(prevIngredients => [
+	 		...prevIngredients,
+	 		{id: Math.random().toString(),...ingredient}])
+ 		})
+ 	});
+}
+
+Now responseData will be an object which has a name property which contains this automatically generated id. thats just how far it works. 
+
+so here i can set the id to response.id
+
+setUserIngredients(prevIngredients => [
+	 		...prevIngredients,
+	 		{id: responseData.name,...ingredient}])
+ 		})
+
+Again we can access name here. it has nothing to do with react or with fetch api. thats just firebase. it returns some data which in the end is some js object which has a name property and the name property will have that unique id property generated by firebase.
+if you use different api, it will not be name but for firebase it is. 
+
+so now, we are creating our ingredient lcoally.updating it there based on our previous ingredients with the ingredient we got here. 
+and with our id generated by firebase.
+
+
+
+
+it returns some data which in the end is the js object which has a name property and that name property will have the unique id which was generated by firebase.
+
+so our next goal is to fetch our data whenever we reload- whenever our app starts, whenever our ingredients gets rendered.and for that we would normally would have used lifecycle methods. we would have used componentDidMount. and we cant use that anymore here unless we transform this to a class based components. 
+
+13. useEffect Load Data
+
+So we want to fetch all ingredients whenever this ingredient component gets rendered in the end. now as i mentioned at the end of the last lecture normally we would use componentDidMount for that to fetch something when this component mounts but this is now not an option anymore unless we transform this to a class based component. 
+
+but there is another hook thats helps us with that. its the useEffect hook. how does this work? just like useState hook, we can only use it in functional components. and we have to use it in the root level. 
+
+so lets use it here:
+
+const Ingredients = () => {
+	const [useIngredients, setUserIngredients] = useState([]);
+
+	useEffect();
+}
+
+useEffect has the name because it is there for you to manage side effects: an http requests are a typical side effects.
+
+ side effects basically means that you have some logic that runs that does affect your application for example - we are fetching some data here but it is not getting finished in the current render cycle or may be it effects something which is outside of the scope of jsx code down there, may be you are setting document title - anything like that - so anything you cannot manage with your normal this component is getting rendered flow.
+
+useEffect by default is executed right after every component render cycle. after this ingredients component has been rendered for the first time- the function you pass to useEffect()-you have to pass a function to the useEffect. and that function will get executed.
+
+useEffect(()=>{})
+
+so this runs whenever this component got rerendered and that is really important to keep in mind: after and for every render cycle. not before, not simultaneously but after every render cycle.
+
+ now, why do we need useEffect though. we could just call fetch to get our data outside of useEffect right? the fetch would automatically send a get request and we will get our data back.
+
+  and then we can add a then block and then we get the response. if we can return response.json() - access to the response body and then we can add another response block which is our response data. yes we should also handle errors. we will do that later. 
+
+fetch('https://react-hooks-update.firebaseio.com/ingredients.json ', {
+ 		method: 'POST',
+ 		body: JSON.stringify(ingredient),
+ 		headers: {'Content-Type':'application/json'}
+
+ 	}). then(response => {
+ 		response.json();
+ 	}).then(responseData => {
+
+ 		setUserIngredients(prevIngredients => [
+	 		...prevIngredients,
+	 		{id: Math.random().toString(),...ingredient}])
+ 		})
+ 	});
+
+so this is executed when this component renders and that is want right? when hte component is rendered for the first time we want to fetch this. So, here we got our response data. and response data in firebase case will actually be an object-not an array and we have to transform this 
+
+const loadedIngredients  = [];
+
+fetch('').then(response=>{
+	response.json();
+}.then(responseData=>{
+	const loadedIngredients = [];
+
+	for (const key in responseData) {
+
+	}
+}))
+
+this loadedIngredients is our helper constant that i am creating. then i use the for in loop to go through all my keys at responseData because again 
+response data will be an object. 
+
+every key will be such a unique id and the value for that key will be the actual data for our ingredient. 
+
+so here key will be this unique id.
+
+ the value for responseData key will be our concrete ingredient Data so here i can use LaodedIngredients, the array that i created here. and push a new ingredient on to it. 
+
+ it is constant but with push we are not editing the value, stored in loadedIngredients. we are editing the array stored in memory. and if it is not clear to you, attached you will find resource on javascript reference and primitive types which has something to do with that. so here i push a new object on to the loadedIngredients array. the id is the key, and title is the responseData for that key i.e responseData[key]. with this dynamic syntax here, 
+responseData[key].title 
+and amount is: responseDta[key].amount
+
+const loadedIngredients  = [];
+
+for (const key in responseData) {
+	loadedIngredients.push(
+		{
+			id: key,
+			title: responseData[key].title,
+			amount: responseData[key].amount
+		}
+
+	)
+}
+
+so this is how i load my ingredients. how i transform this objects to an array and once this transformation is done so after this for loop here, we can ofcourse call setUserIngredients(loadedIngredients); i.e to this array we generated. 
+
+this approach has one huge issue. if you save this you actually end up with the infinite loop here. you can see if you access the network tab. you are sending tons of requests. there we quickly comment it out to stop this infinite loop.
+
+//setUserIngredients(loadedIngredients);
+
+
+so why are we getting that infinite loop for fetching data like this? if you fetch data in your render function then whenever ingredient renders you are sending a http request. and when you then as a result, after this http request update your state what happens when you update your state- the component renders again- so the ingredients renders again and what does this mean? we send another http request. we update the state at some point. we rerender we send request.
+
+and thats the infinite loop. thats sending the request here in render method is not an option. 
+so lets cut the function from the render method and move into the useEffect function here. now we are executing this after our rerender cycle. but still
+
+const Ingredients = () => {
+	const [useIngredients,setUserIngredients] = useState([]);
+
+	useEffect(()=>{
+		fetch()
+	})
+}
+
+if we go to the network tab. we still have an infinite loop.
+
+so how can we fix that?
+
+useEffect actually also takes a second argument. the first argument is the function which executes after a rerender cycle. the second argument is an array with the dependecies of your function. and only when such a dependency change, then the function will rerun. so this allows you to control how often this function run. By default: for every render cycle you can change this. 
+
+
+14. Use Effect
+
+So we learnt about useEffect. Just like with useState, we can have multiple useEffect causing one in the same component.
+you can have as many as you want just as with useState. Here i could have another useEffect called. and this function just wants to log 'RENDERING INGREDIENTS'
+
+useEffect(()=>{
+	console.log('RENDERING INGREDIENTS');
+})
+
+I m not specifying a second argument. and this will run for every rerender cycle. 
+
+so if we console.log we see:
+2 RENDERING INGREIENTS
+
+that is it runs twice. the reason for that simply is this component gets rendered. and, this first useEffects also executes and fetches data. And,this is the first render cycle. and then, once this data fetching is done which happens in the future, it takes a while, only few milliseconds but still. then we update the state. and hence we rerender this component again. and we have another rerender cycle. and thats why we see ingredients twice here.
+
+so you can have multiple use effect calls and you can control how they execute with this second argument, with array.
+
+Now you should configure this array in an honest way though.
+
+you should really specify your dependencies. if you have a dependency for example here, i am outputting user Ingredients- then you should specify it. you can ofcourse omit the second argument if you know you wanna run this for every rerender cycle.
+this means 
+
+
+
+useEffect(()=>{
+	console.log('RENDERING INGREDIENTS', userIngredients);
+})
+
+
+
+but if you know you only wanna run this if this changed, you should specify that in this case, userIngredients is a dependency of second effect. this means that this function here will now only run when userIngredients changed. Right now in this app thats the same as rendering in every render cycle. but if we had something else, that could be executed, which also rerenders this- lets say we had some other value where we are managing - which we can change with a setState. then this function would only execute when userIngredients changed not if taht other value changed.  we will see that concept of having arguments here through out this module butit is very important.
+
+so that is useEffect and how you can configure it or at least the basics of useEffect.
+
+useEffect(()=>{
+	console.log('RENDERING INGREDIENTS', userIngredients);
+},[useIngredients]);
+
+There is more to useEffect than what we see thus far.
+
+
+14. Search
+
+lets manage the user input
+
+import React, {useState} from 'react';
+
+const Search = React.memo(props=>{
+	const [enteredFilter, setEnteredFilter] = useState('');
+
+	return (
+		<section className="search">
+			<Card>
+				<div className="search-input">
+					<label>Filter by Title</label>
+					<input 
+					type="text" 
+					value={enteredFilter}
+					onChange = {event=>setEnteredFilter(event.target.value)}
+					 />
+					}
+					}
+				</div>
+			</Card>
+		</section>
+
+	)
+})
+
+Now whenever we type something in input, we try to fetch data from firebase. How could we make this work? 
+
+well you could register a function for onChange- basically sends a http request on every keystroke would work. Here, however i am updating the value on every keystroke. Instead you can use useEffect here. and pass in a function that should make that http request. simply specify enteredFilter as a dependency. 
+
+
+import React, {useState, useEffect} from 'react';
+
+
+const Search = React.memo(props=>{
+	const [enteredFilter, setEnteredFilter] = useState('');
+
+	useEffect(()=>{
+
+	},[enteredFilter])
+
+});
+
+This means that this function will execute whenever enteredFilter changed- having the same result. but in my opinion it is a bit elegant. we are really embracing the idea of hooks.  we are splitting our logic.
+
+this function:
+onChange={event=>setEnteredFilter(event.target.value)}
+
+only updates what the user enters or only updates the state the user entered. useEffect() automatically execute thereafter. and do whatever we want to do for every change.
+
+so here, i want to sent the http request. so we will go to ingredients.js and basically fetch the logic i have in here.
+useEffect(()=>{
+	fetch('')
+	.then(response=> response.json())
+})
+
+everything is the same. but in the end i dont call setIngredients. 
+Instead i want to trigger something in ingredients.js because that is where we manage our ingredients, that is also where we use the search component. 
+
+<section>
+	<Search />
+</section>
+
+In the end, we should also use the Search component. in the end we should establish a connection. this ingredients components updates the ingredients here: fetch new ingredients in Search.js lets say. 
+
+of course for that we use props. we can specify
+
+props.onLoadIngredients() lets say- the name is totally up to you. 
+and forward our loaded ingredients like this:
+
+const Search = React.memo(props=>{
+	const [enteredFilter, setEnteredFilter] = useState('');
+
+	useEffect(()=>{
+		props.onLoadIngredients(loadedIngredients);
+
+	},[enteredFilter])
+
+});
+
+so onLoadIngredients is now a function i expect on my search component.So, in ingredients component, we have to specify this prop on the search component. and there forward a pointer at a function that should execute when onLoadIngredients is called in the search component. we have no such function yet. so let me add at the top.
+
+useEffect(()=>{
+	console.log('Rendering Ingredients',userIngredients);
+},[userIngredients])
+
+const filteredIngredientHandler = (filteredIngredients) =>{
+	setUserIngredients
+}
+we get filterIngredients as argument. the idea here is simply that we call setUserIngredients(fitleredIngredients)
+we set it equal to filteredIngredients.
+
+
+
+
+
+
+
+
+
+
 
 
 
