@@ -7,15 +7,31 @@ React Tutorial
 5. A new ! post-fix expression operator
 6. What is the use of stringify and then parse a JSON object
 7. Export Default considered Harmful
+8: Example of Toggle Button
+9. Conditional Rendering with && operator in React
+10. Passing Arguments to Event Handlers
+11. Refs
+12. Render Props
+13. React with Typescript
+14. React Contexts
+15. Example of React Component
+
 
 1. Print two variables next to each other.
 Use tilde and currency operator of es6 
+
+codeword: eh chadke dollar de malai
 
 const FormatMoney = (value: number, currencySymbol: string | undefined)=>{
   return `${currencySymbol} ${value}` ;
 }
 
 2. Call a function and return a function inside the return statement.
+
+const FormatMoney = (value: number, currencySymbol: string | undefined)=>{
+  return `${currencySymbol} ${value}` ;
+}
+
 
 export function BulletChartCard(props: IFinancialDetailsProps){
   const {productivity, growth, currencyInfo} = props;
@@ -330,6 +346,1006 @@ Autocomplete
 Irrespective of if you know about the exports, you evenautocomplete at this import {/*here*/} from "./foo"; cursor location. Gives your developers a bit of wrist relief.
 Typo Protection
 You don't get typos like one dev doing import Foo from "./foo"; and another doing import foo from "./foo";
+
+
+8: Example of Toggle Button
+
+class TodoApp extends React.Component {
+
+  state = {
+  	on: false
+  }
+  
+  toggle = () => {
+   this.setState((prevState)=>{
+   	return {
+    	on: !prevState.on
+    }
+   })
+  }
+
+  render() {
+    return (
+    <React.Fragment>
+      {this.state.on && <p>Hello toggle me</p> }
+      <button onClick={this.toggle}> Show/ Hide </button>
+    </React.Fragment>
+    )
+  }
+}
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+
+
+Passing Arguments to Event Handlers
+
+<button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
+<button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+
+
+In both cases, the e argument representing the React event will be passed as a second argument after the ID. With an arrow function, we have to pass it explicitly, but with bind any further arguments are automatically forwarded.
+
+
+nameChangedHandler = (event) => {
+	this.setState({
+		person: event.target.value
+	})
+}
+
+the event object will be automatically passed by react like in normal js where you get default access to event object. 
+
+togglePersonHandler(){
+	
+}
+we will have a problem if you want to use the this keyword.
+
+
+9. Conditional Rendering with && operator in React
+
+https://reactjs.org/docs/conditional-rendering.html
+
+const MailBox = (props) => {
+  	const unreadMessages = props.unreadMessages;
+    console.log("props",unreadMessages);
+
+    return(
+    <React.Fragment>
+    {unreadMessages.length>0 && <span>hello</span>}
+   	</React.Fragment>
+      
+    )
+  
+}
+
+
+class TodoApp extends React.Component {
+  
+  
+  render() {
+	  const messages= ['One','Two','Three','Four'];
+	    return (
+	      <MailBox unreadMessages={messages} />
+	    )
+  }
+}
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+
+It works because in JavaScript, true && expression always evaluates to expression, and false && expression always evaluates to false.
+
+Therefore, if the condition is true, the element right after && will appear in the output. If it is false, React will ignore and skip it.
+
+10. Passing Arguments to Event Handlers
+
+Inside a loop it is common to want to pass an extra parameter to an event handler. For example, if id is the row ID, either of the following would work:
+
+<button onClick={(e) => this.deleteRow(id, e)}>Delete Row</button>
+<button onClick={this.deleteRow.bind(this, id)}>Delete Row</button>
+The above two lines are equivalent, and use arrow functions and Function.prototype.bind respectively.
+
+In both cases, the e argument representing the React event will be passed as a second argument after the ID. With an arrow function, we have to pass it explicitly, but with bind any further arguments are automatically forwarded.
+
+
+11. Refs
+
+A very helpful article on Refs: https://medium.com/@martin_hotell/react-refs-with-typescript-a32d56c4d315
+
+Refs allows you to access a dom element. Lets say i have a form, i have a bunch of fields. and a submit button. 
+
+you want user to type something in and click enter and that should move your focus to the next field. and so on.. and then enter to focus on submit. and, enter again, that would submit the button. So you are not using mouse at all. you can use tabs to do that. but most of the people are comfortable with the enter button.
+
+There is no easy way to do it but using refs. so we are going to build 
+
+Shadow DOM if you dont know is basically for scoped css.
+
+https://www.youtube.com/watch?v=tiytyGEodl0
+
+class TodoApp extends React.Component {
+  
+  onClick = () => {
+    console.log(this.firstName.value);
+  }
+  
+  onKeyUp = (e)=>{
+    if(e.keyCode === 13) {
+      this.lastName.focus();
+    }
+  }
+  render() {
+    return (
+      <div>
+         <div>
+           <span>FirstName:</span>
+           <input ref={(input)=>{this.firstName=input}
+           type="text"
+           onKeyUp={this.onKeyUp}
+           />
+         </div>
+         <div>
+           <span>LastName:</span>
+           <input ref={(input)=>{this.lastName=input}} type="text" />
+         </div>
+          <div>
+           <span>Age:</span>
+           <input ref={(input)=>{this.age=input}} type="text" />
+         </div>
+          <div>
+           <input type="submit" ref={(input)=>{this.submit=input}} value="submit" onClick={this.onClick}/>
+         </div>
+      </div>
+    )
+  }
+}
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+
+Here,
+ref={(input)=>{this.lastName=input}}
+
+we are creating an input and assign that input to a variable. 
+
+
+<input type="text" />
+
+when we render our persons here, the last person should automatically receive focus. In regular js, you could write
+
+componentDidMount(){
+  document.querySelector('input').focus()
+}
+
+if i do this, i do get focus but i focus on the first one. the querySelector selects the first input it finds. And, additonally this is not really that great. because it doesnt refer to the input rendered by this component, otherwise it would render the last input because that was the last component rendered. this code here executed so this code here actually executed the last time in that last person component and it didn't focus the
+input of that person component but still, the first input it found on the entire page because document.querySelector
+is not something that is related to React, it is a general web or browser feature, a general DOM selector and it always works on the entire DOM,
+
+it doesn't care whether we use React or not and therefore, this is not the optimal way of selecting this.
+Sure we could set up an ID here to select it by ID but React actually has an easier way for us to select an element, a concept called refs which stands for references. On any element and that does really mean not just on inputs but on any element including your own components, you can add a special ref keyword. Now ref, just like key, is a special property you can pass into any component, it is detected and understood by React.
+
+Now ref can be used in a couple of different ways and here is way number one which is supported in older versions of React too. You pass a function here and this can be an anonymous arrow function as I'm doing versions of React too. You pass a function here and this can be an anonymous arrow function as I'm doing it here. and the argument that you are getting, is the reference to the element you place this on. 
+
+<input key="i3" ref={()=>} type="text" onChange={this.propschanged} value={this.props.name} />
+
+Here, we could name this inputEl, but you can name it whatever you want.
+
+<input key="i3" ref={(inputEl)=>{}} type="text" onChange={this.propschanged} value={this.props.name} />
+
+in the function body, we can use that. therefore, here ofcouse we can call it focus actually.
+
+<input key="i3" ref={(inputEl)=>{inputEl.focus()}} type="text" onChange={this.propschanged} value={this.props.name} />
+
+But thats not what i want to do here. Instead lets say we want to use that in some other place of the application. and therefore what you can also do is, you can add a new property to your class, so not to your state but really just to the class by using this, then any name of your choice like input element
+but this can really be name, whatever you want and this holds the inputEl we're getting as an argument. So we're getting access to the input element here and then we're storing this in a global property, 
+
+<input key="i3" ref={(inputEl)=>{this.inputElement=inputEl}}
+
+so from that point on we can use it anywhere in our application. And since componentDidMount executes
+
+after render, input element will have been set by then,
+so in here we can call input element focus, excuse me,
+
+ componentDidMount(){
+   this.inputElement.focus();
+ }
+
+ <input key="i3" ref={(inputEl)=>{this.inputElement = inputEl}}/>
+
+ this input element focus of course because input element is a property of this class and therefore this approach
+
+only works in class-based components, not in functional components. If we saved that, it reloads and
+if I toggle my persons, now the last persons input is selected, thanks to this reference.
+
+Now this is one approach of using references but as I mentioned, it's not the only one. Since
+React 16.3, we also have another way of setting up a reference and that includes the constructor or requires us
+to use the constructor and in there, you can now set up your input element, so the same property I'm using down there, input element
+by calling React.createRef(). So createRef is a method offered on the React object we're importing and I'm storing it here in the input element.
+
+constructor(){
+  this.inputElementRef = React.createRef()
+}
+
+
+Now that means of course this is not necessarily my input, this is any reference object React gives me, whatever that is behind the scenes.
+You can now use this reference here and therefore I'll name it inputEl, element ref to make it really clear that this is just a reference, you can now use this here instead of passing a function to ref.
+
+//<input key="i3" ref={(inputEl)=>{this.inputElement = inputEl}}/>
+<input ref={this.inputElementRef}/>
+
+
+
+ So, this function approach is OK and therefore I'll comment it out to keep it here but you can now set ref
+equal to this input element ref, so to this property you're initializing here in the constructor. This holds an access to this ref object
+React gives me and then I'm assigning this to my ref property and behind the scenes, React will make
+the connection and inputElementRef will then actually allow me access to the element on which this
+ref assignment was placed.
+
+So now in componentDidMount, I can use this.inputElementRef, so this ref property and there, I actually
+have a current property which you have to access first and this gives you access to your current reference.
+
+componentDidMount(){
+  this.inputElementRef.current.focus()
+}
+
+So here, I'll access current and then focus because the current element stored in this reference here
+is this element here, so the input element and that does have a focus method.
+So with that, we would always be able to do that.
+Now one thing, if you add a constructor, you have to call super here and of course you should forward
+the props you're getting here to make sure everything works correctly,
+always when you add a constructor, add super first.
+
+constructor(props){
+  super(props);
+  this.inputElementRef = React.createRef();
+}
+
+So now with that, we got everything set up and now this app reloads and you can see that still the last
+person is selected, thanks to our reference. So you can use either approach, either with React create ref which is the more
+modern approach or by using that function form down there to get direct access to the element,
+this is the older approach and therefore it also works in older versions of React and it's up to you
+to use which version you want depending on which version, the version of React you're using, is allowing
+you to use.
+
+
+
+REFS WITH REACT HOOKS:
+-----------------------
+
+What about functional components, how do you use references there, is it possible there?
+
+Well this function-based approach here is not usable in functional components but the other approach kind of is, with the help of React hooks.
+
+So let's go into our cockpit.js file where we have a functional component and let's say in here, I
+automatically want to click this button here whenever this entire page loads.
+
+Cockpit.js
+
+const cockpit = props => {
+  return (
+    <button className={btnClass} onClick={props.clicked}> Toggle Persons</button>
+  )
+}
+
+So maybe up here, doesn't really matter but should definitely be before you return your JSX code of course,you set up your reference. So I'll create a constant here and I'll name this toggle button ref and now here in a class-based component, we would have used React.createRef().
+
+const cockpit = props => {
+  const toggleBtnRef = React.createRef();
+  return (
+    <button className={btnClass} onClick={props.clicked}> Toggle Persons</button>
+  )
+}
+
+ In a functional component, this will not work, this is not supported but instead here we have a hook we can use, the use ref hook.
+ So you import use ref from React and then you use ref here, like this
+
+ import React, { useEffect, useRef } from 'react';
+
+ const cockpit = props => {
+  const toggleBtnRef = useRef();
+  }
+
+ Now you could pass an initial value here because you can actually use references not just to get access to DOM elements but you can even store other values in there but that is more advanced and not something we'll dive into right now,
+
+ the more common use case here for references is that you do get access to your DOM elements. 
+
+ So now we have our reference created with the help of the use ref hook, now we can connect that in our DOM.
+
+ const cockpit = props => {
+  const toggleBtnRef = useRef(null);
+}
+
+lets pass null as an intial value here.
+ Now therefore let's pass null as an initial value here and then let's go down to our DOM or to our JSX code to be precise,
+ not the real DOM and here I want to pass a reference to this button or I want to set a reference to this button.
+ So here again, we use the ref key word, that can be used here as well and I now refer to my button, excuse me, my toggle button ref and toggle
+  button ref is this constant which uses useRef. 
+
+  <button ref={toggleBtnRef} className={btnClass}>Toggle Persons</button>
+
+  Now with that set up, we could try clicking that button. So let's use toggle button ref current click and let save this and
+  see if it works and it does and I get an error, cannot read property click of null.
+
+
+  const cockpit = props => {
+    const toggleBtnRef = useRef(null);
+    toggleBtnRef.current.click();
+  }
+
+
+
+
+  What's going wrong here,
+
+do you have an idea?
+
+
+It's kind of tricky but it's important, if you understand this, you understand how hooks work.
+Well I'm getting this because I'm calling click right after I initialize my reference.
+
+ React didn't have a chance of executing the code down there where I actually do assign this reference to the
+button and therefore at the point of time I'm calling click here, the button is of course undefined.
+
+Now how could we change that? We can change this with useEffect because what did you learn about
+useEffect?
+
+useEffect(()=>{ //this is the function you pass to useEffect.
+  
+},[])
+
+It basically runs after every render cycle. So the function you pass to useEffect does not run immediately,
+it runs after this JSX code here has been rendered for the first time and therefore useEffect
+here is a great place to actually call click. So therefore here in this useEffect where I pass an empty
+array as a second argument and which therefore only executes when the component renders the first time
+and then cleans up when it's unmounted,
+
+here I'll not use this set timeout thing anymore but instead here, I can now use toggle button ref current
+click, like that.
+
+useEffect(()=>{ //this is the function you pass to useEffect.
+  toggleBtnRef.current.click()
+},[])
+
+And now if I reload this,
+this works without error and you see indeed it does click the button otherwise we wouldn't instantly
+see all the persons.
+So that is how you can set references with the use ref hook, here when using React hooks in functional
+components and that also hopefully served as an example of how useEffect works and how it actually executes this
+function only after this JSX code was passed and rendered for the first time, so that React did have a chance
+of connecting your reference here.
+
+This is of course just a dummy example, you can implement any logic that fits your use cases. So first of all, we need to set up a reference 
+and since this is a functional component, we have no constructor, we just have our function body.
+
+
+
+12. Render Props
+
+The term render prop refers to a technique for sharing code between React components using a prop whose value is a function. 
+- Reactjs blog
+
+We have learned in the past posts, how we can pass data to child components from parent components.
+ The child components capture the data in the props object argument:
+
+
+
+
+
+
+class ChildComp extends React.Component {
+    constructor(props) { }
+    render() {
+        return <div>{this.props.name}</div>
+    }
+}
+<ChildComp name="nnamdi" />
+
+Objects, arrays, booleans, strings, Numbers can be passed to child components via props.
+ The child component uses the props argument to know what to render.
+
+ 13. React with Typescript
+
+
+https://www.sohamkamani.com/blog/react/2018-08-22-using-react-with-typescript/
+https://medium.com/@miketmoore/learning-typescript-6a5796dd1616
+
+14. React Contexts
+
+Context was introduced by React and it helps us handle cases like this, where you need certain
+data, certain state in multiple components and you don't want to pass that state across multiple layers
+of components just to get it from component A at the top to component D at the very bottom when the
+components B, C in between don't really care about it
+and that's exactly the use case here.
+
+We want to skip the persons component and with the React context feature, we can do that.
+How does it work then?
+
+Using the Context API
+----------------------
+https://www.udemy.com/course/react-the-complete-guide-incl-redux/learn/lecture/13556344#overview
+
+I will add a new folder and name it context and you can name it whatever you want,
+that of course does not matter and in there, I'll an auth-context.js file. In here,
+I'll create a so-called context object and React gives us access to that,
+so we need to import React from React and then I'll create my authContext here by calling React create
+context and I'll export this authContext as a default for this file.
+
+auth-context.js
+
+import React from 'react';
+const authContext = React.createContext();
+
+export default authContext;
+
+const authContext = React.createContext({authenticated:false,login:()=>{}})
+
+const authContext = React.createContext({authenticated:false,login:()=>{}})
+
+Now React.createContext() actually allows us to initialize our context with a default value because what
+the context in the end is is a globally available Javascript object you could say, though globally available is not entirely correct,
+you decide where it is available. Technically, it doesnt have to be an object. You could also have an array, string, a number etc as a context value.
+
+But it is a Javascript object that can be passed between React components without using props, behind the scenes so to say. 
+So you can initialize as with any value you want, for example here I'll set authenticated to false and I'll also add a login method here.
+
+const authContext = React.createContext({authenticated:false, login:()=>{}})
+
+
+However this method will not do anything, it's an empty anonymous function and I'm adding this here because
+if I initialize my default value with everything I want to be able to access on this context from different
+components in my application, then I actually get better auto-completion from the IDE and that's the
+only reason and I don't really care too much about that default value here otherwise because now that
+authContext will be used in app.js and I will show you how to use it there and why doesn't matter what
+you set as a default value. 
+
+full code:
+
+auth-context.js
+
+import React from 'react';
+const authContext = React.createContext({authenticated: false,login:()=>{}})
+
+export default authContext;
+
+in App.js
+
+
+So in there, let's import AuthContext with a capital A at the beginning from the context folder and there of course
+the auth-context file. Now authContext can be used as a component and it should wrap and that's important,
+it should wrap all the parts of your application that need access to this context.
+
+In my case, that will be the cockpit component and the persons component which I'll output down there.
+So this part here needs to be wrapped by my context,
+this button doesn't really care and if I had other components being rendered in here and they don't
+need authentication information, then they also don't need to be wrapped.
+
+<Aux>
+  <button onCLick={()=>{this.setState({showCockpit:false})}}> Remove Cockpit </button>
+  <AuthContext.Provider>
+  {this.state.showCockpit ? (
+    <Cockpit 
+      title ={this.props.appTitle} />): null}
+
+    />
+  )}
+
+</Aux>
+
+So down here, I will use my authContext which I imported now as a JSX element but not like this but
+instead here, you can access with a .provider.
+So this actually gives you a provider JSX component on this authContext object and you wrap everything where you want
+ to be able to access this context later on.
+
+So now inside of the cockpit and of persons, we'll be able to interact with our context and also in the
+app.js file because here I'm setting up this provider component. Now the provider,
+this component takes a value prop and this is why the default values here don't really matter,
+the default value will apply when you don't set any other value. However in many use cases like this
+one, you actually want to have a dynamic value,
+the authentication status can change afterall and therefore, I'll manage the status here in app.js and
+I pass my current state of the authentication status here to value. So value will be a Javascript object,hence the double curly braces, outer curly braces are there to enter dynamic content, inner curly braces construct Javascript object and there I'll have the exact same structure as here in the default context object, so I'll have authenticated and login as keys and again, I did set it up here in my authContext
+
+initialization because this now gives me better auto-completion in my IDE.
+So in app.js, in this object here, we now have this authenticated key here and this should refer to this state authenticated, so we'll still manage the authentication status in my state of this component because one thing does not change when you use context,
+React will re-render when state or props change. So only changing something in a context object would
+not cause a re-render cycle and therefore this is not enough.
+Hence I still manage my authentication status in the state of this component but I then also store
+the current state in that authenticated prop of the object I am passing as a value to the authContext
+and since this effectively is a prop of the authContext provider,
+this will update whenever this state updates.
+
+Now we also have the login key and that should point at my login handler,
+so this just stores a reference to this login handler function.
+Now this is in my context object that can now be accessed from cockpit and persons because they are
+inside of the provider wrapper. So let's now access this inside of persons, how can we get access to our authContext here?
+
+First of all, we have to import it again. So I'll import AuthContext with a capital A from
+and then you go up to the context folder and then authContext.
+And now here we don't want to provide the context but we want to consume it and you do this by going
+to the place where you return your JSX code, where you want to use that context and then you simply
+use authContext.consumer as a JSX component
+and this now wraps your other JSX code, since this is some Javascript expression, we need to wrap this
+here with curly braces.
+
+So now here, we have authContext.consumer but this is not yet the entirely correct syntax, authContext.consumer
+does not take JSX code as a child, so as content between the opening and closing tag but
+instead this takes a function as a child between the opening and closing tag.
+So here, I actually will pass in a function which will eventually return my JSX code and this function
+which will be executed for us by the authContext.consumer or by the React context API, this function wilL get our context object,
+
+so this is how we get access to that context object here in the place where we consume it. We provide
+a function that accepts context as an argument, we'll get that argument by the authContext here, React
+executes this function for us and then in this JSX code which we return here and which will be rendered
+in the end, we have access to that context object and therefore now, we could forward this to isAuth. But of course, that was not the idea here, right?
+
+We wanted to use the authContext in person not in persons, we wanted to skip that extra cycle where
+we have to forward something which we don't need in this component.
+So let's actually not consume authContext in here,
+let's remove that instead and let's also remove the isAuth prop we're forwarding and let's remove
+the authContext import. We wanted to use authContext in the person component,
+so here is the place where we should import it.
+So import authContext from and now go all the way up to the context folder and import authContext
+and now here I want to set up my consumer in the place where I want to access that context data
+and for me, that is this single line here
+and if you needed it in other places, you would wrap everything with that consumer where you need it.
+So here I'll use my consumer
+and as you learned, in there you get a function which gets context as an argument and then you have to
+return the JSX code you eventually want to return,
+so here I will grab this check here where I render a paragraph
+and now, I could use my context here,
+
+so I now use context authenticated.
+With that, we're consuming our context in the person component to output the right data but we're not using it for making this login button work.
+
+So let's go back to the cockpit component now where we have that login button and let's consume context
+here as well.
+
+So first of all, let's import authContext from context, authContext and then let's consume it
+here to wrap our login button.
+So here I will use authContext.consumer, wrap this entire button
+but of course as you learned, we don't just wrap the JSX code,
+instead we wrap a function where we get the context argument and then this function returns the JSX code
+
+and then again here, we can not access or we could access props login but we don't want to,
+
+instead now we access context.login because remember, that login property holds a reference to
+
+the login function, that is what we're setting up here.
+
+And now we don't need to pass this login handler on the login peop to cockpit anymore,
+
+instead we're now using context. And now once everything saves, we can press login and it updates as
+
+before
+
+but now we're using the context API. And this is especially useful if you have very long chains of data
+
+you're passing around and if you don't want to pass data from component to component to component, if you
+
+don't need it in these in-between components, then context is a great way of bypassing components and
+
+directly passing data from A to D.
+
+
+Context Provider:
+
+class Person extends React.Component {
+  render(){
+   const {name} = this.props;
+    return (
+      <div className="person">
+        <p>Hey I am a Person {name}</p>
+      </div>
+    )
+  }
+}
+
+
+class TodoApp extends React.Component {
+ state ={
+   name: 'Wes',
+   age:100,
+   cool:true
+ }
+  render() {
+    return (
+      <div>
+        <p> I am the app</p>
+        <Person name={this.state.name}/>
+      </div>
+    )
+  }
+}
+
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+
+The problems starts when there is no direct parent child relationship. 
+
+const Family = (props) => {
+  return (
+    <div className="family">
+      <Person />
+    </div>
+  )
+}
+
+
+Now we have the <App/> which renders Family tag. and we have family that renders out the Person tag.
+
+
+const Family = (props) => {
+  return (
+    <div className="family">
+      <Person />
+    </div>
+  )
+}
+
+class Person extends React.Component {
+  render(){
+   const {name} = this.props;
+    return (
+      <div className="person">
+        <p>Hey I am a Person {name}</p>
+      </div>
+    )
+  }
+}
+
+
+class TodoApp extends React.Component {
+ state ={
+   name: 'Wes',
+   age:100,
+   cool:true
+ }
+  render() {
+    return (
+      <div>
+        <p> I am the app</p>
+        <Family name={this.state.name}/>
+      </div>
+    )
+  }
+}
+
+
+
+
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+so we have App > Family > Person
+
+Now the data lives on the App and it has to get down to Person. this is a very simple example and you can already see an issue here that i cannot directly pass data from App to Person. 
+
+So I need to pass the data to the App component and then my family component would need to pass the data down again 
+
+
+const Family = (props) => {
+  return (
+    <div className="family">
+      <Person name={props.name}/>
+    </div>
+  )
+}
+
+class Person extends React.Component {
+  render(){
+   const {name} = this.props;
+    return (
+      <div className="person">
+        <p>Hey I am a Person {name}</p>
+      </div>
+    )
+  }
+}
+
+
+class TodoApp extends React.Component {
+ state ={
+   name: 'Wes',
+   age:100,
+   cool:true
+ }
+  render() {
+    return (
+      <div>
+        <p> I am the app</p>
+        <Family name={this.state.name}/>
+      </div>
+    )
+  }
+}
+
+
+
+
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+
+
+thats fine when it is one or two or 3 level. but what happens if it is 6 or 7 level. well, thats where people start to reach for some sort of data store like redux where you can inject your data store.
+your data store is where all your data lives. you can inject your data at any level deep. 
+
+now, react Context API is actually going to work very similar to that where we can inject our data at any level that you want. 
+
+So it requires two different pieces- we need a Provider. And, then we need a consumer. and that is both in this new context API. 
+
+//First we will make a new context. 
+
+const MyContext = React.createContext();
+
+And then, we need to create a Provider component. Thats where your data is actually going to live. 
+
+//Then create a provider component.  Lets move the data that we want 
+
+class MyProvider extends Component {
+  state = {
+    name: "Wes",
+    age: 100,
+    cool: true
+  }
+
+  render() {
+    return( // we need to return a context provider. 
+      <MyContext.Provider>
+
+      {this.props.children}
+      </MyContext.Provider>
+    )
+  }
+}
+
+Inside of the provider, we are going to have {this.props.children}
+this is very similar to redux. and what this is going to do is this is going to live at the top level of your application. 
+
+and then there is going to be another component that we use, to actually access the data. now this isnt enough just yet. we need a value here and that value can be anything that we want. 
+
+<MyContext.Provider value="I'm the value ">
+
+  {this.props.children}
+</MyContext.Provider>
+
+So far we are able to access the state, pass down the value to anything that this Provider is wrapped in. and then we can do is we can go to our App, and wrap the entire application in that Provider.
+
+class TodoApp extends React.Component {
+
+  render() {
+    return (
+      <MyProvider>
+        <div>
+          <p> I am the app</p>
+          <Family name={this.state.name}/>
+        </div>
+    </MyProvider>
+    )
+  }
+} 
+
+And, then any child inside that provider-it doesnt matter if it is directly there. or anywhere down in the chain were able to access that actual data. So we can quit passing the data like this:
+
+<Family name={this.state.name} />
+
+to
+
+<Family />
+
+and on our family component, we can quit caring about passing the data down to props.
+
+const Family = (props) => (
+  <div className="family">
+    <Person />
+  </div>
+)
+
+so here is the quiestion:
+
+<App>
+  <Provider>
+    <Context.Provider>
+      <Family>
+        <Person>
+
+
+Our data lives in the provider. but, we need to access it inside of the Person. how do i get it down from Provider all the way down to the person?
+
+
+and the way that we do that is we create consumer. the Provider is going to be where you data lives. and the consumer is going to be where you want to access your data. so all we need to do is: Go into that Person component. thats where we want to access our data.
+
+
+and, then we can take our context 
+
+class Person extends Component {
+  render() {
+    return(
+      <div className="person">
+        <MyContext.Consumer>
+
+        </MyContext.Consumer>
+      </div>
+    )
+
+  }
+
+}
+
+And, then inside of that, it is not going to pass it down via props. it is going to use render prop. and render prop usually look something like this:
+
+you either have a property called render and inside of that you pass it a function to render. or, in this case, renderProps is passed as just a child.
+
+so the child of consumer will always always always be a function. Inside, the function you get your value, or your context.i like to call it context. and then we can start returning something. 
+
+class Person extends Component {
+  render() {
+    return (
+      <div className="Person">
+        <MyContext.Consumer>
+
+        {(context)=>(
+          <p>I am inside the {context} </p>
+        )}
+
+
+      </MyContext.Consumer>
+      </div>
+    )
+  }
+
+}
+
+and, the question is what is inside in this variable? 
+
+15. Example of React Component
+
+import React, { PureComponent, ReactNode } from 'react';
+import './KeyValueComponent.scss';
+import { IKeyValueComponentProps } from './IKeyValueComponentProps';
+import { easeExpInOut, transition } from 'd3';
+import * as d3 from 'd3';
+import { select } from 'd3-selection';
+
+export default class KeyValueComponent extends PureComponent<
+  IKeyValueComponentProps
+> {
+  // default props
+  static defaultProps: Partial<IKeyValueComponentProps> = {
+    precision: 0,
+    transitionTime: 1000,
+    transition: true,
+    align: 'right',
+    wrapContent: false,
+    valueFontSize: 30,
+    appendageFontSize: 16,
+    theme: 'light',
+    wrapSpacing: 0
+  };
+
+  KPIRef = React.createRef() as React.RefObject<HTMLSpanElement>;
+
+  // value that is being displayed. initialised to 0 if transition is on
+  private displayedVal = 0;
+
+  // transitions from 0 to initial value. Runs after initial render
+  componentDidMount() {
+    if (this.props.transition) {
+      this.startTransition();
+    }
+  }
+
+  // transitions from displayed value to desired value. Runs after subsequent renders
+  componentDidUpdate() {
+    if (this.props.transition) {
+      this.startTransition();
+    }
+  }
+
+  render() {
+    const { valueFontSize, appendageFontSize, wrapSpacing } = this.props;
+    const valueStyle = {
+      '--value_font_size': valueFontSize,
+      '--wrap_spacing': wrapSpacing
+    } as React.CSSProperties;
+    
+    const appendageStyle = {
+      '--appendage_font_size': appendageFontSize
+    } as React.CSSProperties;
+
+    return (
+      <div className={`${this.genClasses()}`}>
+        <span style={appendageStyle} className="appendage">
+          {this.props.prefix}
+        </span>
+        <span style={valueStyle} className="value" ref={this.KPIRef}>
+          {this.getDisplay().toFixed(this.props.precision)}
+        </span>
+        <span style={appendageStyle} className="appendage">
+          {this.props.suffix}
+        </span>
+      </div>
+    );
+  }
+
+  getDisplay(): number {
+    return this.props.transition ? this.displayedVal : this.props.value;
+  }
+
+  // transitions the displayed value from the previous number to the current number
+  startTransition() {
+    select(this.KPIRef.current!)
+      .transition()
+      .duration(this.props.transitionTime!)
+      .ease(easeExpInOut)
+      .attr('text', this.props.value)
+      .tween(
+        'text',
+        this.getTransitionTween(this.displayedVal, this.props.value)
+      );
+  }
+
+  // Determine a tween function that renders the component at interpolated values
+  // between the previous and current
+  private getTransitionTween(
+    fromRenderState: number,
+    toRenderState: number
+  ): () => (t: number) => void {
+    const interpolatedValues = d3.interpolate(fromRenderState, toRenderState);
+    return () => (t) => {
+      this.KPIRef.current!.innerText = String(
+        interpolatedValues(t).toFixed(this.props.precision)
+      );
+      this.displayedVal = interpolatedValues(t);
+    };
+  }
+
+  private genClasses = () => {
+    let classes = `key-value`;
+    classes += this.props.theme === 'dark' ? ' key-value--dark' : '';
+    classes += this.props.wrapContent === true ? ' wrap-content' : '';
+    classes +=
+      this.props.align === 'right'
+        ? ' align-right'
+        : this.props.align === 'left'
+        ? ' align-left'
+        : this.props.align === 'centre'
+        ? ' align-centre'
+        : ' align-centre';
+    return classes;
+  };
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

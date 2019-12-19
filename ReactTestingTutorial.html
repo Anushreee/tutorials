@@ -1,0 +1,598 @@
+1. Testing Basic Config
+2. Fix up issue with Sass not being recognized
+3. Test Command- To ignore other files and test only the given file
+4. Unit Testing Template
+5. Difference betweeen toBe and ToEqual
+6. exists() method
+7. React code for testing
+8. Test error: cannot find module react from 'react.js'
+yarn test src/components/KPIChartComponent/KPIChartComponent.test.tsx --watch
+
+1. Testing Basic Config
+
+yarn add enzyme
+yarn add enzyme-adapter-react-16
+yarn add @types/enzyme
+yarn add @types/enzyme-adapter-react-16
+
+2. Fix up issue with Sass not being recognized
+
+yarn add identity-obj-proxy
+
+add jest config in package.json file
+
+"jest": {
+    "testEnvironment": "jsdom",
+    "moduleNameMapper": {
+      "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/build/"
+    ]
+  },
+
+In jest.config.js
+
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  moduleNameMapper: {
+    "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+  }
+};
+
+3. Test Command- To ignore other files and test only the given file
+
+yarn test KPIChartComponent/KPIChartComponent.test.tsx --watch
+
+4. Unit Testing Template
+
+import React from "react";
+import Enzyme, { shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import KPIChartComponent from "./KPIChartComponent";
+import NoDataAvailable from './NoDataAvailable/NoDataAvailable';
+
+Enzyme.configure({ adapter: new Adapter() });
+
+const generateTemplate = (template) => {
+    return template && template? template : NoDataAvailable    
+}
+
+const data =[{
+            align: 'left',
+            warning: {
+                visible: false,
+                color: '#ee3124',
+                count: 9,
+            },
+            title: {
+                text: 'Total Temperature',
+                fontSize: '16'
+            },
+            chartTemplate: {
+                available: generateTemplate(''),
+                notAvailable: generateTemplate('')
+            },
+            currentValue: {
+                value: 181.2,
+                units: 'units',
+                delta: '+1234.56'
+            }
+        }]
+    
+
+	const setup = (props={}) =>{
+	    const component = shallow(<KPIChartComponent 
+	        align={data[0].align}
+	        warning={data[0].warning}
+	        title = {data[0].title}
+	        chartTemplate = {data[0].chartTemplate}
+	        currentValue = {data[0].currentValue}
+	        severity= "High"
+	        chartAvailabilityOptions = {"Available"}
+	    />);
+	    return component;
+	}
+
+
+	describe("KPIChartComponent", () => {
+	    let wrapper;
+
+	    let wrapperProps;
+
+	    beforeEach(()=>{
+	        wrapper=setup();
+	        wrapperProps = wrapper.instance().props;
+	    })
+	  
+
+	  it("renders without crashing", () => {
+	    expect(wrapper).toBeTruthy();
+	  });
+
+	  it("should receive align props",()=>{
+	      expect(wrapperProps).toHaveProperty("align");
+	  })
+
+
+	  it("the align props should be either left or right",()=>{
+	      expect(wrapperProps.align).toBe("left" || "right");
+	  })
+
+	  it("the warning props visbile property should a boolean",()=>{
+	    expect(typeof(wrapperProps.warning.visible)).toBe('boolean');
+	  })
+
+	  it("the title text property should not be empty",()=>{
+	      expect(wrapperProps.title.text).not.toBe('');
+	  })
+
+	  it("the available property of chartTemplate should be a function",()=>{
+	    expect(typeof(wrapperProps.chartTemplate.available)).toBe("function");
+	  })
+	});
+
+
+    5. Difference betweeen toBe and ToEqual
+    https://stackoverflow.com/questions/45195025/what-is-the-difference-between-tobe-and-toequal-in-jest
+
+	Jest documentation reads: toBe just checks that a value is what you expect. ... Use .toEqual when you want to check that two objects have the same value. This matcher recursively checks the equality of all fields, rather than checking for object identity—this is also known as "deep equal"
+
+
+	Use .toEqual when you want to check that two objects have the same value. This matcher recursively checks the equality of all fields, rather than checking for object identity—this is also known as "deep equal". For example, toEqual and toBe behave differently in this test suite, so all the tests pass.
+
+	 const x = { a: { b: 3 } };
+    const y = { a: { b: 3 } };
+
+    expect(x).toEqual(y);
+    expect(x).toBe(y);
+	In this case, toEqual passes but toBe fails. I understand that toEqual passes because it does a deep equal check. Why is toBe failing in this case?
+
+	Also, are there best practices for using toBe and toEqual (not just in Jest but in other testing frameworks, too)?
+
+	Answer:
+
+	You can use toBe for primitives like strings, numbers or booleans for everything else use toEqual. For example
+	x = 4 
+	y = 4
+	x === y // true
+
+	x = 'someString'
+	y = 'someString'
+	x === y // true
+	Even empty objects are not equal
+
+	x = {}
+	y = {}
+	x === y //false
+
+
+	.toBeTruthy()
+Use .toBeTruthy when you don't care what a value is and you want to ensure a value is true in a boolean context. For example, let's say you have some application code that looks like:
+
+drinkSomeLaCroix();
+if (thirstInfo()) {
+  drinkMoreLaCroix();
+}
+You may not care what thirstInfo returns, specifically - it might return true or a complex object, and your code would still work. So if you want to test that thirstInfo will be truthy after drinking some La Croix, you could write:
+
+test('drinking La Croix leads to having thirst info', () => {
+  drinkSomeLaCroix();
+  expect(thirstInfo()).toBeTruthy();
+});
+In JavaScript, there are six falsy values: false, 0, '', null, undefined, and NaN. Everything else is truthy.
+
+6. exists() method
+
+
+
+describe("<App/>",()=>{
+	const wrapper = shallow(<App/>);
+	it("should contain 1p element",()=>{
+		expect(wrapper.find('.App-intro').exists()).toBe(true)
+	})
+})
+
+The test will pass because:
+
+the exists() method is handy for testing one specific node.
+
+
+
+
+7. React code for testing
+
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">Welcome to React</h1>
+        </header>
+        <ul>
+        	<li>Test 1</li>
+        	<li>Test 2</li>
+        	<li>Test 3</li>
+       	</ul>
+        <p className="App-intro">
+          To get started, edit and save to reload
+        </p>
+      </div>
+    )
+  }
+}
+
+8. children()
+
+the children method is handy when scoping test to a specific parent-child hierarchy
+
+describe("<App/>",()=>{
+	const wrapper = shallow(<App/>);
+	it.only("should contain 1p element",()=>{
+		expect(wrapper.find('ul').children().length).toBe(3)
+	})
+})
+
+
+
+9. Many methods in enzyme accept a selector as an argument. There are five different valid type of selectors. we can use
+the element syntax
+
+https://egghead.io/lessons/react-understand-the-different-accepted-selectors-in-enzyme
+
+expect(wrapper.find('h1').children().length).toBe(3) //element syntax
+expect(wrapper.find('.tyler')) //class syntax
+expect(wrapper.find('#tyler')) //id syntax
+expect(wrapper.find('[href="tyler"]')) //attribute syntax
+
+we can also combine these together:
+expect(wrapper.find('a[href="tyler"]'))
+
+we are also able to use contextual selectors such as > + and ~
+
+const Title = ({text}) => <div>{text}</div>
+
+it("h1 contains correct text",()=>{
+	expect(wrapper.find('.tyler ~ .clark'))
+})
+
+Prop selector
+So instead of App.js we paste a componet called title that simply returns a div with a text prop.
+
+const Title = ({text}) => <div>{text}</div>
+
+lets add the title underneath the header and give it a prop of some title.
+
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <h1 className="App-title">Welcome to React</h1>
+          <img src="img/logo" alt="logos" />
+        </header>
+        <Title text="Some title"/>
+        <ul>
+        	<li>Test 1</li>
+        	<li>Test 2</li>
+        	<li>Test 3</li>
+       	</ul>
+        <p className="App-intro">
+          To get started, edit and save to reload
+        </p>
+      </div>
+    )
+  }
+}
+
+we use the attribute syntax to look for the element with the text prop. This is obviously 
+handy when looking for specific components and set up our render tree. Now the key and the ref prop
+cannot be used in this situation. 
+
+describe("<App/>",()=>{
+	const wrapper = shallow(<App/>);
+	it.only("test test",()=>{
+		expect(wrapper.find('[text="Some title"]').exists()).toBe(true)
+	})
+})
+we can use object property selector to find nodes.
+we can pass in object as an argument that matches propertoies of an argument. so this alt logo will match on this image 
+element. 
+
+describe("<App/>",()=>{
+	const wrapper = shallow(<App/>);
+	it.only("test test",()=>{
+		expect(wrapper.find({alt:'logos'}).exists()).toBe(true);
+	})
+})
+
+
+10. Test React Component Props with Enzyme and Jest
+
+lets create a new component
+
+export class Link extends Component {
+	render() {
+		return <a href={this.props.address}>Click</a>
+	}
+}
+
+when it comes to testing component prop with enzyme it is important to understand which prop of the component we are trying to test. are we trying to test the actual instance of the component: the address prop value right here or are we trying to test the href value on the returned a-tag node. 
+
+for our first test ehre we are testing the instance of the link address prop. we can see that 
+
+ describe('<Link />',()=>{
+      it('link component accepts address prop',()=>{
+          const wrapper = shallow(<Link address="www.google.com" />)
+          expect(wrapper.instance().props.address).toBe('www.google.com');
+      })
+
+      it('a tag node renders href correctly',()=>{
+
+
+          const wrapper = shallow(<Link address="www.google.com" />);
+          expect(wrapper.props().href).toBe('www.google.com');
+      })
+  })
+
+with this second test, we are making sure that our href is using the correct prop value.
+contrary to our first test where we used the instance, now we are using the props method on the wrapper itself.
+this will return all the props of the components return node. In our case we are looking at the a-tag. and, it
+is treating the href like a prop. so our two tests are testing the same prop essentially but in diffrent ways. 
+
+what if our component had a conditional return value depending on the prop thats passed. what if we did this.props.hide as a ternary returning null?
+
+export class Link extends Component {
+	render() {
+		return this.props.hide ? null:<a href={this.props.address}> Click</a>
+	}
+}
+
+lets run a new test for this:
+
+it('returns null with true hide prop')
+
+
+ it('returns null with true hide prop',()=>{
+          const wrapper = shallow(<Link hide={false} />);
+          expect(wrapper.find('a').length).toBe(1)
+      })
+
+ So, now lets test if the null is returned correctly. if we do 
+
+ wrapper.setProps({hide:true})
+ expect(wrapper.get(0).toBeNull())
+
+ setProps is a method that takes an object and passes it through as new props to our component. this causes a re-render of our component. its useful when wanting to test how components behave over time with changing props. this method will call componentWillReceiveProps lifecycle method on the component. Out get method simply returns the node at the given index of the current wrapper. 
+
+ to wrap it all up, we are using the toBeNull method from jest to make sure that this node that we are returning is actually null. 
+
+ it('returns null with true hide prop',()=>{
+  const wrapper = shallow(<Link hide={false} />);
+  expect(wrapper.find('a').length).toBe(1)
+  wrapper.setProps({hide:true})
+  expect(wrapper.get(0).toBeNull())
+})
+
+
+9. Fully Render React Components with Enzyme
+
+Full DOM rendering is ideal for use cases wehre you have components that may interact with DOM APIs, or may require the full react lifecycle in order to fully test a component. for eg. if you want to test the componentDidMount lifecycle hook.
+
+10. Test Simulated Event handlers with enzyme
+
+Sometimes we have components that will use event methods, such as onClick,onChange and onMouseOver. we can use enzyme to not only simulate these events on our rendered components but can check that conditional rendered attributes work as expected. 
+
+it('on button click changes p text',()=>{
+          const wrapper = shallow(<App />);
+          const button = wrapper.find('button');
+          expect(wrapper.find('.button-state').text()).toBe('No!');
+          button.simulate('click');
+          expect(wrapper.find('.butotn-state').text()).toBe('Yes')
+      })
+
+
+
+simulate will target the component's prop based on the event that we give it. For example, we are using click here. and this will actually get the onClick prop on our component and call it. 
+
+now, what if we dealing with the input elements and whenever a user types into the input, it updates the component's state. Our new test wil
+
+it('on input change, title changes text',()=>{
+	const wrapper = shallow(<App/>)
+	const input = wrapper.find('input');
+	expect(wrapper.find('h2').text()).toBe('')
+})
+
+it('on input change, title changes text',()=>{
+        const wrapper = shallow(<App/>);
+        const input = wrapper.find('input');
+        expect(wrapper.find('h2').text()).toBe('')
+        input.simulate('change',{currentTarget:{value:'Tyler'}})
+        expect(wrapper.find('h2').text()).toBe('Tyler')
+
+    })
+
+Test New Component State with setState in Enzyme
+Sometimes our React components use local state to conditionally update our component attributes. if we wanted to simulate and test different component contexts, we can manually update the rendered component inside of our testing environment.
+
+it('updates className with new State',()=>{
+	const wrapper = shallow(<App/>);
+	expect(wrapper.find('.blue').length).toBe(1)
+	expect(wrapper.find('.red').length).toBe(0)
+	wrapper.setState({mainColor:'red'})
+	expect(wrapper.find('.blue').length).toBe(0)
+	expect(wrapper.find('.red').length).toBe(1)
+})
+
+now in oru state we put the mainColor is blue
+
+state = {
+	on: false,
+	input: '',
+	mainColor:'blue'
+}
+
+
+As our component grows and becomes more functional, there are times when we may need to add helper methods to the class.
+
+
+describe("<App/>",()=>{
+    const wrapper = shallow(<App/>)
+    it("renders without Crashing",()=>{
+        expect(wrapper).toBeTruthy()
+    })
+    it("find logo",()=>{
+        expect(wrapper.find({alt:'logos'}).exists()).toBe(true)
+    })
+    it("find title",()=>{
+       expect(wrapper.find('[text="Some]').exists()).toBe(true);
+    
+    })
+    it('on button click changes p text',()=>{
+        const wrapper = shallow(<App />);
+        const button = wrapper.find('button');
+        expect(wrapper.find('.button-state').text()).toBe('No!');
+        button.simulate('click')
+        expect(wrapper.find('.button-state').text()).toBe('Yes');
+    })
+    it('on input change, title changes text',()=>{
+        const wrapper = shallow(<App/>);
+        const input = wrapper.find('input');
+        expect(wrapper.find('h2').text()).toBe('')
+        input.simulate('change',{currentTarget:{value:'Tyler'}})
+        expect(wrapper.find('h2').text()).toBe('Tyler')
+
+    })
+
+    it('updates className with new State',()=>{
+        const wrapper = shallow(<App/>);
+        expect(wrapper.find('.blue').length).toBe(1)
+        expect(wrapper.find('.red').length).toBe(0)
+        wrapper.setState({mainColor:'red'})
+        expect(wrapper.find('.blue').length).toBe(0)
+        expect(wrapper.find('.red').length).toBe(1)
+    })
+      
+  })
+
+  describe('<Link />',()=>{
+      it('link component accepts address prop',()=>{
+         const wrapper = shallow(<Link address='www.google.com'/>);
+         expect(wrapper.instance().props.address).toBe('www.google.com');
+      })
+
+      it('a tag node renders href correctly',()=>{
+         const wrapper = shallow(<Link address='www.google.com'/>);
+         expect(wrapper.props().href).toBe('www.google.com')
+      })
+
+      it('returns null with true hide prop',()=>{
+          const wrapper = shallow(<Link hide={false} />);
+          expect(wrapper.find('a').length).toBe(1)
+          wrapper.setProps({hide:true})
+          expect(wrapper.get(0)).toBeNull();
+      })
+
+      
+  })
+
+
+  -----------------------------------------------
+To Deal with the typescript issue
+
+  import React from "react";
+import Enzyme, { shallow } from "enzyme";
+import Adapter from "enzyme-adapter-react-16";
+import KPIChartComponent from "./KPIChartComponent";
+import NoDataAvailable from "./NoDataAvailable/NoDataAvailable";
+
+Enzyme.configure({ adapter: new Adapter() });
+
+
+describe("KPIChart",()=>{
+
+  let wrapperProps;
+
+  const wrapper = shallow(<KPIChartComponent align="left" />);
+  wrapperProps = wrapper.instance().props;
+
+
+  it("should have align props-FIRST WAY", () => {
+    expect(wrapperProps.align).toBe("left")
+  });
+
+  it("should have align props-SECOND WAY", () => {
+    const wrapper = shallow(<KPIChartComponent align="left" />);
+    const wrapperProps = (wrapper.instance() as any).props;
+    expect(wrapperProps.align).toBe("left")
+  });
+})
+
+chartAvailabilityOptions:"notavailable"
+
+module.exports = {
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  moduleNameMapper: {
+    "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+  },
+
+  globals: {
+    'ts-jest': {
+      diagnostics: false
+    }
+  }
+};
+
+
+
+
+
+8. Test error: cannot find module react from 'react.js'
+
+solution: yarn add react-test-renderer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

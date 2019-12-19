@@ -1,0 +1,20 @@
+.ui.forge.chart-wrap {
+    .center-block {
+        .center {
+            font-size: 1.6rem;
+            z-index: 100;
+            &__units {
+                font-size: 0.85rem;
+                display: inline-block;
+                padding-top: 0.25rem;
+            }
+            &__text {
+                font-size: 1rem;
+                display:  inline-block;
+                padding-top: .5rem;
+            }
+        }
+    }
+}
+
+

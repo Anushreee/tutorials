@@ -2,6 +2,65 @@
 
 1. For watch mode
 yarn test --watch
+https://medium.com/codeclan/testing-react-with-jest-and-enzyme-20505fec4675
+
+2. To run only a particular test file and ignore other files:
+https://codewithhugo.com/run-skip-single-jest-test/#run-a-single-jest-test-file-with-the-cli
+
+3. For installation of jest and enzyme in package.json
+
+4. To be Truthy or Falsy
+https://vincenttunru.com/toBeTruthy-vs-toBe-true/
+
+4. To Check for an array of arrays
+https://stackoverflow.com/questions/25189937/detect-array-of-arrays
+
+it("headerGroups should be an array of array", () => {
+ 
+    if (wrapperProps.tHeaderGroups) {
+      expect(Array.isArray(wrapperProps.tHeaderGroups)).toBe(true);
+      if(Array.isArray(wrapperProps.tHeaderGroups)){
+        expect(Array.isArray(wrapperProps.tHeaderGroups)[0]).toBe(true);
+      }
+    }  
+  });
+
+3. For installation of jest and enzyme in package.json
+
+"@types/enzyme": "^3.10.3",
+"@types/enzyme-adapter-react-16": "^1.0.5",
+"enzyme": "^3.10.0",
+"enzyme-adapter-react-16": "^1.15.1",
+"jest-css-modules": "^2.1.0",
+"jest-environment-jsdom": "^24.9.0",
+"jsdom": "^15.2.1",
+"jsdom-global": "^3.0.2",
+"react-scripts-ts": "^3.1.0",
+"@types/react": "^16.9.11",
+"@types/jest": "^24.0.23",
+"@types/react-dom": "^16.9.4",
+"@types/react-test-renderer": "^16.8.1",
+ "jest": "^24.9.0",
+ "ts-jest": "^24.0.2",
+
+  "jest": {
+      "testEnvironment": "jsdom",
+      "globals": {
+        "ts-jest": {
+          "diagnostics": false
+        }
+      },
+      "moduleNameMapper": {},
+      "testPathIgnorePatterns": [
+        "/node_modules/",
+        "/build/"
+      ]
+    }
+
+
+yarn test src/components/CustomDataTable/CustomDataTable.test.tsx
+
+
 
 
 
@@ -78,6 +137,39 @@ expect(wrapper.find('.tyler > .clark').text()).toBe('Hello World');
 expect(wrapper.find('.tyler + .clark').text()).toBe('Hello World');
 expect(wrapper.find('.tyler ~ .clark').text()).toBe('Hello World');
 
+
+6. it("the length of the columns should be equalt to each data index length", () => {
+    const dataLength = Object.keys(wrapper.props().tableData[0]).length;
+    expect(wrapper.first().props().tableColumns).toHaveLength(dataLength);
+  });
+
+7.it("the length of the columns should be equalt to each data index length", () => {
+    Object.keys(wrapper.props().tableData).forEach(each=>{
+      expect(wrapper.first().props().tableColumns).toHaveLength(each.length)
+    })
+  });
+
+8.it("the length of the columns should be equal to the length of each object inside data array", () => {
+    const columnsLength = wrapper.first().props().tableColumns.length;
+    wrapper.props().tableData.forEach(each=>{
+      expect(Object.keys(each)).toHaveLength(columnsLength)
+    })
+  });
+
+9.it("each field value should correspond to the each object's key of data", () => {
+    const columnFields = wrapper.first().props().tableColumns.map(each=>{
+       return each.field
+    });
+    console.log("column Field is ", columnFields)
+    wrapper.props().tableData.forEach((each,index)=>{
+      console.log("column Field index is ", columnFields[index]);
+      console.log("each Object keys is ", Object.keys(each))
+
+      expect(Object.keys(each)).toStrictEqual(columnFields)
+    })
+  });
+
+
 next is the prop selector.
 
 const Title = ({text}) => <div>{text}</div>
@@ -126,6 +218,13 @@ import toJson from 'enzyme-to-json';
 
 and now pass our tree as an argument to json
 
+describe('App',()=>{
+        it('matches the snapshot',()=>{
+          const tree = shallow(<App/>)
+          expect(toJson(tree)).toMatchSnapshot();
+        })
+});
+
 
 Now the snapshots will be different and there will be error.
 So press u to udpate them.
@@ -143,35 +242,2829 @@ jest will show us the differences of our record and actual renderings.
     + List One
 </li>
 
+To begin writing test for components in node-props, lets create new component.
+
+Link.tsx
+
+
+import React,{Component} from "react";
+
+interface ILinkProps {
+    address: string
+}
+
+export default class Link extends Component<ILinkProps> {
+    render() {
+            return(
+                <>
+                     <a href={this.props.address}>Click </a>
+                </>
+            )
+            
+    }
+}
+
+Content.test.tsx
+
+import React,{Component} from "react";
+import Enzyme from 'enzyme';
+import {shallow} from 'enzyme';
+import  Adapter from 'enzyme-adapter-react-16';
+import Link from './Link';
+
+Enzyme.configure({ adapter: new Adapter() });
+
+describe('<Link/>',()=>{
+        it('Link component accepts address prop',()=>{
+         const wrapper = shallow(<Link address='www.google.com'/>);
+         expect(wrapper.instance().props.address).toBe('www.google.com');
+        })
+});
+
+when it comes to testing component props with enzyme, its important to understand which prop or the component, we are trying to test. what we mean by this is are we tyring to test the actual instance of the component? so, this address prop or we are trying to test the href value on the returned a tag node. For our fist test here, we are testing the actual instance of the link address prop. and we can see that this is passing our test. 
+
+Next we will do:
+
+TestChart.test.tsx
+
+import { Chart } from "@scuf/charts";
+import React from 'react';
+import { IDonutProps } from "./IDonutProps";
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+import { mount,shallow } from 'enzyme';
+
+export class TestChart extends React.Component {
+    render() {
+      return (
+        <React.Fragment>
+            <Chart title="Rebel Fleet" subtitle="Battle at Endor">
+               
+            </Chart>;
+        </React.Fragment>
+      );
+    }
+  }
+  
+
+  Enzyme.configure({ adapter: new Adapter() });
+
+  describe('DonutChart',()=>{
+  
+      const wrapper = mount(<TestChart />);
+      it('renders without crashing',()=>{
+       console.log(wrapper.debug);
+         
+      })
+  
+  });
+
+
+Content.test.tsx
+
+import * as React from 'react';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+import { mount,shallow } from 'enzyme';
+import Content from './Content';
+
+
+
+Enzyme.configure({ adapter: new Adapter() });
+
+describe('DonutChart',()=>{
+
+    const wrapper = mount(<Content/>);
+    it('renders without crashing',()=>{
+     console.log(wrapper.debug);
+       
+    })
+
+});
+
+/////////////////////////////////////
+
+///////////////////////////////////////
+
+export class Link extends Component {
+  render(){
+    return this.props.hide? null : <a href={this.props.address}> Click </a>
+  }
+
+  it('returns null with true hide prop',()=>{
+  const wrapper = shallow(<Link hide={false} />);
+  expect(wrapper.find('a').length).toBe(1);
+  wrapper.setProps({hide:true})
+  expect(wrapper.get(0)).toBeNull()
+})
+
+
+
+and this test does pass which means that the false value that we are passing on the prop is actually returning
+an a tag. 
+
+so now we tested our null to be returned correctly.
+
+now if we do,
+ wrapper.setProps({hide:true})
+ expect(wrapper.get(0)).toBeNull())
+
+ And it looks like the test still pass.
+
+ setProps is a method that takes an object and passes it through as new props to our component.
+
+this causes a rerender of our component and useful when wanting to test our components behave over time with changing props. this method will call componentWillReceiveProps life cycle hooks method on the component. and our get method simply returns the node at the given index of the current wrapper.
+
+we are using toBeNull() method from jest to be sure that what we are returning is actually null. 
+
+
+Event Methods.
+
+Sometimes we have components that we use event methods such as click, onChange and onMouseOver. we can use enzyme to not 
+only simulate these events of rendered components but can check the conditional rendering attributes work as expected.
+
+So lets write a new test 
+
+it('on button change changes p text',()=>{
+  const wrapper = shallow(<App/>);
+  const button = wrapper.find('button');
+  expect(wrapper.find('.button-state').text()).toBe('No!')
+})
+
+and, now lets implement the corresponding jsx
+
+
+class App extends Component {
+  state={on: false}
+  render(){
+        return (
+        <>
+        <div className="App">
+           <h1 className="heading">Hello World</h1>
+           <Title text="some title"></Title>
+           <p className="button-state">{this.state.on?'Yes!':'No!'}</p>
+           <button onClick= {()=>this.setState({on:true})}>Click</button>
+        </div>
+        <Test />
+        </>
+  }
+)
+   }
+}
+
+the test will pass because our initial state is false, so our text says No.
+
+back in our test we will add,
+button.simulate('click')
+expect(wrapper.find('.button-state').text()).toBe('Yes')
+
+it('on button change changes p text',()=>{
+  const wrapper = shallow(<App/>);
+  const button = wrapper.find('button');
+  expect(wrapper.find('.button-state').text()).toBe('No!')
+  button.simulate('click');
+  expect(wrapper.find('.button-state').text()).toBe('Yes')
+})
+
+simulate will target the components prop on the event that we give it. For example, we are using click here in 
+this to give the onClick prop on the component and call it. 
+
+now what if we were working with the input element and when the use types into the input, it updates the component state. so our new test
+
+it('on input change, title changes text',()=>{
+  const wrapper = shallow(<App/>);
+  const input = wrapper.find('input')
+})
+
+REACT ERRORS:
+
+
+Looks like you called mount() without the global document loaded.
+
+yarn add jsdom jsdom-global
+
+
+React testing error: It looks like you called `mount()` without a global document being loaded
+
+https://stackoverflow.com/questions/42418660/react-testing-error-it-looks-like-you-called-mount-without-a-global-documen
+
+In your package.json, specify the test environment for jest as "jsdom" as follows:
+
+  "jest": {
+    "testEnvironment": "jsdom"
+  }
+
+
+
+
+//*******************************************************Test Example *********************************************************************************/
+
+
+
+
+import 'jsdom-global/register';
+import * as React from 'react';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+import CustomDataTable from './CustomDataTable';
+import { mount,shallow } from 'enzyme';
+import { DataTable } from '@scuf/datatable';
+
+Enzyme.configure({ adapter: new Adapter() });
+const columns = [
+    {
+      "header": "Uptime",
+      "field": "FieldOne",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    },
+    {
+      "header": "Onstream Factor",
+      "field": "FieldTwo",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    },
+    {
+      "header": "Shutdowns",
+      "field": "FieldThree",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    }
+    
+  ]
+
+  const data=[
+    {
+      "FieldOne": {
+        "cellData": "100.2",
+        "cellDataStyle": {
+          "fontSize": "150%",
+          "fontWeight": "700",
+          "color": "#0b87f1"
+        }
+      },
+      "FieldTwo": {
+        "cellData": "92.57",
+        "cellDataStyle": {
+          "fontSize": "150%",
+          "fontWeight": "700",
+          "color": "#0b87f1"
+        },
+        "units": "%",
+        "unitsStyle": { "fontSize": "70%" }
+      },
+      "FieldThree": {
+        "cellData": "8",
+        "cellDataStyle": {
+          "fontSize": "150%",
+          "fontWeight": "700",
+          "color": "#0b87f1"
+        }
+      }
+    }
+  ]
+describe('CustomDataTable',()=>{
+    const wrapper = mount(<CustomDataTable
+        tableName={'Summary Table'}
+        columns = {columns}
+        data = {data}
+    />);
+
+    it('renders without crashing',()=>{
+        mount(<CustomDataTable
+            tableName={'Summary Table'}
+            columns = {columns}
+            data ={data}
+        />);
+    })
+
+    it('should receive tableName props',()=>{
+        expect(wrapper.first().props()).toHaveProperty('tableName', 'Summary Table');
+    })
+
+    
+    it('should receive 3 columns',()=>{
+        expect(wrapper.first().props().columns).toHaveLength(3);
+    })
+
+    it('the column header should not be empty',()=>{
+        expect(wrapper.first().props().columns[0].header).not.toEqual('');
+    })
+
+    it('the first column header should be uptime',()=>{
+        expect(wrapper.first().props().columns[0].header).toBe("Uptime")
+    })
+
+     it('all column headers should not be empty',()=>{
+        wrapper.props().columns.map(each=>{
+            expect(each.header).not.toEqual('');
+        })
+    })
+
+    it('all column fields should not be empty',()=>{
+        wrapper.props().columns.map(each=>{
+            expect(each.field).not.toEqual('');
+        })
+    })
+
+    it('all column cell templates should not be empty',()=>{
+        wrapper.props().columns.map(each=>{
+            expect(each.cellTemplate).not.toEqual('');
+        })
+    })
+});
+
+describe('table props',()=>{
+    const wrapper = mount(
+        <DataTable data={data}>
+            <DataTable.Column field="hello" header="hello" align="right"></DataTable.Column>
+        </DataTable>
+    )
+
+  
+
+    it('adds the align class to the cells',()=>{
+        const cell = wrapper.find('tbody').find('td.align-right')
+        expect(cell).toHaveLength(1);
+    })
+})
+
+
+
+/******* React Testing JSON DATA *************************/
+
+Summary Table:
+
+const columns = [
+    {
+        "header": "Uptime",
+        "field": "FieldOne",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "Onstream Factor",
+        "field": "FieldTwo",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "Shutdowns",
+        "field": "FieldThree",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      }
+]
+
+const data=[
+  {
+      "FieldOne": {
+        "cellData": "100.2",
+        "cellDataStyle": {
+          "fontSize": "150%",
+          "fontWeight": "700",
+          "color": "#0b87f1"
+        }
+      },
+      "FieldTwo": {
+        "cellData": "92.57",
+        "cellDataStyle": {
+          "fontSize": "150%",
+          "fontWeight": "700",
+          "color": "#0b87f1"
+        },
+        "units": "%",
+        "unitsStyle": { "fontSize": "70%" }
+      },
+      "FieldThree": {
+        "cellData": "8",
+        "cellDataStyle": {
+          "fontSize": "150%",
+          "fontWeight": "700",
+          "color": "#0b87f1"
+        }
+      }
+    }
+]
+
+
+Catalyst Cycle Length:
+
+const columns = [
+    {
+      "header": "Current period started March 23, 2018",
+      "field": "FieldOne",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    },
+    {
+      "header": "",
+      "field": "FieldTwo",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    },
+    {
+      "header": "Target",
+      "field": "FieldThree",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    },
+    {
+      "header": "Actual",
+      "field": "FieldFour",
+      "align": "left",
+      "cellTemplate": "valueRenderer"
+    }
+]
+
+const data=[
+  {
+    "FieldOne": {
+      "cellData": "Treating",
+      "cellDataStyle": {
+        "fontSize": "110%"
+      }
+    },
+    "FieldTwo": {
+      "cellData": "2.1",
+      "cellDataStyle": {
+        "fontSize": "110%"
+      },
+      "units": "F/mo",
+      "unitsStyle": { "fontSize": "70%" }
+    },
+    "FieldThree": {
+      "cellData": "Feb 2021",
+      "cellDataStyle": {
+        "fontSize": "110%"
+      }
+    },
+    "FieldFour": {
+      "cellData": "Feb 2021",
+      "cellDataStyle": {
+        "fontSize": "110%",
+        "color": "#0b87f1"
+      }
+    }
+  },
+  {
+    "FieldOne": {
+      "cellData": "Cracking",
+      "cellDataStyle": {
+        "fontSize": "110%"
+      }
+    },
+    "FieldTwo": {
+      "cellData": "2.2",
+      "cellDataStyle": {
+        "fontSize": "110%"
+      },
+      "units": "F/mo",
+      "unitsStyle": { "fontSize": "70%" }
+    },
+    "FieldThree": {
+      "cellData": "Feb 2021",
+      "cellDataStyle": {
+        "fontSize": "110%"
+      }
+    },
+    "FieldFour": {
+      "cellData": "Feb 2021",
+      "cellDataStyle": {
+        "fontSize": "110%",
+        "color": "#0b87f1"
+      }
+    }
+  }
+]
+
+"^.+\\.(css|less|scss)$": "identity-obj-proxy"
+
+
+import "jsdom-global/register";
+
+import * as React from "react";
+import Adapter from "enzyme-adapter-react-16";
+import Enzyme from "enzyme";
+import CustomDataTable from "./CustomDataTable";
+import { mount, shallow } from "enzyme";
+import { DataTable } from "@scuf/datatable";
+
+Enzyme.configure({ adapter: new Adapter() });
+const columns = [
+  {
+    "header": "Uptime",
+    "field": "FieldOne",
+    "align": "left",
+    "cellTemplate": "valueRenderer"
+  },
+  {
+    "header": "Onstream Factor",
+    "field": "FieldTwo",
+    "align": "left",
+    "cellTemplate": "valueRenderer"
+  },
+  {
+    "header": "Shutdowns",
+    "field": "FieldThree",
+    "align": "left",
+    "cellTemplate": "valueRenderer"
+  }
+]
+
+const data=[
+  {
+    "FieldOne": {
+      "cellData": "100.2",
+      "cellDataStyle": {
+        "fontSize": "150%",
+        "fontWeight": "700",
+        "color": "#0b87f1"
+      }
+    },
+    "FieldTwo": {
+      "cellData": "92.57",
+      "cellDataStyle": {
+        "fontSize": "150%",
+        "fontWeight": "700",
+        "color": "#0b87f1"
+      },
+      "units": "%",
+      "unitsStyle": { "fontSize": "70%" }
+    },
+    "FieldThree": {
+      "cellData": "8",
+      "cellDataStyle": {
+        "fontSize": "150%",
+        "fontWeight": "700",
+        "color": "#0b87f1"
+      }
+    }
+  }
+]
+
+const setUp = (props={}) =>{
+  const wrapper = shallow(<CustomDataTable {...props} />)
+  return wrapper;
+}
+
+describe("CustomDataTable Component", () => {
+  let wrapper;
+  beforeEach(()=>{
+    wrapper = setUp();
+  })
+
+
+  const wrapper shallow(
+    <CustomDataTable
+      tableName={"Summary Table"}
+      tableColumns={columns}
+      tableData={data}
+    />
+  );
+
+  it("renders without crashing", () => {
+    expect(wrapper).toBeTruthy();
+  });
+
+  it('should receive 3 columns',()=>{
+    expect(wrapper.first().props().tableColumns).toHaveLength(3);
+  })
+
+  it("should receive tableName props", () => {
+    expect(wrapper.props()).toHaveProperty("tableName", "Summary Table");
+  });
+
+  it("all column fields should not be empty", () => {
+    wrapper.props().tableColumns.map(each => {
+      expect(each.field).not.toEqual("");
+    });
+  });
+
+  it("all column cell templates should not be empty", () => {
+    wrapper.props().tableColumns.map(each => {
+      expect(each.cellTemplate).not.toEqual("");
+    });
+  });
+
+  it("the length of the columns should be equal to the length of each object inside data array", () => {
+    const columnsLength = wrapper.first().props().tableColumns.length;
+    wrapper.props().tableData.forEach(each=>{
+      expect(Object.keys(each)).toHaveLength(columnsLength)
+    })
+  });
+
+  it("each field value should correspond to the each object's key of data", () => {
+    const columnFields = wrapper.first().props().tableColumns.map(each=>{
+       return each.field
+    });
+    wrapper.props().tableData.forEach((each,index)=>{
+      expect(Object.keys(each)).toStrictEqual(columnFields)
+    })
+  });
+});
+
+describe("table props", () => {
+  const wrapper = mount(
+    <DataTable data={data}>
+      <DataTable.Column
+        field="hello"
+        header="hello"
+        align="right" 
+      ></DataTable.Column>
+    </DataTable>
+  );
+});
+
+
+describe('CustomDataTable Component ',()=>{
+  it('should render without errors',()=>{
+    const component = setUp();
+    const wrapper = component.find('table');
+    expect(wrapper.length).toBe(1)
+  })
+})
+
+
+/***********************************Example using Shallow ********************************************************/
+
+
+import "jsdom-global/register";
+
+import * as React from "react";
+import Adapter from "enzyme-adapter-react-16";
+import Enzyme from "enzyme";
+import CustomDataTable from "./CustomDataTable";
+import { mount, shallow } from "enzyme";
+
+Enzyme.configure({ adapter: new Adapter() });
+const columns = [
+  {
+    header: "Uptime",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Onstream Factor",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Shutdowns",
+    field: "FieldThree",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  }
+]
+
+const data=[
+  {
+    FieldOne: {
+      cellData: "100.2",
+      cellDataStyle: {
+        fontSize: "150%",
+        fontWeight: "700",
+        color: "#0b87f1"
+      }
+    },
+    FieldTwo: {
+      cellData: "92.57",
+      cellDataStyle: {
+        fontSize: "150%",
+        fontWeight: "700",
+        color: "#0b87f1"
+      },
+      units: "%",
+      unitsStyle: { "fontSize": "70%" }
+    },
+    FieldThree: {
+      cellData: "8",
+      cellDataStyle: {
+        fontSize: "150%",
+        fontWeight: "700",
+        color: "#0b87f1"
+      }
+    }
+  }
+]
+
+const setUp = (props={}) => {
+  const wrapper = shallow(<CustomDataTable 
+                            tableColumns = {columns} 
+                            tableData = {data}
+                            tableName = {'Summary Table'}
+                            />)
+  return wrapper;
+}
+
+describe('CustomDataTable Component ',()=>{
+  let wrapper;
+  beforeEach(()=>{
+    wrapper = setUp();
+  })
+
+  it('should render without errors',()=>{
+    expect(wrapper).toBeTruthy();
+  })
+
+  it('should receive 3 columns',()=>{
+    expect(wrapper.instance().props.tableColumns.length).toBe(3);
+  })
+
+  it("should receive tableName props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tableName");
+  });
+
+  it("should receive tableData props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tableData");
+  });
+
+  it("should receive tableColumns props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tableColumns");
+  });
+
+  it("all column fields should not be empty", () => {
+    wrapper.instance().props.tableColumns.map(each => {
+      expect(each.field).not.toEqual("")
+    });
+  });
+
+  it("all column cell templates should not be empty", () => {
+    wrapper.instance().props.tableColumns.map(each => {
+      expect(each.cellTemplate).not.toEqual("")
+    });
+  });
+
+  it("the length of the columns should be equal to the length of each object inside data array", () => {
+    const columnsLength = wrapper.instance().props.tableColumns.length;
+    wrapper.instance().props.tableData.forEach(each=>{
+      expect(Object.keys(each)).toHaveLength(columnsLength)
+    })
+  })
+
+  it("each field value should correspond to the each object's key of data", () => {
+    const columnFields = wrapper.instance().props.tableColumns.map(each=>{
+       return each.field
+    });
+    wrapper.instance().props.tableData.forEach((each,index)=>{
+      expect(Object.keys(each)).toStrictEqual(columnFields);
+    })
+  });
+})
+
+
+/*******************************************Datas*****************************************/
+Catalyst Cycle Length
+
+const columns = [
+  {
+    header: "Current period started March 23, 2018",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Target",
+    field: "FieldThree",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Actual",
+    field: "FieldFour",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  }
+]
+
+const data=[
+  {
+    FieldOne: {
+      cellData: "Treating",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "2.1",
+      cellDataStyle: {
+        fontSize: "110%"
+      },
+      units: "F/mo",
+      unitsStyle: { fontSize: "70%" }
+    },
+    FieldThree: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  },
+  {
+    FieldOne: {
+      cellData: "Cracking",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "2.2",
+      cellDataStyle: {
+        fontSize: "110%"
+      },
+      units: "F/mo",
+      unitsStyle: { fontSize: "70%" }
+    },
+    FieldThree: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  }
+]
+
+/*******************************************Datas*****************************************/
+Catalyst Replacement Indicator
+
+const headerGroups = [
+  [
+    {
+      header: "Currents period started March 23, 2018",
+      colspan: 2
+    },
+    {
+      header: "Target"
+    },
+    {
+      header: "Actual"
+    }
+  ]
+]
+
+const columns = [
+  {
+    rowHeader: true,
+    header: "",
+    field: "status"
+  },
+  {
+    header: "HDS",
+    field: "FieldOne",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "DES",
+    field: "FieldTwo",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "PR",
+    field: "FieldThree",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "SR",
+    field: "FieldFour",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "HTS",
+    field: "FieldFive",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "LTS",
+    field: "FieldSix",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "Meth",
+    field: "FieldSeven",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "NH3",
+    field: "FieldEight",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  }
+]
+
+const data=[
+  {
+    status: "Age In Months",
+    FieldOne: "32",
+    FieldTwo: "32",
+    FieldThree: "32",
+    FieldFour: "32",
+    FieldFive: "32",
+    FieldSix: "32",
+    FieldSeven: "32",
+    FieldEight: "32"
+    },
+    {
+    status: "TA 2019",
+    FieldOne: "Green",
+    FieldTwo: "Green",
+    FieldThree: "Green",
+    FieldFour: "Orange",
+    FieldFive: "Green",
+    FieldSix: "Red",
+    FieldSeven: "Green",
+    FieldEight: "Green"
+    },
+    {
+    status: "TA 2022",
+    FieldOne: "Green",
+    FieldTwo: "Green",
+    FieldThree: "Red",
+    FieldFour: "Orange",
+    FieldFive: "Green",
+    FieldSix: "Green",
+    FieldSeven: "Green",
+    FieldEight: "Green"
+    }
+]
+
+/****************************Bed Comparison Table *******************************************/
+
+const columns = [
+  {
+    rowHeader: true,
+    header: "Vessel",
+    field: "status"
+  },
+  {
+    header: "A V1320",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  },
+  {
+    header: "B V1330",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  },
+  {
+    header: "B V1340",
+    field: "FieldThree",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  }
+]
+
+const data=[
+      {
+        status: "End of Heating Temp",
+        FieldOne: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldTwo: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldThree: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        }
+      },
+      {
+        status: "End of Cooling Temp",
+        FieldOne: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldTwo: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldThree: {
+          cellData: "1",
+          cellDataStyle: "bordered-green-curve"
+        }
+      },
+      {
+        status: "Absorption Time",
+        FieldOne: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldTwo: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldThree: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        }
+      },
+      {
+        status: "Heating Time",
+        FieldOne: {
+          cellData: "2",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldTwo: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldThree: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        }
+      },
+      {
+        status: "Heating Flow",
+        FieldOne: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldTwo: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldThree: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        }
+      },
+      {
+        status: "Cooling Time",
+        FieldOne: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldTwo: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        },
+        FieldThree: {
+          cellData: "0",
+          cellDataStyle: "bordered-green-curve"
+        }
+      }
+    ]
+
+
+/****************************Warning Summary Table *******************************************/
+
+const columns = [
+  {
+    rowHeader: true,
+    header: "",
+    field: "status"
+  },
+  {
+    header: "Production & Energy",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  },
+  {
+    header: "Reliability",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  }
+]
+
+const data=[
+  {
+    status: "Feed Purification",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "Reformed & WHS",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "Shift",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "C02 Removal",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "Methanator",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "Ammonia Loop",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "Refrigeration Loop",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  },
+  {
+    status: "BFW & Steam System",
+    FieldOne: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    },
+    FieldTwo: {
+      cellData: "0",
+      cellDataStyle: "bordered"
+    }
+  }
+]
+
+/****************************Pipes In Alarm Table *******************************************/
+
+
+const columns = [
+  {
+    rowHeader: true,
+    header: "",
+    field: "status"
+  },
+  {
+    header: "01",
+    field: "FieldOne",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "02",
+    field: "FieldTwo",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "03",
+    field: "FieldThree",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "04",
+    field: "FieldFour",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "05",
+    field: "FieldFive",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "06",
+    field: "FieldSix",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "07",
+    field: "FieldSeven",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "08",
+    field: "FieldEight",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "09",
+    field: "FieldNine",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  },
+  {
+    header: "10",
+    field: "FieldTen",
+    align: "center",
+    cellTemplate: "statusRenderer"
+  }
+]
+
+const data=[
+  {
+    status: "Reactor 1",
+    FieldOne: "Grey",
+    FieldTwo: "Grey",
+    FieldThree: "Grey",
+    FieldFour: "Grey",
+    FieldFive: "Grey",
+    FieldSix: "Grey",
+    FieldSeven: "Grey",
+    FieldEight: "Grey",
+    FieldNine: "Grey",
+    FieldTen: "Grey"
+  },
+  {
+    status: "Reactor 2",
+    FieldOne: "Grey",
+    FieldTwo: "Grey",
+    FieldThree: "Grey",
+    FieldFour: "Grey",
+    FieldFive: "Grey",
+    FieldSix: "Grey",
+    FieldSeven: "Grey",
+    FieldEight: "Grey",
+    FieldNine: "Grey",
+    FieldTen: "Grey"
+  },
+  {
+    status: "Reactor Three",
+    FieldOne: "Grey",
+    FieldTwo: "Grey",
+    FieldThree: "Grey",
+    FieldFour: "Grey",
+    FieldFive: "Grey",
+    FieldSix: "Grey",
+    FieldSeven: "Grey",
+    FieldEight: "Grey",
+    FieldNine: "Grey",
+    FieldTen: "Grey"
+  }
+]
+
+
+/***************************Simple Table ******************************************************/
+
+const columns = [
+  {
+    rowHeader: true,
+    header: "",
+    field: "status"
+  },
+  {
+    header: "Temperature",
+    field: "FieldOne",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Lab",
+    field: "FieldTwo",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Calculated",
+    field: "FieldThree",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Raw",
+    field: "FieldFour",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Corrected",
+    field: "FieldFive",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Reconciled",
+    field: "FieldSix",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+
+  {
+    header: "Raw",
+    field: "FieldSeven",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Corrected",
+    field: "FieldEight",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Reconciled",
+    field: "FieldNine",
+    align: "center",
+    cellTemplate: "valueRenderer"
+  }
+]
+
+const data=[
+  {
+    status: "Feed",
+    FieldOne: {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldTwo": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldThree": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldFour": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldFive": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldSix": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldSeven": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldEight": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldNine": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    }
+  },
+  {
+    "status": "Reformate",
+    FieldOne: {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldTwo": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldThree": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldFour": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldFive": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldSix": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldSeven": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldEight": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldNine": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    }
+  },
+  {
+    "status": "Unstabilized LPG",
+    FieldOne: {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldTwo": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldThree": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldFour": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldFive": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldSix": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldSeven": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldEight": {
+      cellData: "1.00",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    },
+    "FieldNine": {
+      cellData: "-",
+      cellDataStyle: {
+        fontSize: "100%"
+      }
+    }
+  }
+]
+
+/***************************Object Management List Table ******************************************************/
+
+
+const columns = [
+  {
+    header: "",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldThree",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldFour",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldFive",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldSix",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldSeven",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldEight",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  }
+]
+
+const data=[
+  {
+    FieldOne: {
+      cellData: "Processing conditions",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldThree: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldFive: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSix: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSeven: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldEight: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  },
+  {
+    FieldOne: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "Weight Recovery and rates",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldThree: {
+      cellData: "Processing conditions-page 1",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "1",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldFive: {
+      cellData: "2",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSix: {
+      cellData: "icon-actions",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSeven: {
+      cellData: "Administrator",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldEight: {
+      cellData: "June 25,2018",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  },
+  {
+    FieldOne: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "Volumetric Flow rates",
+      cellDataStyle: {
+        fontSize: "110%"
+      },
+      functionality: {
+        event: "tooltip",
+        content: "Rec feed rate, Rec reformate rate, Rec LPG rate, Rec Net gas rate"
+      }
+    },
+    FieldThree: {
+      cellData: "Processing conditions-page 2",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "1",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldFive: {
+      cellData: "2",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSix: {
+      cellData: "icon-actions",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSeven: {
+      cellData: "Administrator",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldEight: {
+      cellData: "June 25,2018",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  },
+  {
+    FieldOne: {
+      cellData: "",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "Weight Recovery and rates",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldThree: {
+      cellData: "Processing conditions-page 3",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "1",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldFive: {
+      cellData: "2",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSix: {
+      cellData: "icon-actions",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldSeven: {
+      cellData: "Administrator",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    },
+    FieldEight: {
+      cellData: "June 25,2018",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  }
+]
+
+/***************************New Value Input Table  ******************************************************/
+
+const columns = [
+  {
+    rowHeader: true,
+    header: "",
+    field: "status"
+  },
+  {
+    header: "",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  },
+  {
+    header: "",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "badgeRenderer"
+  },
+  {
+    header: "",
+    field: "FieldThree",
+    align: "left",
+    cellTemplate: "badgeRenderer",
+    editable: true
+  },
+  {
+    header: "",
+    field: "FieldFour",
+    align: "left",
+    cellTemplate: "badgeRenderer",
+    editable: true
+  },
+  {
+    header: "",
+    field: "FieldFive",
+    align: "left",
+    cellTemplate: "badgeRenderer",
+    editable: true
+  },
+  {
+    header: "",
+    field: "FieldSix",
+    align: "left",
+    cellTemplate: "badgeRenderer",
+    editable: true
+  }
+]
+
+const data=[
+  {
+    status: "i-Paraffins",
+    FieldOne: {
+      cellData: "7.78"
+    },
+    FieldTwo: {
+      cellData: "="
+    },
+    FieldThree: {
+      cellData: "7.78"
+    },
+    FieldFour: {
+      cellData: "7.78"
+    },
+    FieldFive: {
+      cellData: "="
+    },
+    FieldSix: {
+      cellData: "7.78"
+    }
+  },
+  {
+    status: "n-Paraffins",
+    FieldOne: {
+      cellData: "0"
+    },
+    FieldTwo: {
+      cellData: "="
+    },
+    FieldThree: {
+      cellData: "2.23"
+    },
+    FieldFour: {
+      cellData: "7.78"
+    },
+    FieldFive: {
+      cellData: "="
+    },
+    FieldSix: {
+      cellData: "7.78"
+    }
+  },
+  {
+    status: "Olefins",
+    FieldOne: {
+      cellData: "0.01"
+    },
+    FieldTwo: {
+      cellData: "="
+    },
+    FieldThree: {
+      cellData: "0.00"
+    },
+    FieldFour: {
+      cellData: "7.78"
+    },
+    FieldFive: {
+      cellData: "="
+    },
+    FieldSix: {
+      cellData: "7.78"
+    }
+  },
+  {
+    status: "Naphthenes",
+    FieldOne: {
+      cellData: "20.30"
+    },
+    FieldTwo: {
+      cellData: "="
+    },
+    FieldThree: {
+      cellData: "20.30"
+    },
+    FieldFour: {
+      cellData: "7.78"
+    },
+    FieldFive: {
+      cellData: "="
+    },
+    FieldSix: {
+      cellData: "7.78"
+    }
+  },
+  {
+    status: "Aromatics",
+    FieldOne: {
+      cellData: "5.65"
+    },
+    FieldTwo: {
+      cellData: "="
+    },
+    FieldThree: {
+      cellData: "5.80"
+    },
+    FieldFour: {
+      cellData: "7.78"
+    },
+    FieldFive: {
+      cellData: "="
+    },
+    FieldSix: {
+      cellData: "7.78"
+    }
+  }
+]
+
+
+/***************************Backup Custom Data Table  ******************************************************/
+
+import "jsdom-global/register";
+
+import * as React from "react";
+import Adapter from "enzyme-adapter-react-16";
+import Enzyme from "enzyme";
+import CustomDataTable from "./CustomDataTable";
+import { mount, shallow } from "enzyme";
+import { object } from "prop-types";
+import { string } from "postcss-selector-parser";
+import { ucFirst } from "change-case";
+
+Enzyme.configure({ adapter: new Adapter() });
+
+let headerGroups = null;
+
+ headerGroups = [
+  [
+    {
+      header: "Currents period started March 23, 2018",
+      colspan: 2
+    },
+    {
+      header: "Target"
+    },
+    {
+      header: "Actual"
+    }
+  ]
+]
+
+const columns = [
+  {
+    header: "Current period started March 23, 2018",
+    field: "FieldOne",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "",
+    field: "FieldTwo",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Target",
+    field: "FieldThree",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  },
+  {
+    header: "Actual",
+    field: "FieldFour",
+    align: "left",
+    cellTemplate: "valueRenderer"
+  }
+]
+
+const data=[
+  {
+    FieldOne: {
+      cellData: "Treating",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "2.1",
+      cellDataStyle: {
+        fontSize: "110%"
+      },
+      units: "F/mo",
+      unitsStyle: { fontSize: "70%" }
+    },
+    FieldThree: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  },
+  {
+    FieldOne: {
+      cellData: "Cracking",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldTwo: {
+      cellData: "2.2",
+      cellDataStyle: {
+        fontSize: "110%"
+      },
+      units: "F/mo",
+      unitsStyle: { fontSize: "70%" }
+    },
+    FieldThree: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%"
+      }
+    },
+    FieldFour: {
+      cellData: "Feb 2021",
+      cellDataStyle: {
+        fontSize: "110%",
+        color: "#0b87f1"
+      }
+    }
+  }
+]
+
+
+
+const setUp = (props={}) => {
+  const wrapper = shallow(<CustomDataTable 
+                            tableColumns = {columns} 
+                            tableData = {data}
+                            tableName = {'Summary Table'}
+                            tableHeaderGroups={headerGroups && headerGroups}
+
+                            />)
+  return wrapper;
+}
+
+
+
+describe('CustomDataTable Component ',()=>{
+
+  let wrapper;
+  beforeEach(()=>{
+    wrapper = setUp();
+  })
+
+  it('should render without errors',()=>{
+    expect(wrapper).toBeTruthy();
+  })
+
+  it("headerGroups should be an array of array",()=>{
+    if(wrapper.instance().props.tableHeaderGroups){
+      //expect(wrapper.instance().props.tableHeaderGroups).toBeInstanceOf(Array)
+      expect(Array.isArray(wrapper.instance().props.tableHeaderGroups)).toBe(true)
+    }
+  })
+
+ 
+
+  it('should receive 3 columns',()=> {
+   //expect(wrapper.instance().props.tableColumns.length).toBe(tableColumns.length)
+  })
+
+  it("should receive tableName props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tableName");
+  });
+
+  it("should receive tableData props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tableData");
+  });
+
+  it("should receive tableColumns props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tableColumns");
+  });
+
+  it("all column fields should not be empty", () => {
+    wrapper.instance().props.tableColumns.map(each => {
+      expect(each.field).not.toEqual("")
+    });
+  });
+
+  it("all column cell templates should not be empty", () => {
+    wrapper.instance().props.tableColumns.map(each => {
+      expect(each.cellTemplate).not.toEqual("")
+    });
+  });
+
+  it("the length of the columns should be equal to the length of each object inside data array", () => {
+    const columnsLength = wrapper.instance().props.tableColumns.length;
+    wrapper.instance().props.tableData.forEach(each=>{
+      expect(Object.keys(each)).toHaveLength(columnsLength)
+    })
+  })
+
+  it("each field value should correspond to the each object's key of data", () => {
+    const columnFields = wrapper.instance().props.tableColumns.map(each=>{
+       return each.field
+    });
+    wrapper.instance().props.tableData.forEach((each,index)=>{
+      expect(Object.keys(each)).toStrictEqual(columnFields);
+    })
+  });
+
+  it("the editable property value should be a boolean",()=>{
+    const value = typeof(wrapper.instance().props.tableColumns.editable);
+    
+  })
+
+  
+
+  
+})
+
+
+/***************************New Backup Custom Data Table  ******************************************************/
+
+
+import * as React from "react";
+import Enzyme from "enzyme";
+import CustomDataTable from "./CustomDataTable";
+import Adapter from "enzyme-adapter-react-16";
+import toJson from 'enzyme-to-json';
+import { mount, shallow } from "enzyme";
+
+
+Enzyme.configure({ adapter: new Adapter() });
+
+let headerGroups = null;
+
+const columns = [
+    {
+      rowHeader: true,
+      header: "",
+      field: "status"
+    },
+    {
+      header: "",
+      field: "FieldOne",
+      align: "left",
+      cellTemplate: "badgeRenderer"
+    },
+    {
+      header: "",
+      field: "FieldTwo",
+      align: "left",
+      cellTemplate: "badgeRenderer"
+    },
+    {
+      header: "",
+      field: "FieldThree",
+      align: "left",
+      cellTemplate: "badgeRenderer",
+      editable: true
+    },
+    {
+      header: "",
+      field: "FieldFour",
+      align: "left",
+      cellTemplate: "badgeRenderer",
+      editable: true
+    },
+    {
+      header: "",
+      field: "FieldFive",
+      align: "left",
+      cellTemplate: "badgeRenderer",
+      editable: true
+    },
+    {
+      header: "",
+      field: "FieldSix",
+      align: "left",
+      cellTemplate: "badgeRenderer",
+      editable: true
+    }
+  ]
+  
+  const data=[
+    {
+      status: "i-Paraffins",
+      FieldOne: {
+        cellData: "7.78"
+      },
+      FieldTwo: {
+        cellData: "="
+      },
+      FieldThree: {
+        cellData: "7.78"
+      },
+      FieldFour: {
+        cellData: "7.78"
+      },
+      FieldFive: {
+        cellData: "="
+      },
+      FieldSix: {
+        cellData: "7.78"
+      }
+    },
+    {
+      status: "n-Paraffins",
+      FieldOne: {
+        cellData: "0"
+      },
+      FieldTwo: {
+        cellData: "="
+      },
+      FieldThree: {
+        cellData: "2.23"
+      },
+      FieldFour: {
+        cellData: "7.78"
+      },
+      FieldFive: {
+        cellData: "="
+      },
+      FieldSix: {
+        cellData: "7.78"
+      }
+    },
+    {
+      status: "Olefins",
+      FieldOne: {
+        cellData: "0.01"
+      },
+      FieldTwo: {
+        cellData: "="
+      },
+      FieldThree: {
+        cellData: "0.00"
+      },
+      FieldFour: {
+        cellData: "7.78"
+      },
+      FieldFive: {
+        cellData: "="
+      },
+      FieldSix: {
+        cellData: "7.78"
+      }
+    },
+    {
+      status: "Naphthenes",
+      FieldOne: {
+        cellData: "20.30"
+      },
+      FieldTwo: {
+        cellData: "="
+      },
+      FieldThree: {
+        cellData: "20.30"
+      },
+      FieldFour: {
+        cellData: "7.78"
+      },
+      FieldFive: {
+        cellData: "="
+      },
+      FieldSix: {
+        cellData: "7.78"
+      }
+    },
+    {
+      status: "Aromatics",
+      FieldOne: {
+        cellData: "5.65"
+      },
+      FieldTwo: {
+        cellData: "="
+      },
+      FieldThree: {
+        cellData: "5.80"
+      },
+      FieldFour: {
+        cellData: "7.78"
+      },
+      FieldFive: {
+        cellData: "="
+      },
+      FieldSix: {
+        cellData: "7.78"
+      }
+    }
+  ]
+
+const setUp = (props={}) => {
+  const wrapper = shallow(<CustomDataTable 
+                            tColumns = {columns} 
+                            tData = {data}
+                            tName = {'Summary Table'}
+                            tHeaderGroups={headerGroups && headerGroups}
+                            />)
+  return wrapper;
+}
+
+describe('CustomDataTable Component ',()=>{
+
+  let wrapper;
+  beforeEach(()=>{
+    wrapper = setUp();
+  })
+
+  it('should render without errors',()=>{
+    expect(wrapper).toBeTruthy();
+  })
+
+  it('matches the snapshot',()=>{
+    const tree = wrapper;
+    expect(toJson(tree)).toMatchSnapshot();
+  })
+
+  it("headerGroups should be an array of array",()=>{
+    if(wrapper.instance().props.tHeaderGroups){
+        console.log('hello');
+      expect(Array.isArray(wrapper.instance().props.tHeaderGroups)).toBe(true)
+    }
+  })
+
+  it('should receive 3 columns',()=> {
+   expect(wrapper.instance().props.tColumns.length).toBe(columns.length)
+  })
+
+  it("should receive tableName props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tName");
+  });
+
+  it("should receive tableData props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tData");
+  });
+
+  it("should receive tableColumns props", () => {
+    expect(wrapper.instance().props).toHaveProperty("tColumns");
+  });
+
+  it("all column fields should not be empty", () => {
+    wrapper.instance().props.tColumns.map(each => {
+      expect(each.field).not.toEqual("")
+    });
+  });
+
+  it("all column cell templates should not be empty", () => {
+    wrapper.instance().props.tColumns.map(each => {
+      expect(each.cellTemplate).not.toEqual("")
+    });
+  });
+
+  it("the length of the columns should be equal to the length of each object inside data array", () => {
+    const columnsLength = wrapper.instance().props.tColumns.length;
+    wrapper.instance().props.tData.forEach(each=>{
+      expect(Object.keys(each)).toHaveLength(columnsLength)
+    })
+  })
+
+  it("each field value should correspond to the each object's key of data", () => {
+    const columnFields = wrapper.instance().props.tColumns.map(each=>{
+       return each.field
+    });
+    wrapper.instance().props.tData.forEach((each,index)=>{
+      expect(Object.keys(each)).toStrictEqual(columnFields);
+    })
+  });
+
+  it("the editable property value should be a boolean",()=>{
+    //const value = typeof(wrapper.instance().props.tColumns.editable);
+    
+  })
+
+  
+
+  
+})
+
+
+New unit testing tutorial:
+
+expect(functions.add(2,2)).toBe(4);
+expect(functions.add(2,2)).not.toBe(5);
+expect(functions.isNull()).toBeNull();
+expect(functions.checkValue(null)).toBeFalsy(); //zero, null and undefined are falsy
+expect(functions.checkValue(null)).not.toBeFalsy();
+expect(functions.checkValue(null)).toBeTruthy();
+
+createUser:()=>{
+  const user = {firstName:'Brad'}
+  user['lastName']='Traversy'
+  return user;
+}
+
+expect(functions.createUser()).toBe({
+  firstName:'Brad',
+  lastName:'Traversy'
+})  // results in test failing
+
+ToBe is for primitive types. Object and arrays are actual reference types in javascript. you can have two of the same looking objects. but they are actually stored in two different areas of memory. so they are treated differently. 
+
+ToBe is not for objects.
+so if you want to use objects, or array, you have to use toEqual. 
+
+expect(functions.createUser()).toEqual({
+  firstName:'Brad',
+  lastName:'Traversy'
+}) // will pass the test.
+
+Less than and greater than
+
+expect(load1+load2).toBeLessThan(1600);
+expect(load1+load2).toBeLessThanOrEqual(1600);
+
+test('There is no I in team',()=>{
+  expect('team').not.toMatch(/I/);
+})
+
+test('There is no I in team',()=>{
+  expect('team').not.toMatch(/I/i);  //for case insensitive
+
+})
+
+
+//Arrays
+
+test('Admin should be in username',()=>{
+  usernames = ['john',"karen","admin"];
+  expect(usernames.toContain('admin'))
+})
+
+
+Work with asynchronous data:
+
+install axios
+
+fetchUser:()=>axios.get('https://jsonplaceholder.typicode.com/users/1').
+then(res=>res.data)
+.catch(err=>'error')
+
+//working with async data
+
+//Promise
+test('user fetched name should be Leanne graham',()=>{
+  expect.assertiions(1);
+  return functions.fetchUser().then((data=>{
+  expect(data.name).toEqual('Leanne Grapham')
+}))
+})
+
+test('user fetched name should be Leanne graham',async()=>{
+    expect.assertiions(1);
+    const data = await functions.fetchUser();
+    expect(data.name).toEqual('Leanne Grapham')
+})
+
+//Async Await
+
+
+
+//make sure you have assertions and fetchUser when dealing with asynchronous data like this.
+
+assertions verifies that a certain number of assertions are called. this is used when testing asynchronous code, which makes sure that assertiions in callback 
 
 
 
 
 
 
+Errors: 
+1. On new Adapter(): only a void function can be called with the new keyword.
+
+Enzyme.configure({adapter: new Adapter()}); 
+
+
+using classNames in test is not a good idea. use a custom data-test attribute. 
+using dat-test is a way of telling other programmers to not to change the value because it is used in test.
+
+<header data-test="headerComponent">
+  return(
+    <img data-test="logoImg" />
+  )
+</header>
+
+it('should render without errors',()=>{
+  const wrapper = component.find(`[data-test='headerComponent']`);
+  expect(wrapper.length).toBe(1)
+})
+
+
+it('should render without errors',()=>{
+  const wrapper = component.find(`[data-test='logoImg']`);
+  expect(wrapper.length).toBe(1)
+})
+
+Funny enough, this code is quite repetitive,
+const wrapper = component.find(`[data-test='headerComponent']`);
+
+const findByTestAttr = (component,attr) =>{
+  const wrapper = component.find(`[data-test='${attr}']`)
+}
+
+describe('Header component',()=>{
+  let component;
+  beforeEach(()=>{
+    component = setUp();
+  });
+
+  it('should render without errors',()=>{
+    const wrapper = findByTestAttr(component,'headerComponent');
+    expect(wrapper.length).toBe(1);
+
+  })
+
+
+})
+
+State Testing: 
+
+Sometimes our React Component uses Local state to conditionally update our component attributes. if you want to simulate and test different contexts,
+we can manually update the rendered component inside of our testing environment.
+
+class App extends Component {
+  state = {
+    on:false,
+    input:'',
+    mainColor:'blue'
+  }
+}
+
+it('updates className with new State',()=>{
+  const wrapper = shallow(<App/>);
+  expect(wrapper.find('.blue').length).toBe(1)
+  expect(wrapper.find('.red').length).toBe(0)
+  wrapper.setState({mainColor:'red'})
+  expect(wrapper.find('.blue').length).toBe(0)
+  expect(wrapper.find('.red').length).toBe(1)
+})
+
+
+Form Testing:
+
+Following is the form:
+
+class TodoApp extends React.Component {
+  state = {
+    name:'',
+    email:'',
+    number:'',
+    optIn: true
+  }
+  
+  handleChange = (event,str) =>{
+    this.setState({
+      [str]: event.target.value
+    })
+  }
+  
+  handleSubmit = (e) =>{
+    e.preventDefault();
+    console.log('hello')
+    //return api.addUser(this.state.name, this.state.email, this.state.number)
+  }
+  
+  handlePromotionClick = () =>{
+    this.setState(prevState=>{
+       optIn: !prevState.optIn
+    })
+  }
+  
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <h2>Request Information</h2>
+        <input type="text" data-testid="name" value={this.state.name} onChange={(e)=>this.handleChange(e,'name')} />
+        <input type="text" data-testid="email" value={this.state.email} onChange={(e)=>this.handleChange(e,'email')} />
+         <input type="text" data-testid="number" value={this.state.email} onChange={(e)=>this.handleChange(e,'number')} />
+        <input type="checkbox" data-testid="checked" checked={this.state.optIn} onClick={this.handlePromotionClick}/>
+        <button type="submit">Submit</button>
+      </form> 
+    )
+  }
+}
+
+ReactDOM.render(<TodoApp />, document.querySelector("#app"))
+
+
+notes:
+data-test-id gives us more security as classes can change with tools like css.
+
+Plan: Best to think about how our users will interact with the form and then to write unit test to make sure that form answers that question.
+
+1. our users will automatically opted into receiving promotions by default, unless they tick the box.
+2. users should be able to input the information
+3. should be able to submit the form, which will call our API method. 
+4. Finally we want our form to stay in this order: name, email, number. for that we need the snapshot test at the end. 
+
+we have to write test for that.
 
 
 
 
+we will check whether checked
+
+describe('<Form />',()=>{
+  it('receive promotions default is true',()=>{
+    const wrapper = shallow(<Form />)
+    const promotionInput = wrapper.find('[data-testid="checked"]');
+    expect(promotionInput.props().checked).toBe(true);
+  })
+
+  it('allows user to fill out form',()=>{
+    const wrapper = shallow(<Form/>)
+  })
+})
+
+we then need to use the find method to find each input field, and then simulate method to simulate a user typing into that input box. we 
+will also need to send in a mocked event object for each input that holds that new text. if we do it one at a time, it will probably look bloated.
+so lets create a helper function. 
+
+
+const updateInput = (wrapper,instance, newValue ) => {
+  const input = wrapper.find(instance)
+};
+
+we will simulate the event, where 
+
+the props() method which we are actually using on the promotionalInput element, returns all the element attributes. Since this element 
+has the checked attribute on the element, we can assert that it is true by default. we will simulate the change with our event object, where our value is our new value.
+and we will return that new wrapper updated. 
+
+const updateInput = (wrapper,instance,newValue)=>{
+  const input= wrapper.find(instance);
+  input.simulate('change',{
+
+    currentTarget: {value: newValue}
+  })
+  return wrapper.find(instance)
+}
+
+with that we can do updateInput on each of our inidividual input. 
+
+it('allows user to fill out form',()=>{
+    const wrapper = shallow(<Form/>)
+    const namedInput = updateInput(wrapper,'[data-testid="name"]','Tyler');
+    const emailInput = updateInput(wrapper,'[data-testid="email"]','test@gmail.com');
+    const numberInput = updateInput(wrapper, '[data-tstid="name"]','343443434');
+  })
+expect(nameInput.props().value).ToBe('Tyler');
+expect(emailInput.props().value).ToBe('test@gmail.com');
+expect(numberInput.props().value).ToBe('343443434')
+
+Mock Function in Jest:
+
+https://jestjs.io/docs/en/mock-function-api.html
+
+https://www.youtube.com/watch?v=1cnfbcwkoeg&list=PL-Db3tEF6pB8Am-IhCRgyGSxTalkDpUV_&index=8
+
+Mock functions are also known as "spies", because they let you spy on the behavior of a function that is called indirectly by some other code, rather than only testing the output. You can create a mock function with jest.fn() . If no implementation is given, the mock function will return undefined when invoked
+
+Jest allows you to create a mock function. we are going to pass that as props as that emit event. find the button that renders on the page. simulate the click event. 
+and the assertion that we make is that, the number of times the mock function gets passed should be the same as the click event that we simulated.
+
+let mockFunc;
+
+beforeEach(()=>{
+  mockFunc = jest.fn();
+})
 
 
 
+//Backup of kyaws code:
+Component = () => {
+    <table>
+        {props.columns.map (eachCol => <tr> </tr>) />
+    </table>
+}
+
+
+describe(() => {
+    const wrapper = shallow(<COmponent columns={3} />)
+    expect(wrapper.find('tr').length).toBe(3)
+})
+
+
+Component = () => {
+    return {props.fullName ? <div>props.fullName</div> : <noscript />}
+}
+
+
+describe(() => {
+    const wrapper = shallow(<COmponent fullname={"Binesh"} />)
+    expect(wrapper.find("div").length).toBe(1)
+    expect(wrapper.find("div").innerText).toBe("Binesh)
+})
+
+describe(() => {
+    const wrapper = shallow(<COmponent  />)
+    expect(wrapper.find("div").length).toBe(0)
+})
 
 
 
+const Component = (props) => {
+    return Array.looop(() => {
+        <Binesh>{
+            Somethig.loop(() => {
+                <Son />
+            })
+        }</Binesh>
+    })
+}
+
+describe(() => {
+    const componet = <COmponent array={array.secondArray} />
+    expect(wrapper.find(Binesh).length).toBe(array.Lenght)
+    expect(wrapper.find(Son).length).toBe(array.something.length)
+})
 
 
+const Component = () => {
+    const [name, setState] = React.useState(null);
 
+    render(
+        <button onClick={setState("Binesh")}> </button>
+    )
+}
 
-
-
-
-
-
-
-
-
-
+// IN eznyme
+wrapper.find('button').simulate('click');
+wrapper.state('name').toBe("Binesh")
 
 
 

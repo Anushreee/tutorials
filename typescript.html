@@ -1308,7 +1308,7 @@ this since no instances can be created from outside too due to this private acce
 constructor.
 
 
-Map:
+Map Datastrcuture:
 
 using objects does have few pitfall. the first one is with inherited objects. 
 
@@ -1336,6 +1336,88 @@ A new instance of Map gets created and we then call set on it straight away.
 It is easier to see if you use it like this:
 
 let map = new Map().set("A",1).set("B",2);
+
+https://howtodoinjava.com/typescript/maps/
+
+Map is a new data structure introduced in ES6. It allows you store key-value pairs similar to other programming languages e.g. Java, C#.
+
+Use Map type and new keyword to create a Map in TypeScript.
+
+Create Map Example
+let myMap = new Map();
+
+Add/ Retrieve/ Delete Entries from Map
+map.set() – method to add entries in Map.
+map.get() – to retrieve an entry from Map.
+map.has() – to existence of an entry in the Map.
+map.delete() – deletes an entry from the Map.
+map.size – ‘size’ property will return size of Map.
+
+Get/Set Entries Example
+let nameAgeMapping = new Map();
+ 
+//Set entries
+nameAgeMapping.set("Lokesh", 37);
+nameAgeMapping.set("Raj", 35);
+nameAgeMapping.set("John", 40);
+ 
+//Get entries
+nameAgeMapping.get("John");     //40
+ 
+//Check entry is present or not
+nameAgeMapping.has("Lokesh");       //true
+nameAgeMapping.has("Brian");        //false
+ 
+//Size of Map with 
+nameAgeMapping.size;                //3
+ 
+//Delete an entry
+nameAgeMapping.delete("Lokesh");    // true
+ 
+//Clear whole Map
+nameAgeMapping.clear();             //Clear all entries
+Iterate over Map entries
+Use 'for...of' loop to iterate over map keys or values or entries.
+
+Iterate Map Example
+let nameAgeMapping = new Map();
+ 
+nameAgeMapping.set("Lokesh", 37);
+nameAgeMapping.set("Raj", 35);
+nameAgeMapping.set("John", 40);
+ 
+//Iterate over map keys
+for (let key of nameAgeMapping.keys()) {
+    console.log(key);                   //Lokesh Raj John
+}
+ 
+//Iterate over map values
+for (let value of nameAgeMapping.values()) {
+    console.log(value);                 //37 35 40
+}
+ 
+//Iterate over map entries
+for (let entry of nameAgeMapping.entries()) {
+    console.log(entry[0], entry[1]);    //"Lokesh" 37 "Raj" 35 "John" 40
+}
+ 
+//Using object destructuring
+for (let [key, value] of nameAgeMapping) {
+    console.log(key, value);            //"Lokesh" 37 "Raj" 35 "John" 40
+
+example:
+
+ let mappedElement = new Map<
+        string,
+        (cellData: ICellData) => JSX.Element
+      >()
+        .set("badgeRenderer", badgeRenderer)
+        .set("valueRenderer", valueRenderer)
+        .set("statusRenderer", statusRenderer);
+
+Creates a new Instance of Map. For the key it takes a string. And, for the values, it takes a function which takes ICellData as argument which is of type ICellData and this 
+function should return jsx. 
+
 
 
 Generics:
