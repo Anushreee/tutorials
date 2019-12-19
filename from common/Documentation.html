@@ -1,0 +1,192 @@
+Documentation: How to install webpack
+
+1. npm init
+output: package.json file is created
+
+2. npm install webpack --save-dev
+
+--save-dev because we use it only in the development environment. not in the production.
+in node modules folder you will see webpack as one of the folders. 
+
+output: node_modules folder is installed. 
+
+3. Go to package.json 
+add a script: build
+
+
+"build": "webpack"
+
+it will target the webpack package we downloaded. and you cant access it directly from command line which is why
+i created script for it. accessing from command line would be more difficult. you would have to dive into node_modules
+folder and so on. so webpack and then the most basic form of using it. the most basic form is to define an entry point which
+could be our src js folder 
+so "build": "webpack src/js/app.js"
+
+this will tell webpack. this is the file you should start your journey. then you also define the output file
+So,
+"build": "webpack src/js/app.js --output dist/bundle.js --mode development"
+
+this is our script defined. with our script defined, we have to adjust our app.js file. because webpack will start its journey here. 
+here we have to give wepack a clue what this app.js depends on. and this is how webpack will then work. in each file you tell hey which
+dependency does this file have?and webpack works its way up starting at the file you specify as the starting point. 
+A bundle.js will be created by webpack. it includes a lot of code which webpack added for us. but most importantly it should work.
+so in our index.html file, 
+
+<script src="dist/bundle.js"></script>
+
+4. webpack-dev-server to simulate server like process so that we can use http: protocol rather than the file protocol we had been using. 
+
+npm install --save-dev webpack-dev-server
+
+will download the latest version of it. 
+
+and in our build script, we can 
+
+"build": "webpack src/js/app.js --output dist/bundle.js --mode development"
+
+replace the webpack build here, with webpack-deve-server
+
+"build": "webpack-dev-server src/js/app.js --output dist/bundle.js --mode development"
+
+this should only be replaced in our development build script. it will work like webpack. it simply wraps itself around webpack- offers all the functionalities, all the features of webpack plus an extra feature of providing us the development server. 
+
+now here if i run npm-run-build then it will still compile our code, and we get an important message:
+ is running a http://localhost:8080/
+ webpack output is served from /
+
+ as a result, the bundle is no longer stored in the dist folder here. if we delete the dist directory here, it will still work. Instead it is stored in the memory for the server. 
+
+ if we go to the console, we see that it doesnt find out dist and bundle. 
+
+ To solve it:
+ in package.json file in the build use --entry, ./src, --output-filename 
+ ./dist
+
+ "build": "webpack-dev-server --entry ./src/js/app.js --output-filename ./dist/bundle.js --mode development",
+
+ now it works. but we still dont have a dist folder becoz it is in memory.
+ in network tab, we now really have some real sizes here. the error message is gone in console. instead we get the message 
+ live reloading enabled.
+
+ now you are using http here and you are accessing the files via http request. 
+
+the bundle file is seen in the Network tab. and it is very big because it is not optimised and it simply uses a lot of code that dev-server simply uses. and that is only available during development. that will disappear once you produce the app for production.
+
+so that is our webpack-dev-server, a better way of testing our project,
+of running them in local machine. and how you should really work with frontend apps.
+
+now lets dig into config file, which we can create to learn about how we can finetune webpack to our needs and to dive into little bit more advanced features.
+
+https://www.youtube.com/watch?v=8DDVr6wjJzQ
+
+5. Understand the 4 core concepts on webpack.
+
+1. webpack always needs an entry point- where it should start looking for dependencies. and then, there can be multiple entry points but it needs to have some entry points, some clue on when to start its journey. 
+
+2. it also needs to have output. and, we use both entry and output in our very basic usage - where should it store the bundle or if you have multiple entry points- the bundles. then it will create multiple bundles one for each entry point.
+
+we have module loaders which allow us to transform our code. and, we have plugins which do kind of same but on different level. and you will understand the difference in this video. 
+
+lets get started by creating a config file. thus far we ran all our webpack commands directly in the command line. and it was fine until now but for a more detail configuration we need a config file. we add it in the root folder: webpack.config.js file and you can name it anything you like. you then will have to specify the name of your config file in the command line though. or you use exactly this filename and webpack will pick it up for you. 
+
+now, webpack.config.js file needs to have a certain specific structure. it needs to export a js object which holds the webpack configuration. and you use the node js export syntax for it. 
+
+module.exports = {}; // you assign a js object- the configuration object that has a value. now this js object has some basic things it needs to contain. first of all we need to have an entry- where should we start the journey. you could have an array of multiple entry points. it can be js objects where you map aliases to different entry points. or you can have one single file where you can reference as a string though.
+
+module.exports = {
+	entry: './src/js/app.js' // my entry point here 
+}
+
+it is the same path that we used in the package.json file. and this path seen in the config file have to be seen relative from the config file i.e from the root of your project. so now we tell webpack where to start. 
+
+Now we need to tell webpack where to finish. 
+
+so we next add the output here.
+
+module.exports = {
+	output: './src/js/app.js' // my entry point here 
+}
+
+output is a js object, where we configure what the output should look like. here again, we do have different levels of detail. the most basic level of defining the output is to tell webpack where to store and then what to name it. and so we can add path property here. and these property names are all reserved. these are the names webpack will recognise. and to make super clear that webpack identifies it correctly- we can use a node js feature. import path package with require path. 
+
+var path = require('path');
+
+this is available since you installed node js on your new machine and path package - a core node js package simply gives you some utility functions which help you resolve the correct path. so here you can now call the resolve method on the path. first parameter is underscore underscore dir name. that is a reserved variable name you didnt define it anywhere right but it is made available to you which simply indicates - hey this is the current directory.  
+
+module.exports = {
+	entry: './src/js/app.js',
+	output: {
+		path: path.resolve(__dirname,'dist' ),
+		filename: 'bundle.js'
+	}
+}
+
+
+and then the second argument is the subdirectory that you want to go to like 'dist'- a folder which should get created. we dont have to get it yet. and why do we use this path resolve method? because the output path needs to be an absolute path. so we cant define in the entry property where we have a relative path-seeing from our webpack config file. 
+
+here we really need to have an absolute path -webpack needs to write something there. it needs to create a file for us there. and path resolve method resolves such an absolute path-gives us an absolute path with the given inputs. so that is where to store it.
+
+Now, we also need to define filename i.e how should webpack name this file. and all of the time you will see bundle.js though you are not limited to the name. you can name any name you want. But bundle.js clearly indicates that you have got bundle- which is why it is a popular name. so these are the two basic features that we already use. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

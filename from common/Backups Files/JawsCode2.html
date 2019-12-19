@@ -1,0 +1,64 @@
+import * as React from "react";
+import { ICustomDataTableProps } from "./ICustomDataTableProps";
+import { DataTable } from "@scuf/datatable";
+import "./CustomDataTable.scss";
+import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
+import { Notification, Icon } from "@scuf/common";
+import { TreeTable } from "@scuf/datatable";
+
+const childrenData = {
+  columns: 
+}
+
+interface ICustomDataTableState {
+  expandedRows?: any;
+  selectedRow?: any;
+  selectedAll?: any;
+  data?: any;
+}
+
+class CustomDataTable extends React.Component<
+  ICustomDataTableProps,
+  ICustomDataTableState
+> {
+  state = {
+    tableData: this.props.columns
+  }
+
+  render() {
+    const { data1: tableData, columns } = this.props;
+
+    return (
+      <DataTable data={tableData}>
+        {columns.map(col => {
+          return (
+            <DataTable.Column
+              header={col.header}
+              field={col.field}
+              renderer={React.createElement(this.props.cellTemplates.get(col.cellTemplate), {  })}
+            />
+          );
+        })}
+      </DataTable>
+    );
+  }
+}
+
+// <DataTable
+//   data={this.state.data}
+//   headerColumnGroup={headers}
+//   selection={this.state.selectedRow}
+//   selectionMode={selectionMode}
+//   resizableColumns={true}
+//   onEdit={(newData, cellData) => this.editData(newData, cellData)}
+//   expandedRows={this.state.expandedRows}
+//   rowExpansionTemplate={this.rowExpansionTemplate}
+//   onSelectAll={e => this.setState({ selectedAll: e })}
+//   onSelectionChange={e => this.setState({ selectedRow: e })}
+// >
+//   {dynamicColumns}
+// </DataTable>
+
+export default CustomDataTable;

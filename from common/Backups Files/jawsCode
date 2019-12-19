@@ -1,0 +1,31 @@
+const data = {
+  headers: [{}],
+  columns: [{}]
+  data(Rows): [{ cellData: "", isOpen: false }]
+}
+
+Component {
+  state = {
+    tableData: props.data
+    rowToExpand: null
+  }
+  
+  onExpand = (indexToMatch) => {
+    const rowToExpand = tableData.filter(eachCol, index => index === indexToMatch)[0]
+    rowToExpand.isOpen = true;
+    // here you need to set state for the whole table, and rowToExpand
+    setState({...this.state, rowToExpand })
+  }
+  
+  <DataTable rowExpansionTemplate={() => <RowExpansionTemplate data={this.state.rowToExpand.cellData} />}>
+    { map && <DataTable.Column renderer={React.createElement(cellTemplate.get(col.cellTemplate), { onExpand: () => this.onExpand(index) })} />}
+  </DataTable>
+}
+
+RowExpansionTemplate() {
+  <DataTable.Column cellData={props.cellData} />
+}
+
+RowExpansionRender {
+  <div onClick={props.onExpand}><Icon></div>
+}

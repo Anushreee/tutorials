@@ -1,0 +1,158 @@
+import * as React from "react";
+import { ICustomDataTableProps } from "./ICustomDataTableProps";
+import { DataTable } from "@scuf/datatable";
+import "./CustomDataTable.scss";
+import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { InputText } from "primereact/inputtext";
+import { Row } from "primereact/row";
+import { Notification, Icon } from "@scuf/common";
+import { TreeTable } from "@scuf/datatable";
+
+const data = [
+  { plane: "s-1", pilot: "AAron Davis", status: "Retired", flights: 2 },
+  { plane: "f-1", pilot: "Garven Dresis", status: "Retired", flights: 10 },
+  { plane: "6-t", pilot: "David JP", status: "Retired", flights: 9 }
+];
+
+interface ICustomDataTableState {
+  expandedRows?: any;
+  selectedRow?: any;
+  selectedAll?: any;
+  data?: any;
+  car1?: any;
+}
+
+class CustomDataTable extends React.Component<
+  ICustomDataTableProps,
+  ICustomDataTableState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: this.props.data1,
+      car1: null
+    };
+    this.vinEditor = this.vinEditor.bind(this);
+    this.requiredValidator = this.requiredValidator.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ car1: data });
+    //console.log("hello the props are ", this.props);
+  }
+
+  /* Cell Editing */
+  onEditorValueChange(props, value) {
+    let updatedCars = [...props.value];
+    updatedCars[props.rowIndex][props.field] = value;
+    this.setState({ car1: updatedCars });
+  }
+
+  requiredValidator(props) {
+    let value = props.rowData[props.field];
+    return value && value.length > 0;
+  }
+
+  getCellData(field) {
+    //console.log("hello");
+    let search = field;
+    let object = data.find(obj => {
+      return obj.hasOwnProperty(search);
+    });
+    console.log("the object is", object[search].cellData);
+  }
+
+  inputTextEditor(props, field) {
+    //console.log("the rowData field is", field);
+
+    this.getCellData(field);
+
+    return (
+      <InputText
+        type="text"
+        value={field}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          this.onEditorValueChange(props, e.target.value)
+        }
+      />
+    );
+  }
+
+  vinEditor(props) {
+    // console.log("the props in vinEditor are", props);
+    let myKey = Object.keys(props.rowData);
+    //console.log("my key is", myKey);
+    myKey.map(each => {
+      // console.log("each is", each);
+    });
+    return this.inputTextEditor(props, props.field);
+  }
+
+  render() {
+    const {
+      columns,
+      data1,
+      headerGroups,
+      cellTemplates,
+      selectionMode
+    } = this.props;
+
+    let headers = null;
+
+    if (headerGroups) {
+      headers = (
+        <ColumnGroup>
+          {headerGroups.map((headerGroup, index) => {
+            return (
+              <Row>
+                {headerGroup.map((each, index) => {
+                  return <Column header={each.header} colSpan={each.colspan} />;
+                })}
+              </Row>
+            );
+          })}
+        </ColumnGroup>
+      );
+    }
+
+    let dynamicColumns = columns.map((eachCol, index) => {
+      let theRenderer = null;
+      if (cellTemplates.has(eachCol.cellTemplate)) {
+        if (eachCol.cellTemplate === `rowExpansionRenderer`) {
+          console.log("hello");
+        } else {
+          theRenderer = cellTemplates.get(eachCol.cellTemplate);
+        }
+      }
+      return (
+        <DataTable.Column
+          rowHeader={eachCol.rowHeader}
+          header={eachCol.header}
+          field={eachCol.field}
+          align={eachCol.align}
+          renderer={theRenderer}
+          key={index}
+          editor={this.vinEditor}
+          editorValidator={this.requiredValidator}
+          style={{ height: "3.5em" }}
+        />
+      );
+    });
+    return (
+      <React.Fragment>
+        <DataTable
+          responsive={true}
+          data={this.state.data}
+          headerColumnGroup={headers}
+          value={this.state.car1}
+          editable={true}
+        >
+          {dynamicColumns}
+        </DataTable>
+      </React.Fragment>
+    );
+  }
+}
+
+export default CustomDataTable;

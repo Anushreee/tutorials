@@ -1,0 +1,503 @@
+For Object Management List Table
+
+
+datatable.stories.config.json
+
+[
+  {
+    "id": 10,
+    "tableName": "Object Management List Table",
+    "tableWidth": "half-width",
+    "selectionMode": "multiple",
+    "headerGroups": [
+      [
+        {
+          "header": ""
+        },
+        {
+          "header": "Group"
+        },
+        {
+          "header": "Name"
+        },
+        {
+          "header": "Description"
+        },
+        {
+          "header": "Cycles",
+          "colspan": 2
+        },
+        {
+          "header": "Actions"
+        },
+        {
+          "header": "CreatedBy"
+        },
+        {
+          "header": "ModifiedBy"
+        }
+      ]
+    ],
+
+    "columns": [
+      {
+        "header": "",
+        "field": "F",
+        "align": "left",
+        "cellTemplate": "valueRenderer",
+        "expander": true
+      },
+      {
+        "header": "",
+        "field": "FieldOne",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldTwo",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldThree",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldFour",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldFive",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldSix",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldSeven",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldEight",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      }
+    ],
+    "columnsChildren": [
+      {
+        "header": "Hello",
+        "field": "ChildrenOne",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+        
+      },
+      {
+        "header": "Hii",
+        "field": "ChildrenTwo",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+        
+      },
+      {
+        "header": "Hiidd",
+        "field": "ChildrenThree",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+        
+      }
+    ],
+    "data": [
+      {
+        "ChildrenOne": {
+          "cellData": "s",
+          "cellDataStyle": {
+            "fontSize": "100%",
+            "fontWeight": "400"
+          
+          }
+        },
+        "ChildrenTwo": {
+          "cellData": "Weight Recovery and Rates",
+          "cellDataStyle": {
+            "fontSize": "100%",
+            "fontWeight": "400"
+           
+          }
+        },
+        "ChildrenThree": {
+          "cellData": "Processing Conditions - page 1",
+          "cellDataStyle": {
+            "fontSize": "100%",
+            "fontWeight": "400"
+          }
+        },
+      
+        "FieldOne": {
+          "cellData": "Processing conditions",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldTwo": {
+          "cellData": "dsd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldThree": {
+          "cellData": "ddd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldFour": {
+          "cellData": "dd",
+          "cellDataStyle": {
+            "fontSize": "110%",
+            "color": "#0b87f1"
+          }
+        },
+        "FieldFive": {
+          "cellData": "dd",
+          "cellDataStyle": {
+            "fontSize": "110%",
+            "color": "#0b87f1"
+          }
+        },
+        "FieldSix": {
+          "cellData": "dd",
+          "cellDataStyle": {
+            "fontSize": "110%",
+            "color": "#0b87f1"
+          }
+        },
+        "FieldSeven": {
+          "cellData": "dd",
+          "cellDataStyle": {
+            "fontSize": "110%",
+            "color": "#0b87f1"
+          }
+        },
+        "FieldEight": {
+          "cellData": "dd",
+          "cellDataStyle": {
+            "fontSize": "110%",
+            "color": "#0b87f1"
+          }
+        }
+      }
+    ]
+  }
+]
+
+
+ICustomDataTableProps.ts
+
+
+export interface ICustomDataTableProps {
+  tableName: string;
+  tableWidth?: string | number;
+  headerGroups?: Array<Array<IHeader>>;
+  columns: ITableColumnDefinition[];
+  columnsChildren?: ITableColumnDefinition[];
+  tableData: Array<object>;
+  expander?: any;
+  childrenData?: any;
+  selectRows?: string;
+  cellTemplates?: Map<string, (cellData: ICellData) => JSX.Element>;
+}
+
+
+CustomDataTable.scss
+
+.pi-chevron-right:before {
+  content: ">";
+  display:inline-block;
+  position: relative;
+  top: 5px;
+  
+}
+
+.pi-chevron-down:before {
+  content: "<";
+  display:inline-block;
+  position: relative;
+  top: 5px;
+  
+}
+
+CustomDataTable.tsx
+
+import * as React from "react";
+import { ICustomDataTableProps } from "./ICustomDataTableProps";
+import { DataTable } from "@scuf/datatable";
+import "./CustomDataTable.scss";
+import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
+import { InputText } from "primereact/inputtext";
+
+interface ICustomDataTableState {
+  cellField?: any;
+  expandedRows?: any;
+}
+
+class CustomDataTable extends React.Component<
+  ICustomDataTableProps,
+  ICustomDataTableState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellField: null,
+      expandedRows: null
+    };
+    this.vinEditor = this.vinEditor.bind(this);
+    this.requiredValidator = this.requiredValidator.bind(this);
+    this.rowExpansionTemplate = this.rowExpansionTemplate.bind(this);
+  }
+
+  requiredValidator(props) {
+    let value = props.rowData[props.field];
+    return value && value.length > 0;
+  }
+
+  onEditorValueChange(props, value) {
+    console.log("the props is", props);
+    console.log("the value is", value);
+    let updatedField = [...props.value];
+    console.log("updatedField is", updatedField);
+    updatedField[props.rowIndex][props.field] = value;
+    this.setState({ cellField: updatedField });
+  }
+
+  inputTextEditor(props, field) {
+    console.log("here field is", field);
+    let search = field;
+    let object = this.props.tableData.find(obj => {
+      return obj.hasOwnProperty(search);
+    });
+
+    return (
+      <InputText
+        type="text"
+        value={object[search].cellData}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          this.onEditorValueChange(props, e.target.value)
+        }
+      />
+    );
+  }
+
+  vinEditor(props) {
+    return this.inputTextEditor(props, props.field);
+  }
+
+  rowExpansionTemplate(childrenData) {
+    let dynamicChildren = this.props.columnsChildren.map((eachCol, index) => {
+      let theRenderer = null;
+
+      if (this.props.cellTemplates.has(eachCol.cellTemplate)) {
+        if (eachCol.cellTemplate === `rowExpansionRenderer`) {
+          console.log("hello");
+        } else {
+          theRenderer = this.props.cellTemplates.get(eachCol.cellTemplate);
+        }
+      }
+
+      return (
+        
+        
+          <DataTable.Column
+            rowHeader={eachCol.rowHeader}
+            header={eachCol.header}
+            field={eachCol.field}
+            align={eachCol.align}
+            renderer={theRenderer}
+            key={index}
+            
+            style={{ height: "3.5em" }}
+          />
+        
+        
+      );
+    });
+    return (
+      <React.Fragment>
+        <DataTable
+          data={this.props.tableData}
+          resizableColumns={true}
+          editable={true}
+          value={this.state.cellField}
+         
+       
+         
+          dataKey="vin"
+        >
+          {dynamicChildren}
+        </DataTable>
+      </React.Fragment>
+    );
+  }
+
+  render() {
+    const {
+      columns,
+      tableData,
+      columnsChildren,
+      childrenData,
+      headerGroups,
+      cellTemplates,
+      selectRows
+    } = this.props;
+
+    let headers = null;
+
+    if (headerGroups) {
+      headers = (
+        <ColumnGroup>
+          {headerGroups.map((eachGroup, index) => {
+            return (
+              <Row key={index}>
+                {eachGroup.map((each, index) => {
+                  return (
+                    <Column
+                      header={each.header}
+                      colSpan={each.colspan}
+                      rowSpan={each.rowspan}
+                      key={index}
+                    />
+                  );
+                })}
+              </Row>
+            );
+          })}
+        </ColumnGroup>
+      );
+    }
+
+    let dynamicColumns = columns.map((eachCol, index) => {
+      let theRenderer = null;
+
+      if (cellTemplates.has(eachCol.cellTemplate)) {
+        if (eachCol.cellTemplate === `rowExpansionRenderer`) {
+          console.log("hello");
+        } else {
+          theRenderer = cellTemplates.get(eachCol.cellTemplate);
+        }
+      }
+
+      return (
+        <DataTable.Column
+          rowHeader={eachCol.rowHeader}
+          header={eachCol.header}
+          field={eachCol.field}
+          align={eachCol.align}
+          renderer={theRenderer}
+          key={index}
+          editor={this.vinEditor}
+          editorValidator={this.requiredValidator}
+          style={{ height: "3.5em" }}
+          expander={eachCol.expander && eachCol.expander}
+        />
+      );
+    });
+    return (
+      <React.Fragment>
+        <DataTable
+          data={this.props.tableData}
+          headerColumnGroup={headers}
+          resizableColumns={true}
+          editable={true}
+          value={this.state.cellField}
+          expandedRows={this.state.expandedRows}
+          onRowToggle={e => this.setState({ expandedRows: e.data })}
+          rowExpansionTemplate={this.rowExpansionTemplate}
+          dataKey="sdd"
+        >
+          {dynamicColumns}
+        </DataTable>
+      </React.Fragment>
+    );
+  }
+}
+
+export default CustomDataTable;
+
+
+ICustomTableColumnDefinition.ts
+
+
+export default interface ITableColumnDefinition {
+  status?: string;
+  header?: string;
+  field?: string;
+  align?: any;
+  cellTemplate?: string;
+  rowHeader?: boolean;
+  editable?:boolean;
+  expander?: boolean;
+}
+
+datatable.stories.tsx
+
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
+import { ICellData } from "../src/components/CustomDataTable/ICellData";
+import "@scuf/datatable/honeywell-compact/theme.css";
+import config from "./config/datatable.stories.config.json";
+import CustomDataTable from "../src/components/CustomDataTable/CustomDataTable";
+import {
+  valueRenderer,
+  badgeRenderer,
+  statusRenderer,
+  rowExpansionRenderer
+} from "./DataTableCustomTemplates";
+
+const stories = storiesOf("CustomDataTable", module);
+
+{
+  config.map((each, index) => {
+    return stories.add(`${each.tableName}`, () => {
+      let mappedElement = new Map<
+        string,
+        (cellData: ICellData) => JSX.Element
+      >()
+        .set("badgeRenderer", badgeRenderer)
+        .set("valueRenderer", valueRenderer)
+        .set("statusRenderer", statusRenderer)
+        .set("rowExpansionRenderer", rowExpansionRenderer);
+
+      return (
+        <React.Fragment>
+          <CustomDataTable
+            tableName={each.tableName}
+            columns={each.columns}
+            tableData={each.data}
+            headerGroups={each.headerGroups && each.headerGroups}
+            selectRows={each.selectionMode ? each.selectionMode : null}
+            cellTemplates={mappedElement}
+            key={each.tableName} 
+            columnsChildren={each.columnsChildren ? each.columnsChildren : null}
+            childrenData={each.childrenData ? each.childrenData : null}
+          />
+        </React.Fragment>
+      );
+    });
+  });
+}
+
+

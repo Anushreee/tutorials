@@ -1,0 +1,794 @@
+Errors and Fix in Datatable.
+
+1. ERROR 1:
+
+Error: Property 'selectionMode' does not exist on type '{ "id": number; "tableName": string; "tableWidth": string; "columns": { "header": string; "field": string; "align": string; "cellTemplate": string; }[]; "data": { "FieldOne": { "cellData": string; "cellDataStyle": { "fontSize": string; "fontWeight": string; "color": string; }; }; "FieldTwo": { ...; }; "FieldThree": ...'.
+
+
+Steps conducted: 
+
+1. The selectionMode is there in datatable.stories.tsx but still getting the error.
+
+
+
+<CustomDataTable
+tableName={each.tableName}
+columns={each.columns}
+data1={each.data}
+childrenData ={each.childrenData? each.childrenData:null}
+headerGroups={each.headerGroups? each.headerGroups : null}
+cellTemplates={mappedElement}
+key={each.tableName}
+selectionMode={each.selectionMode? each.selectionMode:null}
+/>
+          
+2. Checking Typescript of CustomDataTable
+
+I checked the ICustomDataTableProps:
+
+export interface ICustomDataTableProps {
+  tableName: string;
+  tableWidth?: string | number;
+  headerGroups?: Array<Array<IHeader>>;
+  columns: ITableColumnDefinition[];
+  data1: Array<object>;
+  selectionMode: any;
+  childrenData: any;
+  cellTemplates?: Map<string, (cellData: ICellData) => JSX.Element>;
+}
+
+
+It is there in typescript as well.
+
+3. try to put selectionMode on json because right now it is missing.
+
+
+
+  TS2339: Property 'selectionMode' does not exist on type '{ "id": number; "tableName": string; "tableWidth": string; "columns": { "header": string; "field": string; "align": string; "cellTemplate": string; }[]; "data": { "FieldOne": { "cellData": string; "cellDataStyle": { "fontSize": string; "fontWeight": string; "color": string; }; }; "FieldTwo": { ...; }; "FieldThree": ...'.
+
+ steps:
+
+ 1. Reading the message carefully leads to the thinking that this error message is coming from json file because it is starting from id.
+ 2. checked the tyescript and found that 
+ selectionMode: any
+
+ there should have been a question mark before it because it is not compulsory for all tables to have selectionMode. 
+
+ selectionMode?:any
+
+ 3. when i made the change in selectionMode in typescript, it is still showing the same error.
+
+ let me restart the yarn.
+
+ 4. yarn start
+
+ In datatable.stories.tsx, selectionMode is specified as below:
+
+ 	<React.Fragment>
+          <CustomDataTable
+            tableName={each.tableName}
+            columns={each.columns}
+            data1={each.data}
+            cellTemplates={mappedElement}
+            key={each.tableName}
+            selectionMode={each.selectionMode && each.selectionMode}
+          />
+    </React.Fragment>
+
+    what if i change the selectionMode into another 
+
+    5. After several checking found out that if the key or property is mentioned in the <CustomDataTable />
+    it must be mentioned in the json file. 
+
+    for eg. for the above code, each.selectionMode looks for selectionMode in the json file, if it doesnt find it, it throws an error
+
+    So until now i am in the conclusion that every property that is mentioned in the <CustomDataTable /> must be mentioned in json file.
+
+    I further found out that:
+    selectionMode:'' should be provided to any of the tables for the code to not throw error. Not every table should have it but atleast one of the tables should have it. I removed selectionMode from SummaryTable and put it in the Catalyst Cycle length table and it worked. 
+
+
+
+
+
+2. ERROR 2:
+
+Cannot read property 'hooks' of undefined
+TypeError: Cannot read property 'hooks' of undefined
+    at StoryStore.cleanHooks (http://localhost:51732/vendors~main.a11fcc34f6557036e284.bundle.js:27702:22)
+    at renderMain (http://localhost:51732/vendors~main.a11fcc34f6557036e284.bundle.js:35305:22)
+    at StoryStore.renderUI (http://localhost:51732/vendors~main.a11fcc34f6557036e284.bundle.js:35420:9)
+    at StoryStore.emit (http://localhost:51732/vendors~main.a11fcc34f6557036e284.bundle.js:68798:35)
+    at http://localhost:51732/vendors~main.a11fcc34f6557036e284.bundle.js:27448:16
+UPTIME	ONSTREAM FACTOR	SHUTDOWNS
+100.2 
+92.57 % 
+8 
+
+Solution:It is mainly the json error, if some comma is missing or comma is extra. fix it. Had to restart the yarn and it worked alright
+
+3. ERROR 3:
+Cannot read property 'startsWith' of undefined
+
+this error occured, when the cellData and cellDataStyle was removed from the fields. The command line doesnt show the error. it is just the browser which shows the error.
+
+eg.
+
+"data":[
+	{
+		"FieldOne": {}
+	}
+]
+
+when i put back cellData it works even if i dont put cellDataStyle.
+
+"data":[
+	{
+		"FieldOne": {
+			"cellData": "100.2"
+		}
+	}
+]
+
+Lets find the reason for this error:
+
+Steps:
+
+Step1: I found that it has a cellTemplate of "valueRenderer"
+
+[
+  {
+    "id": 1,
+    "tableName": "Summary Table",
+    "tableWidth": "half-width",
+    "selectionMode": "",
+    "columns": [
+      {
+        "header": "Uptime",
+        "field": "FieldOne",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      }
+
+      //and so on
+    ]
+   }
+]
+
+If i go and check the code on DataTableCustomTemplates.tsx  for valueRenderer
+
+i can see that it asks for cellData.value.cellData
+
+I changed the code: i put a condition that only if cellData.value.cellData  is there then all code will execute otherwise
+the codes will not be asking for properties or values which doesnt exist.
+
+export function valueRenderer(cellData: ICellData) {
+ 
+  let theData = null;
+  let data = null;
+
+  if(cellData.value.cellData){
+    data = cellData.value.cellData;
+    let dataStyle = cellData.value.cellDataStyle;
+    let functionality = null;
+    let theFunctionality = null;
+    if (cellData.value.functionality) {
+      if (functionality.event === "tooltip") {
+        theFunctionality = (
+          <div style={{ color: "grey" }}>
+            <Tooltip
+              content={functionality.content}
+              element={<Icon name="message" size="medium" />}
+              position="left center"
+              event="focus"
+              hoverable={true}
+            />
+          </div>
+        );
+      
+      }
+    }
+
+    if (data.startsWith("icon-actions")) {
+      theData = (
+        <>
+          <span style={dataStyle}>
+            <button className="icon-button" onClick={e => alert("copying")}>
+              <Icon name="document" size="small" />
+            </button>
+          </span>
+          <span style={dataStyle}>
+            <button className="icon-button" onClick={e => alert("click to edit")}>
+              <Icon name="edit" size="small" />
+            </button>
+          </span>
+          <span style={dataStyle}>
+            <button
+              className="icon-button"
+              onClick={e => confirm("Are you sure you want to delete?")}
+            >
+              <Icon name="delete" size="small" />
+            </button>
+          </span>
+        </>
+      );
+    
+    } else {
+      theData = <span style={dataStyle}>{data}</span>;
+    }
+  }
+
+  
+ 
+
+  const theUnit = cellData.value.units && (
+    <span style={cellData.value.unitsStyle}> {cellData.value.units}</span>
+  );
+
+  return (
+    <React.Fragment>
+      {theData}
+      {theUnit} 
+    </React.Fragment>
+  );
+}
+
+
+4. ERROR 4:
+Objects are not valid as a React child (found: object with keys {cellData, cellDataStyle}). If you meant to render a collection of children, use an array instead.
+
+a. this error is found when i dont specify cellTemplate in json file. cellTemplate must be provided as it is passed in <CustomDataTemplate />
+
+b. this error is also found one i pass empty string:
+
+"data": [
+      {
+        "FieldOne": {
+          "cellData": "Processing conditions",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldTwo": {
+          "cellData": "", //pass empty string
+
+
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        }
+]
+
+Solution for this empty string:
+
+ theData = (
+        <span style={dataStyle}>
+          {fieldData && fieldData.length > 0 && fieldData}
+          {theFunctionality}
+        </span>
+      );
+  if there is fieldData and fieldData's length is greater than 0 then display that fieldData
+
+  if you just do:
+  fieldData && fieldData.length > 0 
+  it wont render the cellData. you must specify the third one as well.
+
+  
+
+
+
+<CustomDataTable
+            tableName={each.tableName}
+            columns={each.columns}
+            data1={each.data}
+            cellTemplates={mappedElement}
+            key={each.tableName}
+            selectionMode={each.selectionMode && each.selectionMode}
+          />
+
+if i assign an empty string or null 
+
+"columns": [
+      {
+        "header": "Uptime",
+        "field": "FieldOne",
+        "align": "left",
+        "cellTemplate": ""
+      },
+  then it will throw the same error.
+
+  the reason is cellTemplate should be a function. 
+
+  it is set like this:
+
+  .set("badgeRenderer", badgeRenderer)
+        .set("valueRenderer", valueRenderer)
+        .set("statusRenderer", statusRenderer)
+        .set("rowExpansionRenderer",rowExpansionRenderer)
+
+   So it should be one of the functions.
+
+
+if i change the one of the cellTemplates of the columns to statusRenderer it will throw the same error.
+i think there is a problem in statusRenderer code.
+
+"columns": [
+      {
+        "header": "Uptime",
+        "field": "FieldOne",
+        "align": "left",
+        "cellTemplate": "statusRenderer"
+      },
+      {
+        "header": "Onstream Factor",
+        "field": "FieldTwo",
+        "align": "left",
+        "cellTemplate": "badgeRenderer"
+      },
+      {
+        "header": "Shutdowns",
+        "field": "FieldThree",
+        "align": "left",
+        "cellTemplate": "valueRenderer"
+      }
+    ]
+
+    if i change one of the codes to badge renderer it works fine. only in the case of status renderer it throws error for SummaryTable.
+
+    export function statusRenderer(cellData: ICellData) {
+	  let color = null;
+	  let data = cellData.value;
+
+	  if (data === "Green") {
+	    color = "green";
+	  } else if (data === "Red") {
+	    color = "red";
+	  } else if (data === "Orange") {
+	    color = "orange";
+	  } else if (data === "Grey") {
+	    color = "grey";
+	  } else {
+	    color = "";
+	  }
+	  return <span>{color ? <DataTable.Status color={color} /> : data}</span>;
+	}
+
+	I changed the above code to this code:
+
+	export function statusRenderer(cellData: ICellData) {
+	  let color = null;
+	  let fieldData = null;
+	  console.log("fieldData is",cellData.value.cellData);
+	  if(cellData.value.cellData) {
+	    fieldData = cellData.value.cellData;
+	    if (fieldData === "Green") {
+	      color = "green";
+	    } else if (fieldData === "Red") {
+	      color = "red";
+	    } else if (fieldData === "Orange") {
+	      color = "orange";
+	    } else if (fieldData === "Grey") {
+	      color = "grey";
+	    } else {
+	      color = "";
+	    }
+	  }
+
+	  return <span>{color ? <DataTable.Status color={color} /> : fieldData}</span>;
+}
+
+
+Now this code works even if statusRenderer is provided as cellTemplate.
+
+
+5: Error 5:
+
+Cannot read property 'tableData' of null
+TypeError: Cannot read property 'tableData' of null
+
+<React.Fragment>
+        <DataTable
+          data={this.state.tableData}
+          headerColumnGroup={headers}
+          resizableColumns={true}
+         
+        >
+
+When i set data=this.state.tableData, it will give me this error but instead if i set it to this.props.tableData it works fine, there is no error. 
+
+but the real problem was the state in the constructor was not initialised properly.
+i fixed the state in constructor and set the value for data as this.state.tableData and it worked fine.
+
+
+6. Error 6:
+
+Remove editable={eachCol.editable ? eachCol.editable : false} from <DataTable.Column>
+
+return (
+        <DataTable.Column
+          rowHeader={eachCol.rowHeader}
+          header={eachCol.header}
+          field={eachCol.field}
+          align={eachCol.align}
+          renderer={theRenderer}
+          key={index}
+          editor={this.vinEditor}
+          //editable={eachCol.editable ? eachCol.editable : false}
+          editorValidator={this.requiredValidator}
+          style={{ height: "3.5em" }}
+        />
+      );
+
+
+
+
+TypeError: fieldData.startsWith is not a function: Ask Binesh for the logic
+
+if the cellData value is empty it shows this error. on the third field below the cellData value is empty.
+
+
+"data": [
+      {
+        "FieldOne": {
+          "cellData": "Processing conditions",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+          
+        },
+        "FieldTwo": {
+          "cellData": "dfd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldThree": {
+          "cellData": "",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        }
+      }
+    ]
+
+    either put the value for cellData or fix the code. you must fix the startsWithCode
+
+
+    THE CODE THAT WORKED:
+
+    datatable.stories.config.json
+
+    [
+  {
+    "id": 10,
+    "tableName": "Object Management List Table",
+    "tableWidth": "half-width",
+    "selectionMode": "multiple",
+    "headerGroups": [
+      [
+        {
+          "header": "Hello"
+        },
+        {
+          "header": "Group"
+        },
+        {
+          "header": "Name"
+        }
+      ]
+    ],
+
+    "columns": [
+      {
+        "header": "",
+        "field": "FieldOne",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldTwo",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "",
+        "field": "FieldThree",
+        "cellTemplate": "valueRenderer"
+      }
+    ],
+    "data": [
+      {
+        "FieldOne": {
+          "cellData": "Processing conditions",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldTwo": {
+          "cellData": "dfd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldThree": {
+          "cellData": "ddd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        }
+      },
+      {
+        "FieldOne": {
+          "cellData": "Processing conditions",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldTwo": {
+          "cellData": "dfd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldThree": {
+          "cellData": "ddd",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "tableName": "New Value Input Table",
+    "tableWidth": "half-width",
+    "selectionMode": "multiple",
+    "headerGroups": [
+      [
+        {
+          "header": "Hello"
+        },
+        {
+          "header": "Group"
+        },
+        {
+          "header": "Name"
+        }
+      ]
+    ],
+    "columns": [
+      {
+        "header": "Para",
+        "field": "FieldOne",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "Meta",
+        "field": "FieldTwo",
+        "cellTemplate": "valueRenderer"
+      },
+      {
+        "header": "Ceta",
+        "field": "FieldThree",
+        "cellTemplate": "valueRenderer"
+      }
+    ],
+    "data": [
+      {
+        "FieldOne": {
+          "cellData": "7.78",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldTwo": {
+          "cellData": "=",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldThree": {
+          "cellData": "7.78",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        }
+      },
+      {
+       
+        "FieldOne": {
+          "cellData": "0",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldTwo": {
+          "cellData": "=",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        },
+        "FieldThree": {
+          "cellData": "2.23",
+          "cellDataStyle": {
+            "fontSize": "110%"
+          }
+        }
+      }
+    ]
+  }
+]
+
+CustomDataTable:
+
+import * as React from "react";
+import { ICustomDataTableProps } from "./ICustomDataTableProps";
+import { DataTable } from "@scuf/datatable";
+import "./CustomDataTable.scss";
+import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
+import { InputText } from "primereact/inputtext";
+
+interface ICustomDataTableState {
+  cellField?: any;
+}
+
+class CustomDataTable extends React.Component<
+  ICustomDataTableProps,
+  ICustomDataTableState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellField: null
+    };
+    this.vinEditor = this.vinEditor.bind(this);
+    this.requiredValidator = this.requiredValidator.bind(this);
+  }
+
+  requiredValidator(props) {
+    let value = props.rowData[props.field];
+    return value && value.length > 0;
+  }
+
+
+  onEditorValueChange(props, value) {
+    console.log("the props is", props);
+    console.log("the value is", value);
+    let updatedField = [...props.value];
+    console.log("updatedField is", updatedField);
+    updatedField[props.rowIndex][props.field] = value;
+    this.setState({ cellField: updatedField });
+   
+  }
+
+  inputTextEditor(props, field) {
+    console.log("here field is", field);
+    let search = field;
+    let object = this.props.tableData.find(obj => {
+      return obj.hasOwnProperty(search);
+    });
+
+    return (
+      <InputText
+        type="text"
+        value={object[search].cellData}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          this.onEditorValueChange(props, e.target.value)
+        }
+      />
+    );
+  }
+
+  vinEditor(props) {
+    return this.inputTextEditor(props, props.field);
+  }
+
+  render() {
+    const {
+      columns,
+      tableData,
+      headerGroups,
+      cellTemplates,
+      selectRows
+    } = this.props;
+
+    let headers = null;
+
+    if (headerGroups) {
+      headers = (
+        <ColumnGroup>
+          {headerGroups.map((eachGroup, index) => {
+            return (
+              <Row key={index}>
+                {eachGroup.map((each, index) => {
+                  return (
+                    <Column
+                      header={each.header}
+                      colSpan={each.colspan}
+                      rowSpan={each.rowspan}
+                      key={index}
+                    />
+                  );
+                })}
+              </Row>
+            );
+          })}
+        </ColumnGroup>
+      );
+    }
+
+    let dynamicColumns = columns.map((eachCol, index) => {
+      let theRenderer = null;
+
+      if (cellTemplates.has(eachCol.cellTemplate)) {
+        if (eachCol.cellTemplate === `rowExpansionRenderer`) {
+          console.log("hello");
+        } else {
+          theRenderer = cellTemplates.get(eachCol.cellTemplate);
+        }
+      }
+
+      return (
+        <DataTable.Column
+          rowHeader={eachCol.rowHeader}
+          header={eachCol.header}
+          field={eachCol.field}
+          align={eachCol.align}
+          renderer={theRenderer}
+          key={index}
+          editor={this.vinEditor}
+          editorValidator={this.requiredValidator}
+          style={{ height: "3.5em" }}
+        />
+      );
+    });
+    return (
+      <React.Fragment>
+        <DataTable
+          data={this.props.tableData} 
+          headerColumnGroup={headers}
+          resizableColumns={true}
+          editable={true}
+          value={this.state.cellField}
+        >
+          {dynamicColumns}
+        </DataTable>
+      </React.Fragment>
+    );
+  }
+}
+
+export default CustomDataTable;
+
+
+The `style` prop expects a mapping from style properties to values, not a string. For example, style={{marginRight: spacing + 'em'}} when using JSX.
+
+this is because in json if 
+"cellDataStyle": ""
+
+is mapped to string, then it throws error. it should map to values.
+
+
+on ability to edit mode, if you use badeRenderer it wont give you any result.
+always use valueRenderer or fix the issue. 
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+

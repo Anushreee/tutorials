@@ -1,0 +1,61 @@
+
+
+use state can be initialised with a default state. and that state can be anything: can be number, object
+
+useState({name:'',amount:''});
+
+it returns an array with exactly 2 elements. useState is built in hook is always returns an array of exactly 2 elements. the first element is always your current state snapshot. and whenever your state updates, this component is reexecuted. and useState therefore is also executed again. But react internally saves that you already configure the state with the help of useState of this component : will not reinitalise it. 
+
+Instead useState manages this state, detach from your compoents. So, independent from your component. so that the state survives the rerenders. so the state survives when the component function is executed again. and so the first value which is returned here is the current state snapshot for this rerender cycle of the component. this means that when you update the state, you get the updated state here. get back an array and that array has 2 elements. the first element is always a current state snapshot- the initial state or if you change it - the updated state. that ofcourse leads to the question: how do you change the state. Thats where the second element in this array is helpful. as i mentioned, this array always has exactly two elements. the second element is the function that allows you to update the current state. 
+
+so this strange looking thing: this dispatch 
+
+React.Dispatch<React.SetStateAction>
+
+that is a function, that will always be a function with a new data for your state to update that state. 
+
+so therefore we can store this array with exactly two elements. i will name it inputState. the name is totally up to you.
+
+const inputState = useState({title:'',amount:''})
+
+now we have stored our array in the inputState,
+we can connect it to our inputs. 
+
+we bind the value of this input to the current state snapshot so that we pass the current state back into the input. and in do this way:
+
+<input value=inputState[0]] />
+
+input state and then the first element. remember inputState is an array with exactly two elements. and the first element at element 0 will be your current state snapshot. now, ofcourse our state is an object though not a string. so, for the title input here, i want to access.
+
+inputState[0].title
+
+
+for the amount we do:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+Donut
+
+donut.stories.tsx
+
+
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
+import '@scuf/charts/honeywell-compact/theme.css';
+
+
+import DonutChart from "../src/components/DonutChart/DonutChart";
+
+const stories = storiesOf('DonutChart', module);
+
+stories.add(
+  'default',
+  (() => (
+   <DonutChart/>
+  ))
+);
+
+DonutChart.tsx
+
+
+import * as React from "react";
+import { Grid } from "@scuf/common";
+import { Chart } from "@scuf/charts";
+import "./DonutChart.scss";
+
+class DonutChart extends React.Component{
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+      const chart = (
+        <React.Fragment>
+          <Chart title="Rebel Fleet" subtitle="Battle at Endor">
+            <Chart.Donut data={[1,2,3,4,5]}/>
+            </Chart>;
+        </React.Fragment>
+      );
+      return (
+        <React.Fragment>
+          <Grid>
+            <Grid.Row>
+              <Grid.Column width={6}>
+                <div>
+                  {chart}
+                </div>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        </React.Fragment>
+      );
+    }
+
+}
+
+   
+
+export default DonutChart;

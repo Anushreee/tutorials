@@ -1,0 +1,426 @@
+Date: 29 Oct 2019 Tuesday
+
+Question 1: Regarding NewValueInputTable
+
+Question2: why do i have to put selectionMode in one of the tables in json?
+Because you hadnt setup interface for jsonData. you need to setup interface for jsonData as well.
+
+Question3: editable property is spread out through out the table. 
+Solutions:
+<DataTable.Column
+editor={this.props.tableEditable && this.vinEditor}/>
+<DataTable
+ editable={tableEditable && tableEditable} />
+ requiredValidator(props) {
+	let value = props.rowData[props.field];
+	return value && value.length > 0;
+}
+
+
+Question4: Code review of customDataTemplates.
+
+a. Applied Destructuring. Learnt new way of destructuring
+b. Made IconButton as Function for cleaner code.
+c. Need to turn the codes into more granular functions. //yet to do
+d. Fixing of errors where empty string lead to errors:
+{fieldData && fieldData.length > 0 && fieldData}
+e. All other errors were solved. it was mainly due to length propert missing. 
+
+
+Homework for Saturday:
+
+Need to turn the codes into more granular functions.
+Organise Treetable data into datatable so that it can be worked together.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Backup of customDataTemplates:
+
+import React from "react";
+import { DataTable } from "@scuf/datatable";
+import { ICellData } from "../src/components/CustomDataTable/ICellData";
+import { Notification, Icon } from "@scuf/common";
+import { Tooltip } from "@scuf/common";
+
+const MainComponent = () => {
+
+  // render cell data
+  // if the cellDataValue has more than 6 characters
+  const renderCellData = () => {
+      if (condition1) {
+          return <Component1>
+      }
+
+      if (condition2) {
+          return <Component2>
+      }
+
+      return <DefaultComponent />
+  }
+
+  return (
+      <div>
+          {renderCellData()}
+      </div>
+  )
+}
+
+export function badgeRenderer(cellData: ICellData) {
+  let fieldData = null;
+  let label = "";
+  if (cellData.value.cellData || cellData.value) {
+    fieldData = cellData.value.cellData || cellData.value;
+    console.log("cellDatais", cellData);
+
+    if (fieldData === "1") {
+      label = "warning";
+    } else if (fieldData === "2") {
+      label = "alert";
+    } else {
+      label = "";
+    }
+  }
+  return (
+    <span className={`${cellData.value.cellDataStyle} ${label}`}>
+      {fieldData}
+    </span>
+  );
+}
+
+export function statusRenderer(cellData: ICellData) {
+  let color = null;
+  let fieldData = null;
+  if (cellData.value.cellData || cellData.value) {
+    fieldData = cellData.value.cellData || cellData.value;
+    if (fieldData === "Green") {
+      color = "green";
+    } else if (fieldData === "Red") {
+      color = "red";
+    } else if (fieldData === "Orange") {
+      color = "orange";
+    } else if (fieldData === "Grey") {
+      color = "grey";
+    } else {
+      color = "";
+    }
+  }
+
+  return <span>{color ? <DataTable.Status color={color} /> : fieldData}</span>;
+}
+
+const IconButton = props => {
+  return (
+    <span style={props.dataStyle}>
+      <button className="icon-button" onClick={props.onClick}>
+        <Icon name={props.iconName} size={props.size || "small"} />
+      </button>
+    </span>
+  );
+};
+
+export function valueRenderer(cellData: ICellData) {
+  let theData = null;
+  let fieldData = null;
+
+  if (cellData.value.cellData || cellData.value) {
+    const { value: fieldCellData } = cellData;
+    fieldData = fieldCellData.value.cellData || cellData.value;
+    let dataStyle = cellData.value.cellDataStyle;
+    let theFunctionality = null;
+
+    if (cellData.value.functionality) {
+      console.log("the functionality is", cellData.value.functionality.event);
+      if (cellData.value.functionality.event === "tooltip") {
+        theFunctionality = (
+          <div style={{ color: "grey" }}>
+            <Tooltip
+              content={cellData.value.functionality.content}
+              element={<Icon name="message" size="medium" />}
+              position="left center"
+              event="focus"
+              hoverable={true}
+            />
+          </div>
+        );
+      }
+    }
+
+    if (
+      fieldData &&
+      fieldData.length > 0 &&
+      fieldData.startsWith("icon-actions")
+    ) {
+      theData = (
+        <React.Fragment>
+          <IconButton
+            dataStyle={dataStyle}
+            onClick={e => alert("copying")}
+            iconName="document"
+          />
+          <IconButton
+            dataStyle={dataStyle}
+            onClick={e => alert("click to edit")}
+            iconName="edit"
+          />
+          <IconButton
+            dataStyle={dataStyle}
+            onClick={e => confirm("Are you sure you want to delete?")}
+            iconName="delete"
+          />
+        </React.Fragment>
+      );
+    } else {
+      theData = (
+        <span style={dataStyle}>
+          {fieldData && fieldData.length > 0 && fieldData}
+          {theFunctionality} {/* renderFieldFunctionality() */}
+        </span>
+      );
+    }
+  }
+
+  const theUnit = cellData.value.units && (
+    <span style={cellData.value.unitsStyle}> {cellData.value.units}</span>
+  );
+
+  return (
+    <React.Fragment>
+      {theData}
+      {theUnit}
+    </React.Fragment>
+  );
+}
+
+export function rowExpansionRenderer(cellData: ICellData) {
+  return (
+    <div onClick={() => {}}>
+      <Icon root="common" name={"caret-down"} />
+    </div>
+  );
+}
+
+
+
+BACKUP OF 
+
+import * as React from "react";
+import { ICustomDataTableProps } from "./ICustomDataTableProps";
+import { DataTable } from "@scuf/datatable";
+import "./CustomDataTable.scss";
+import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
+import { InputText } from "primereact/inputtext";
+
+interface ICustomDataTableState {
+  cellField?: any;
+}
+
+class CustomDataTable extends React.Component<
+  ICustomDataTableProps,
+  ICustomDataTableState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      cellField: null
+    };
+    this.vinEditor = this.vinEditor.bind(this);
+    this.requiredValidator = this.requiredValidator.bind(this);
+  }
+
+  requiredValidator(props) {
+    let value = props.rowData[props.field];
+    return value && value.length > 0;
+  }
+
+  onEditorValueChange(props, value) {
+    console.log("the props is", props);
+    console.log("the value is", value);
+    let updatedField = [...props.value];
+    console.log("updatedField is", updatedField);
+    updatedField[props.rowIndex][props.field] = value;
+    this.setState({ cellField: updatedField });
+  }
+
+  inputTextEditor(props, field) {
+    console.log("here field is", field);
+    let search = field;
+    let object = this.props.tableData.find(obj => {
+      return obj.hasOwnProperty(search);
+    });
+
+    return (
+      <InputText
+        type="text"
+        value={object[search].cellData}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          this.onEditorValueChange(props, e.target.value)
+        }
+      />
+    );
+  }
+
+  vinEditor(props) {
+    return this.inputTextEditor(props, props.field);
+  }
+
+  render() {
+    const {
+      columns,
+      tableData,
+      headerGroups,
+      cellTemplates,
+      editable,
+      selectRows
+    } = this.props;
+
+    let headers = null;
+
+    if (headerGroups) {
+      headers = (
+        <ColumnGroup>
+          {headerGroups.map((eachGroup, index) => {
+            return (
+              <Row key={index}>
+                {eachGroup.map((each, index) => {
+                  return (
+                    <Column
+                      header={each.header}
+                      colSpan={each.colspan}
+                      rowSpan={each.rowspan}
+                      key={index}
+                    />
+                  );
+                })}
+              </Row>
+            );
+          })}
+        </ColumnGroup>
+      );
+    }
+
+    let dynamicColumns = columns.map((eachCol, index) => {
+      let theRenderer = null;
+
+      if (cellTemplates.has(eachCol.cellTemplate)) {
+        theRenderer = cellTemplates.get(eachCol.cellTemplate);
+      }
+
+      return (
+        <DataTable.Column
+          rowHeader={eachCol.rowHeader}
+          header={eachCol.header}
+          field={eachCol.field}
+          align={eachCol.align}
+          renderer={theRenderer}
+          key={index}
+          editor={this.props.editable && this.vinEditor}
+          editorValidator={this.requiredValidator}
+          style={{ height: "3.5em" }}
+        />
+      );
+    });
+    return (
+      <React.Fragment>
+        <DataTable
+          data={this.props.tableData}
+          headerColumnGroup={headers}
+          resizableColumns={true}
+          editable={editable && editable}
+          value={this.state.cellField}
+        >
+          {dynamicColumns}
+        </DataTable>
+      </React.Fragment>
+    );
+  }
+}
+
+export default CustomDataTable;
+
+
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
+import { ICellData } from "../src/components/CustomDataTable/ICellData";
+import "@scuf/datatable/honeywell-compact/theme.css";
+import config from "./config/datatable.stories.config.json";
+import CustomDataTable from "../src/components/CustomDataTable/CustomDataTable";
+import {
+  valueRenderer,
+  badgeRenderer,
+  statusRenderer
+} from "./DataTableCustomTemplates";
+
+
+const stories = storiesOf("CustomDataTable", module);
+
+{
+  config.map((each, index) => {
+    return stories.add(`${each.tableName}`, () => {
+      let mappedElement = new Map<
+        string,
+        (cellData: ICellData) => JSX.Element
+      >()
+        .set("badgeRenderer", badgeRenderer)
+        .set("valueRenderer", valueRenderer)
+        .set("statusRenderer", statusRenderer);
+
+      console.log(each);
+
+      return (
+        <React.Fragment>
+          <CustomDataTable
+            tableName={each.tableName}
+            columns={each.columns}
+            tableData={each.data}
+            headerGroups={each.headerGroups}
+            selectRows={each.selectionMode ? each.selectionMode : null}
+            cellTemplates={mappedElement}
+            key={each.tableName}
+            editable={each.editable === true ? each.editable : null}
+          />
+        </React.Fragment>
+      );
+    });
+  });
+}
+
+
+//New things learnt yesterday
+
+
+ requiredValidator(props) {
+    let value = props.rowData[props.field];
+    return value && value.length > 0;
+  }
+
+  editor={this.props.tableEditable && this.vinEditor}
+
+  editable={tableEditable && tableEditable}
+
+  const { value: fieldCellData } = cellData;
+
+  if(fieldData &&
+      fieldData.length > 0 &&
+      fieldData.startsWith("icon-actions"))
+
+
+
+
+
+
+
+

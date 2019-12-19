@@ -1,0 +1,191 @@
+1. Problems encountered during installing cps-ui-dashboard-react-components in mac
+
+2. Hiding of files in mac
+
+3. while installing webpack got an error: Maximum call stack size exceeded
+
+4. Module not found: Error: Can't resolve 'dist/bundle.js' in '/Users/anushreeshakya/codes/react-components'
+
+5. important Links in Youtube
+
+6. Source Tree: Cloning the project
+
+
+
+1. Problems encountered during installing cps-ui-dashboard-react-components in mac
+
+command: yarn
+
+error An unexpected error occurred: "EACCES: permission denied, unlink '/Users/anushreeshakya/codes/cps-ui-dashboard-react-components/node_modules/yarn/LICENSE'".
+
+Solution
+
+Home Machintosh HD > Users > anushreeshakya > .npmrc
+
+Remove auth and do yarn
+
+_auth = aDM3OTE3OTpBUDcyNGRmVU04Q1BkSnRuaUhqWmg1UTZzVEU=
+email = Anushree.Shakya@Honeywell.com
+always-auth = true
+
+
+@hw:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/hmiweb-npm-stable-local/
+@scuf:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/SCUF-10305-stable-npm-local/
+@cpsui:registry=https://artifactory-na.honeywell.com/artifactory/api/npm/Connected-Performance-Services-8877-stable-npm-virtual/
+
+and then add auth and do yarn.
+
+if there is error regarding scuff-common or something like that.
+
+"@scuf/analytics": "^0.52.17",
+"@scuf/dashboard": "^0.52.18",
+"@scuf/datatable": "^0.52.18",
+"@scuf/styles": "^0.52.17",
+
+and add them one by one 
+add on do yarn
+add another do yarn.
+
+
+To start:
+Go to demo from your root folder
+cd demo
+yarn start
+
+
+
+
+2. Hiding of files in mac
+in the terminal type the following:
+defaults write com.apple.finder AppleShowAllFiles YES
+
+Finder > Go > you can see all the hidden files. you can see all the main folders like HD
+ 
+
+
+VPN Connect Failed:
+
+Contacting honeywell us-west
+
+Hostscan is performing software scan
+
+Hostcan state idle
+
+Certificate validation failure
+
+The secure gateway has rejected the connection
+
+
+3. while installing webpack got an error: Maximum call stack size exceeded
+
+Removed the contents from .npmrc file 
+Home Machintosh HD > Users > anushreeshakya > .npmrc
+
+and tried the command again
+
+npm install webpack --save-dev
+
+4. Module not found: Error: Can't resolve 'dist/bundle.js' in '/Users/anushreeshakya/codes/react-components'
+
+--output must be specified explicitly. type the following code in the command line
+
+"build": "webpack src/js/app.js --output dist/bundle.js --mode development"
+
+
+
+Commands:
+forge
+create forge experience: 
+npm config set @forge:registry "https://artifactory-na.honeywell.com/artifactory/api/npm/hub-npm-stable-local/"
+
+forge experience:create hcp-datatable
+forge experience:preview ./src/index.tsx
+
+yarn global add @forge/cli
+
+
+git config --global user.email "anushree.shakya@honywell.com"
+git config --global user.name "Anushree"
+
+AD Domain: global.ds
+	   honeywell.com
+
+
+Egghead:
+username: binesh.shakya@domain.com.au
+password: 3ggH3@d1982
+
+
+PKI Option:
+
+type PKI
+
+you will seen a screen click on My Computer and check if the certificate has expired
+
+5. important Links in Youtube
+
+a. Form Controls - Building a Custom Select Box/Dropdown Control in React - Episode #20
+https://www.youtube.com/watch?v=HvUI8bkLmk4
+
+b. React.js - How To Dynamically Load Components Based On Selection
+https://www.youtube.com/watch?v=Qqgm170PZwk
+
+c. React / ES6 File Modules - How To Organize Your React Components Using ES6 File Modules
+https://www.youtube.com/watch?v=zrEby6y345Y
+
+6. Other Links
+
+https://reactstrap.github.io/components/form/
+
+
+6. Source Tree: Cloning the project
+
+The destination path /Users/anushreeshakya/codes already exists and is not an empty folder. Please choose an empty or new folder into which to clone.
+
+Solution:
+Under codes folder, create a new folder rename it to your project folder name
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

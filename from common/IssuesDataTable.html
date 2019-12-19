@@ -1,0 +1,171 @@
+Issues:
+
+1. Tooltip is not available in scuff and primereact
+
+
+https://forum.primefaces.org/viewtopic.php?t=44811https://forum.primefaces.org/viewtopic.php?t=44811
+
+
+Backup of CustomDataTable.tsx
+
+import * as React from "react";
+import { ICustomDataTableProps } from "./ICustomDataTableProps";
+import { DataTable } from "@scuf/datatable";
+import "./CustomDataTable.scss";
+import { Column } from "primereact/column";
+import { ColumnGroup } from "primereact/columngroup";
+import { Row } from "primereact/row";
+import { Notification, Icon } from "@scuf/common";
+import { TreeTable } from "@scuf/datatable";
+
+interface ICustomDataTableState {
+  expandedRows?: any;
+  selectedRow?: any;
+  selectedAll?: any;
+  data?: any;
+}
+
+const data = [
+  { plane: "s-1", pilot: "AAron Davis", status: "Retired", flights: 2 },
+  { plane: "f-1", pilot: "Garven Dresis", status: "Retired", flights: 10 },
+  { plane: "6-t", pilot: "David JP", status: "Retired", flights: 9 }
+];
+
+class CustomDataTable extends React.Component<
+  ICustomDataTableProps,
+  ICustomDataTableState
+> {
+  constructor(props) {
+    super(props);
+    this.state = {
+      expandedRows: [data[0]],
+      selectedRow: null,
+      selectedAll: false,
+      data: this.props.data1
+    };
+    this.expanderTemplate = this.expanderTemplate.bind(this);
+    this.toggleExpand = this.toggleExpand.bind(this);
+  }
+
+  rowExpansionTemplate(data) {
+    console.log("children data", data);
+    return (
+      <DataTable data={data}>
+        {Object.keys(data).map(eachCol => {
+          console.log("what is this? ", data[eachCol].cellData);
+          return (
+            <DataTable.Column header={""} field={data[eachCol].cellData} />
+          );
+        })}
+      </DataTable>
+    );
+  }
+
+  expanderTemplate(data) {
+    console.log("What the hell? 🐔", data);
+    const open = this.state.expandedRows.includes(data.rowData);
+    return (
+      <div onClick={() => this.toggleExpand(data.rowData, open)}>
+        <Icon root="common" name={open ? "caret-down" : "caret-right"} />
+      </div>
+    );
+  }
+
+  toggleExpand(data, open) {
+    let expanded = this.state.expandedRows;
+    if (open) {
+      let index = expanded.findIndex(
+        item => JSON.stringify(item) === JSON.stringify(data)
+      );
+      expanded.splice(index, 1);
+    } else {
+      expanded.push(data);
+    }
+    this.setState({ expandedRows: expanded });
+  }
+
+  editData(newVal, cellData) {
+    const data = this.state.data;
+    data[cellData.rowIndex][cellData.field] = newVal;
+    this.setState({ data: data });
+  }
+
+  render() {
+    const {
+      columns,
+      data1,
+      headerGroups,
+      cellTemplates,
+      selectionMode
+    } = this.props;
+
+    let headers = null;
+
+    if (headerGroups) {
+      headers = (
+        <ColumnGroup>
+          {headerGroups.map((eachGroup, index) => {
+            return (
+              <Row key={index}>
+                {eachGroup.map((each, index) => {
+                  return (
+                    <Column
+                      header={each.header}
+                      colSpan={each.colspan}
+                      rowSpan={each.rowspan}
+                      key={index}
+                    />
+                  );
+                })}
+              </Row>
+            );
+          })}
+        </ColumnGroup>
+      );
+    }
+
+    let dynamicColumns = columns.map((eachCol, index) => {
+      let theRenderer = null;
+      if (cellTemplates.has(eachCol.cellTemplate)) {
+        console.warn("eachCol.cellTempalte", eachCol.cellTemplate);
+        if (eachCol.cellTemplate === `rowExpansionRenderer`) {
+          console.log("HERE it should render rowExapnder");
+          theRenderer = this.expanderTemplate;
+        } else {
+          theRenderer = cellTemplates.get(eachCol.cellTemplate);
+        }
+      }
+      return (
+        <DataTable.Column
+          rowHeader={eachCol.rowHeader}
+          header={eachCol.header}
+          field={eachCol.field}
+          align={eachCol.align}
+          renderer={theRenderer}
+          key={index}
+          editable={eachCol.editable ? eachCol.editable : false}
+        />
+      );
+    });
+    return (
+      <React.Fragment>
+        <DataTable
+          data={this.state.data}
+          headerColumnGroup={headers}
+          selection={this.state.selectedRow}
+          selectionMode={selectionMode}
+          resizableColumns={true}
+          onEdit={(newData, cellData) => this.editData(newData, cellData)}
+          expandedRows={this.state.expandedRows}
+          rowExpansionTemplate={this.rowExpansionTemplate}
+          onSelectAll={e => this.setState({ selectedAll: e })}
+          onSelectionChange={e => this.setState({ selectedRow: e })}
+        >
+          {dynamicColumns}
+        </DataTable>
+      </React.Fragment>
+    );
+  }
+}
+
+export default CustomDataTable;
